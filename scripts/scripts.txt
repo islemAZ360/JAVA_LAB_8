@@ -1,0 +1,26 @@
+show
+info
+help
+run_script_file scripts/script1.txt
+run_script_file scripts/scripts.txt
+add TestAddByScript 100 165 true true 555.0 BipBip 2 HAMMER true
+show
+update 3 TestAddByScript 100 165 true true 555.0 BipBip 2 HAMMER true
+add_if_min
+200
+TestAddByScript 100 165 true true 555.0 BipBip 2 HAMMER true
+add_if_max 211 TestAddByScript 100 165 true true 555.0 BipBip 2 HAMMER true
+save
+show
+add_if_min
+1
+name1
+10
+20
+true
+false
+5
+song1
+2
+HAMMER
+no

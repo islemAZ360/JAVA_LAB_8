@@ -1,0 +1,6 @@
+show
+info
+help
+run_script_file scripts/scripts.txt
+add TestAddByScript 100 165 true true 555.0 BipBip 2 HAMMER true
+show
