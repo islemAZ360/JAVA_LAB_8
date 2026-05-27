@@ -4,13 +4,18 @@ import common.HumanBeingReader;
 import common.models.Const;
 import common.models.HumanBeing;
 
+import server.db.CollectionRepository;
+import server.db.DatabaseException;
+
 import java.util.*;
 import java.util.function.Predicate;
 
 public class CollectionManager extends TreeSet<HumanBeing> {
     private final java.time.LocalDateTime creationTime = java.time.LocalDateTime.now();
 
-    public CollectionManager() {
+    private final CollectionRepository<HumanBeing> repository;
+
+    public CollectionManager(CollectionRepository<HumanBeing> repository) {
         super(new Comparator<HumanBeing>() {
             @Override
             public int compare(HumanBeing o1, HumanBeing o2) {
@@ -22,6 +27,8 @@ public class CollectionManager extends TreeSet<HumanBeing> {
                 return super.equals(obj);
             }
         });
+
+        this.repository = repository;
     }
 
     @Override
@@ -164,5 +171,62 @@ public class CollectionManager extends TreeSet<HumanBeing> {
         }
 
         this.removeAll(toRemove);
+    }
+
+    public void loadFromRepository() throws DatabaseException {
+        super.clear();
+        super.addAll(repository.loadAll());
+    }
+
+    public long generateNextId() throws DatabaseException {
+        return repository.generateNextId();
+    }
+
+    public boolean addToDatabaseAndMemory(HumanBeing humanBeing) throws DatabaseException {
+        repository.add(humanBeing);
+        return super.add(humanBeing);
+    }
+
+    public boolean updateInDatabaseAndMemory(long id, HumanBeing newHuman) throws DatabaseException {
+        HumanBeing oldHuman = getHumanById(id);
+        if (oldHuman == null) {
+            return false;
+        }
+
+        newHuman.setId(id);
+
+        if (newHuman.getOwnerLogin() == null) {
+            newHuman.setOwnerLogin(oldHuman.getOwnerLogin());
+        }
+
+        repository.update(newHuman);
+
+        oldHuman.setName(newHuman.getName());
+        oldHuman.setCoordinates(newHuman.getCoordinates());
+        oldHuman.setRealHero(newHuman.isRealHero());
+        oldHuman.setHasToothpick(newHuman.isHasToothpick());
+        oldHuman.setImpactSpeed(newHuman.getImpactSpeed());
+        oldHuman.setSoundtrackName(newHuman.getSoundtrackName());
+        oldHuman.setMinutesOfWaiting(newHuman.getMinutesOfWaiting());
+        oldHuman.setWeaponType(newHuman.getWeaponType());
+        oldHuman.setCar(newHuman.getCar());
+        oldHuman.setOwnerLogin(newHuman.getOwnerLogin());
+
+        return true;
+    }
+
+    public boolean removeFromDatabaseAndMemory(long id) throws DatabaseException {
+        HumanBeing human = getHumanById(id);
+        if (human == null) {
+            return false;
+        }
+
+        repository.remove(id);
+        return super.remove(human);
+    }
+
+    public void clearDatabaseAndMemory(String ownerLogin) throws DatabaseException {
+        repository.clear(ownerLogin);
+        this.removeIf(humanBeing -> ownerLogin.equals(humanBeing.getOwnerLogin()));
     }
 }

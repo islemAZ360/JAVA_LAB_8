@@ -24,6 +24,9 @@ public class HumanBeing implements Serializable, Comparable<HumanBeing> {
     private WeaponType weaponType; //Поле может быть null
     private Car car; //Поле может быть null
 
+    private String ownerLogin;
+
+
     // Private для того, чтобы HumanBeing не можно создать без аргументов
     private HumanBeing() {
         //Automatic value and cant set value
@@ -213,6 +216,31 @@ public class HumanBeing implements Serializable, Comparable<HumanBeing> {
         return Long.compare(this.id, comparingHuman.getId());
 //        return this.getId().compareTo(comparingHuman.getId());
     }
+//    @Override
+//    public String toString() {
+//        return "HumanBeing {" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", coordinates=(" + coordinates.getX() + ", " + coordinates.getY() + ")" +
+//                ", realHero=" + realHero +
+//                ", hasToothpick=" + hasToothpick +
+//                ", impactSpeed=" + impactSpeed +
+//                ", soundtrackName='" + soundtrackName + '\'' +
+//                ", minutesOfWaiting=" + minutesOfWaiting +
+//                ", weaponType=" + weaponType +
+//                ", car=" + (car != null ? car.isCool() : null) +
+//                ", creationDate=" + creationDate +
+//                '}';
+//    }
+
+
+    public String getOwnerLogin() {
+        return ownerLogin;
+    }
+
+    public void setOwnerLogin(String ownerLogin) {
+        this.ownerLogin = ownerLogin;
+    }
     @Override
     public String toString() {
         return "HumanBeing {" +
@@ -226,6 +254,7 @@ public class HumanBeing implements Serializable, Comparable<HumanBeing> {
                 ", minutesOfWaiting=" + minutesOfWaiting +
                 ", weaponType=" + weaponType +
                 ", car=" + (car != null ? car.isCool() : null) +
+                ", ownerLogin='" + ownerLogin + '\'' +
                 ", creationDate=" + creationDate +
                 '}';
     }
