@@ -30,9 +30,14 @@ public class ServerMain {
     public static void main(String[] args) {
         logger.info("Hello! Log4j2 run successfully.");
 
-        String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://pg:5432/studs");
-        String dbUser = System.getenv("DB_USER");
-        String dbPassword = System.getenv("DB_PASSWORD");
+//        String dbUrl = System.getenv().getOrDefault("DB_URL", Const.DB_URL);
+//        String dbUser = System.getenv(Const.DB_USER_ENV);
+//        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+
+        String dbUrl = Const.DB_URL;
+        String dbUser = System.getenv(Const.DB_USER_ENV);
+        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+
 
         CollectionRepository<HumanBeing> repository =
                 new PostgresCollectionRepository(dbUrl, dbUser, dbPassword);

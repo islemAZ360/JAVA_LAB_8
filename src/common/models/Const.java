@@ -19,6 +19,17 @@ public final class Const {
     public static String host = "127.0.0.1";
 //    public static String host = "0.0.0.0";
 //    public static String host = "192.268.10.80";
+
+//    PostgreSQL
+//    public static final String DB_HOST = "pg";
+    public static final String DB_HOST = "localhost";
+    public static final int DB_PORT = 5432;
+    public static final String DB_NAME = "humanbeings";
+    public static final String DB_URL = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
+
+
+    public static final String DB_USER_ENV = "DB_USER";
+    public static final String DB_PASSWORD_ENV = "DB_PASSWORD";
     public static final String RESET = "\u001B[0m";
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
