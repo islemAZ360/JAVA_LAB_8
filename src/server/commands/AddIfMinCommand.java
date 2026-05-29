@@ -4,6 +4,7 @@ import common.Command;
 import common.Request;
 import common.Response;
 import common.StatusCode;
+import common.models.Const;
 import common.models.HumanBeing;
 import server.CollectionManager;
 
@@ -22,7 +23,7 @@ public class AddIfMinCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "add_if_min {element} : добавить элемент, если его значение меньше минимального";
+        return "add_if_min id {element} : добавить элемент, если его ID меньше минимального";
     }
 
     @Override
@@ -34,14 +35,16 @@ public class AddIfMinCommand implements Command {
                 if (isValidId(newId)) {
                     return new Response("Нужно заполнение полей информации объекта", StatusCode.CONTINUE, null);
                 }
+
                 return new Response("ID не меньше минимального ID в коллекции", StatusCode.ID_INVALID, null);
             }
 
             HumanBeing newHuman = (HumanBeing) request.getObjectArgument();
             newHuman.setId(newId);
+            newHuman.setOwnerLogin(Const.DEFAULT_OWNER_LOGIN);
 
             if (collectionManager.isEmpty()) {
-                collectionManager.add(newHuman);
+                collectionManager.addToDatabaseAndMemory(newHuman);
                 return new Response(
                         "Коллекция пуста. Элемент добавлен. ID: " + newHuman.getId(),
                         StatusCode.OK,
@@ -52,7 +55,7 @@ public class AddIfMinCommand implements Command {
             long minId = collectionManager.getMin().getId();
 
             if (newHuman.getId() < minId) {
-                collectionManager.add(newHuman);
+                collectionManager.addToDatabaseAndMemory(newHuman);
                 return new Response(
                         "Элемент добавлен, так как его ID меньше минимального. ID: " + newHuman.getId(),
                         StatusCode.OK,
@@ -73,7 +76,6 @@ public class AddIfMinCommand implements Command {
     }
 
     public Boolean isValidId(Long id) {
-        Long minId = collectionManager.getMin().getId();
-        return id < minId || collectionManager.isEmpty();
+        return collectionManager.isEmpty() || id < collectionManager.getMin().getId();
     }
 }

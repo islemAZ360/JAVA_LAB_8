@@ -26,23 +26,24 @@ public class RemoveByIdCommand implements Command {
 
     @Override
     public Response execute(Request request) {
-        if (request.getStringArgument() == null) {
+        if (request.getStringArgument() == null || request.getStringArgument().isBlank()) {
             return new Response("ID не указан", StatusCode.BAD_REQUEST, null);
         }
 
         try {
-            long id = Long.parseLong(request.getStringArgument().toString());
+            long id = Long.parseLong(request.getStringArgument());
 
-            boolean removed = collectionManager.removeById(id);
+            boolean removed = collectionManager.removeFromDatabaseAndMemory(id);
 
             if (removed) {
                 return new Response("Элемент удален", StatusCode.OK, null);
-            } else {
-                return new Response("Элемент не найден", StatusCode.ID_INVALID, null);
             }
 
-        } catch (Exception e) {
+            return new Response("Элемент не найден", StatusCode.ID_INVALID, null);
+        } catch (NumberFormatException e) {
             return new Response("Ошибка: ID должен быть числом", StatusCode.ID_INVALID, null);
+        } catch (Exception e) {
+            return new Response("Ошибка при удалении: " + e.getMessage(), StatusCode.SERVER_ERROR, null);
         }
     }
 }

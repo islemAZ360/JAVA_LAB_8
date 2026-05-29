@@ -22,7 +22,7 @@ public class UpdateCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "update {element} : обновить элемент по ID";
+        return "update id {element} : обновить элемент по ID";
     }
 
     @Override
@@ -34,8 +34,6 @@ public class UpdateCommand implements Command {
         try {
             long id = Long.parseLong(request.getStringArgument());
 
-            // Bước 1: client mới gửi ID, chưa gửi object
-            // Server check ID trước
             if (request.getObjectArgument() == null) {
                 HumanBeing existing = collectionManager.getHumanById(id);
 
@@ -54,20 +52,16 @@ public class UpdateCommand implements Command {
                 );
             }
 
-            // Bước 2: client gửi object mới
             HumanBeing newHuman = (HumanBeing) request.getObjectArgument();
-
-            // Giữ đúng ID cũ
             newHuman.setId(id);
 
-            boolean updated = collectionManager.update(id, newHuman);
+            boolean updated = collectionManager.updateInDatabaseAndMemory(id, newHuman);
 
             if (updated) {
                 return new Response("Элемент обновлен", StatusCode.OK, null);
-            } else {
-                return new Response("Элемент с ID " + id + " не найден", StatusCode.ID_INVALID, null);
             }
 
+            return new Response("Элемент с ID " + id + " не найден", StatusCode.ID_INVALID, null);
         } catch (NumberFormatException e) {
             return new Response("Ошибка: ID должен быть числом", StatusCode.ID_INVALID, null);
         } catch (ClassCastException e) {

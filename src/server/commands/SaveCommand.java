@@ -6,7 +6,7 @@ import common.Response;
 import common.StatusCode;
 import server.CollectionManager;
 import common.utils.HumanBeingFileManager;
-
+@Deprecated
 public class SaveCommand implements Command {
 
     private final CollectionManager collectionManager;

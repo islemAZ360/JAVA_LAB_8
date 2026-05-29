@@ -4,7 +4,7 @@ import common.models.HumanBeing;
 import server.CollectionManager;
 
 import java.util.Collection;
-
+@Deprecated
 public interface HandleHumanBeingFile {
     void readFileAndLoadHumanBeing(CollectionManager collectionManager);
     void save(HumanBeing human);

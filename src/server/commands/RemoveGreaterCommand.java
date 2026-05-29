@@ -28,7 +28,11 @@ public class RemoveGreaterCommand implements Command {
     @Override
     public Response execute(Request request) {
         if (request.getStringArgument() == null || request.getStringArgument().isBlank()) {
-            return new Response("ID не указан\nИспользование: remove_greater id\nПример: remove_greater 10.", StatusCode.BAD_REQUEST, null);
+            return new Response(
+                    "ID не указан\nИспользование: remove_greater id\nПример: remove_greater 10.",
+                    StatusCode.BAD_REQUEST,
+                    null
+            );
         }
 
         try {
@@ -39,9 +43,7 @@ public class RemoveGreaterCommand implements Command {
                 return new Response("Элемент с ID " + id + " не найден", StatusCode.ID_INVALID, null);
             }
 
-            int oldSize = collectionManager.size();
-            collectionManager.removeGreater(element);
-            int removedCount = oldSize - collectionManager.size();
+            int removedCount = collectionManager.removeGreaterFromDatabaseAndMemory(element);
 
             if (removedCount > 0) {
                 return new Response(
@@ -49,9 +51,9 @@ public class RemoveGreaterCommand implements Command {
                         StatusCode.OK,
                         null
                 );
-            } else {
-                return new Response("Нет элементов с ID больше " + id, StatusCode.ID_INVALID, null);
             }
+
+            return new Response("Нет элементов с ID больше " + id, StatusCode.ID_INVALID, null);
         } catch (NumberFormatException e) {
             return new Response("Ошибка: ID должен быть числом", StatusCode.ID_INVALID, null);
         } catch (Exception e) {

@@ -8,7 +8,7 @@ import common.utils.CommandFileManager;
 import common.utils.CommandManager;
 import common.utils.HumanBeingFileManager;
 import server.CollectionManager;
-
+@Deprecated
 public class ExecuteScriptCommand implements Command {
 //    private final CommandManager commandManager;
     private final CollectionManager collectionManager;

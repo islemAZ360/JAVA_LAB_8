@@ -1,19 +1,20 @@
 package server.commands;
 
-import common.*;
+import common.Command;
+import common.Request;
+import common.Response;
+import common.StatusCode;
+import common.models.Const;
 import common.models.HumanBeing;
 import server.CollectionManager;
-
-/**
- * Команда добавляет новый элемент в коллекцию, только если его ID превышает
- * максимальный ID текущей коллекции.
- */
 
 public class AddIfMaxCommand implements Command {
 
     private final CollectionManager collectionManager;
 
-    public AddIfMaxCommand(CollectionManager collectionManager) { this.collectionManager = collectionManager;}
+    public AddIfMaxCommand(CollectionManager collectionManager) {
+        this.collectionManager = collectionManager;
+    }
 
     @Override
     public String getName() {
@@ -22,31 +23,28 @@ public class AddIfMaxCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "add_if_max : добавить новый элемент в коллекцию, если его значение превышает значение наибольшего элемента этой коллекции";
+        return "add_if_max id {element} : добавить элемент, если его ID больше максимального";
     }
 
-    /**
-     * Выполняет команду add_if_max
-     * @param request аргументы команды: args[1] = ID нового элемента
-     */
     @Override
     public Response execute(Request request) {
         try {
             Long newId = Long.parseLong(request.getStringArgument());
 
             if (request.getObjectArgument() == null) {
-    //            return new Response("Объект не передан", StatusCode.REQUIRED_FIELD_MISSING, null);
                 if (isValidId(newId)) {
                     return new Response("Нужно заполнение полей информации объекта", StatusCode.CONTINUE, null);
                 }
+
                 return new Response("ID не превышает максимальный ID в коллекции", StatusCode.ID_INVALID, null);
             }
 
             HumanBeing newHuman = (HumanBeing) request.getObjectArgument();
             newHuman.setId(newId);
+            newHuman.setOwnerLogin(Const.DEFAULT_OWNER_LOGIN);
 
             if (collectionManager.isEmpty()) {
-                collectionManager.add(newHuman);
+                collectionManager.addToDatabaseAndMemory(newHuman);
                 return new Response(
                         "Коллекция пуста. Элемент добавлен. ID: " + newHuman.getId(),
                         StatusCode.OK,
@@ -57,7 +55,7 @@ public class AddIfMaxCommand implements Command {
             Long maxId = collectionManager.getMaxId();
 
             if (newHuman.getId() > maxId) {
-                collectionManager.add(newHuman);
+                collectionManager.addToDatabaseAndMemory(newHuman);
                 return new Response(
                         "Элемент добавлен, так как его ID больше максимального. ID: " + newHuman.getId(),
                         StatusCode.OK,
@@ -78,7 +76,6 @@ public class AddIfMaxCommand implements Command {
     }
 
     public Boolean isValidId(Long id) {
-        Long maxId = collectionManager.getMaxId();
-        return id > maxId || collectionManager.isEmpty();
+        return collectionManager.isEmpty() || id > collectionManager.getMaxId();
     }
 }

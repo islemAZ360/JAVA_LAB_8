@@ -1,18 +1,13 @@
 package server.commands;
 
-import common.*;
+import common.Command;
+import common.Request;
+import common.Response;
+import common.StatusCode;
+import common.models.Const;
 import common.models.HumanBeing;
 import server.CollectionManager;
-import client.InputManager;
 
-import java.util.Arrays;
-
-/**
- * Команда add {element}: добавляет новый элемент в коллекцию.
- * Элемент читается с помощью ElementReader.
- * Lưu ý: Command này chỉ thêm vào collection, không tự động save vào file.
- * User phải gọi save riêng để lưu.
- */
 public class AddCommand implements Command {
     private final CollectionManager collectionManager;
 
@@ -27,19 +22,18 @@ public class AddCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "add {element} : добавить новый элемент в коллекцию (не сохраняет в файл)";
+        return "add {element} : добавить новый элемент в коллекцию";
     }
 
     @Override
     public Response execute(Request request) {
-
         if (request.getObjectArgument() == null) {
             return new Response("Объект не передан", StatusCode.BAD_REQUEST, null);
         }
 
         try {
             HumanBeing tempHuman = (HumanBeing) request.getObjectArgument();
-//            System.out.println(tempHuman.getCar()); // null
+
             HumanBeing newHuman = new HumanBeing(
                     tempHuman.getName(),
                     tempHuman.getCoordinates(),
@@ -52,7 +46,10 @@ public class AddCommand implements Command {
                     tempHuman.getCar()
             );
 
-            boolean added = collectionManager.add(newHuman);
+            newHuman.setId(collectionManager.generateNextId());
+            newHuman.setOwnerLogin(Const.DEFAULT_OWNER_LOGIN);
+
+            boolean added = collectionManager.addToDatabaseAndMemory(newHuman);
 
             if (added) {
                 return new Response(
@@ -60,10 +57,11 @@ public class AddCommand implements Command {
                         StatusCode.OK,
                         null
                 );
-            } else {
-                return new Response("Не удалось добавить элемент", StatusCode.SERVER_ERROR, null);
             }
 
+            return new Response("Не удалось добавить элемент", StatusCode.SERVER_ERROR, null);
+        } catch (ClassCastException e) {
+            return new Response("Ошибка: передан объект неверного типа", StatusCode.BAD_REQUEST, null);
         } catch (Exception e) {
             return new Response("Ошибка при добавлении: " + e.getMessage(), StatusCode.SERVER_ERROR, null);
         }

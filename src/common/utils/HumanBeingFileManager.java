@@ -7,7 +7,7 @@ import server.CollectionManager;
 import java.io.*;
 import java.util.Collection;
 import java.util.Scanner;
-
+@Deprecated
 public class HumanBeingFileManager extends FileManager implements HandleHumanBeingFile {
     public HumanBeingFileManager(String filePath) {
         super(filePath);

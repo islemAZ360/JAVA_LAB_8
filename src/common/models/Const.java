@@ -30,11 +30,16 @@ public final class Const {
 
     public static final String DB_USER_ENV = "DB_USER";
     public static final String DB_PASSWORD_ENV = "DB_PASSWORD";
+
     public static final String RESET = "\u001B[0m";
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
     public static final String YELLOW = "\u001B[33m";
     public static final String BLUE = "\u001B[34m";
+
+    // test for issue 3
+    public static final String DEFAULT_OWNER_LOGIN = "test_user";
+
 
 //  relative
 //  getId, getName, getCoordinates, getCreationDate, isRealHero, isHasToothpick, getImpactSpeed, getSoundtrackName, getMinutesOfWaiting, getWeaponType, getCar
