@@ -1,5 +1,7 @@
 package common;
 
+import java.nio.channels.SelectionKey;
+
 public interface Command {
     String getName();
 
@@ -8,4 +10,8 @@ public interface Command {
 //    Object execute(String[] arg);
 
     Response execute(Request request);
+
+    default Response execute(Request request, SelectionKey key) {
+        return execute(request);
+    };
 }

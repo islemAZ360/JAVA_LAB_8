@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,6 +18,10 @@ import common.models.Const;
 import common.models.HumanBeing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.auth.AccountRepository;
+import server.auth.AccountService;
+import server.auth.PostgresAccountRepository;
+import server.auth.SessionManager;
 import server.db.CollectionRepository;
 import server.db.PostgresCollectionRepository;
 
@@ -27,25 +34,61 @@ public class ServerMain {
 
     private static final int MAX_CONNECTIONS = 2;
 
+    private static final boolean USE_CLOUD = true;
+
+    public static final Connection getConnection() {
+        String dbUrl;
+        String dbUser;
+        String dbPassword;
+
+        if (USE_CLOUD) {
+            // Supabase
+            // Чек-лист для проверки строки (символ за символом):
+            // Сначала идет: jdbc:postgresql:// (всего один раз).
+            // Затем сразу адрес хоста: aws-1-eu-west-2.pooler.supabase.com
+            // Затем двоеточие и порт: :6543
+            // В конце слэш и имя базы данных: /postgres
+            dbUrl = "jdbc:postgresql://aws-1-eu-west-2.pooler.supabase.com:6543/postgres";
+            dbUser = "postgres.jpbfipdamfvisstxjjpz";
+            dbPassword = "javalab7pro";
+        } else {
+            // Local
+            dbUrl = Const.DB_URL;
+            dbUser = System.getenv(Const.DB_USER_ENV);
+            dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+        }
+
+        try {
+            Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            return conn;
+        } catch (SQLException e) {
+            logger.error("Не удалось поключить к PostgreSQL");
+            return null;
+        }
+    }
+
+    public static CollectionRepository<HumanBeing> getHumanbeingRepository(Connection conn) {
+        return new PostgresCollectionRepository(conn);
+    }
+
+    public static AccountRepository getAccountRepository(Connection conn) {
+        return new PostgresAccountRepository(conn);
+    }
+
     public static void main(String[] args) {
         logger.info("Hello! Log4j2 run successfully.");
 
-//        String dbUrl = System.getenv().getOrDefault("DB_URL", Const.DB_URL);
-//        String dbUser = System.getenv(Const.DB_USER_ENV);
-//        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+        Connection conn = getConnection();
+        CollectionRepository<HumanBeing> repository = getHumanbeingRepository(conn);
+        AccountRepository postgresAccountRepository = getAccountRepository(conn);
 
-        String dbUrl = Const.DB_URL;
-        String dbUser = System.getenv(Const.DB_USER_ENV);
-        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
-
-
-        CollectionRepository<HumanBeing> repository =
-                new PostgresCollectionRepository(dbUrl, dbUser, dbPassword);
+        SessionManager sessionManager = new SessionManager();
+        AccountService accountService = new AccountService(postgresAccountRepository, sessionManager);
 
         CollectionManager collectionManager = new CollectionManager(repository);
         collectionManager.loadFromRepository();
 
-        CommandManager commandManager = new CommandManager(collectionManager);
+        CommandManager commandManager = new CommandManager(collectionManager, accountService);
         requestHandler = new RequestHandler(commandManager);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() ->

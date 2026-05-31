@@ -168,7 +168,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
         oldHuman.setMinutesOfWaiting(newHuman.getMinutesOfWaiting());
         oldHuman.setWeaponType(newHuman.getWeaponType());
         oldHuman.setCar(newHuman.getCar());
-        oldHuman.setOwnerLogin(newHuman.getOwnerLogin());
+        oldHuman.setUserId(newHuman.getUserId());
 
         return true;
     }
@@ -251,8 +251,8 @@ public class CollectionManager extends TreeSet<HumanBeing> {
 
         newHuman.setId(id);
 
-        if (newHuman.getOwnerLogin() == null) {
-            newHuman.setOwnerLogin(oldHuman.getOwnerLogin());
+        if (newHuman.getUserId() == null) {
+            newHuman.setUserId(oldHuman.getUserId());
         }
 
         repository.update(newHuman);
@@ -266,7 +266,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
         oldHuman.setMinutesOfWaiting(newHuman.getMinutesOfWaiting());
         oldHuman.setWeaponType(newHuman.getWeaponType());
         oldHuman.setCar(newHuman.getCar());
-        oldHuman.setOwnerLogin(newHuman.getOwnerLogin());
+        oldHuman.setUserId(newHuman.getUserId());
 
         return true;
     }
@@ -290,11 +290,11 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Очистка объектов конкретного пользователя:
      * сначала БД, затем коллекция в памяти.
      */
-    public int clearDatabaseAndMemory(String ownerLogin) throws DatabaseException {
+    public int clearDatabaseAndMemory(Long userId) throws DatabaseException {
         int oldSize = this.size();
 
-        repository.clear(ownerLogin);
-        this.removeIf(humanBeing -> ownerLogin.equals(humanBeing.getOwnerLogin()));
+        repository.clear(userId);
+        this.removeIf(humanBeing -> userId.equals(humanBeing.getUserId()));
 
         return oldSize - this.size();
     }

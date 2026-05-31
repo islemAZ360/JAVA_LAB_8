@@ -24,7 +24,7 @@ public class HumanBeing implements Serializable, Comparable<HumanBeing> {
     private WeaponType weaponType; //Поле может быть null
     private Car car; //Поле может быть null
 
-    private String ownerLogin;
+    private Long userId;
 
 
     // Private для того, чтобы HumanBeing не можно создать без аргументов
@@ -234,12 +234,12 @@ public class HumanBeing implements Serializable, Comparable<HumanBeing> {
 //    }
 
 
-    public String getOwnerLogin() {
-        return ownerLogin;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setOwnerLogin(String ownerLogin) {
-        this.ownerLogin = ownerLogin;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     @Override
     public String toString() {
@@ -254,7 +254,7 @@ public class HumanBeing implements Serializable, Comparable<HumanBeing> {
                 ", minutesOfWaiting=" + minutesOfWaiting +
                 ", weaponType=" + weaponType +
                 ", car=" + (car != null ? car.isCool() : null) +
-                ", ownerLogin='" + ownerLogin + '\'' +
+                ", ownerLogin='" + userId + '\'' +
                 ", creationDate=" + creationDate +
                 '}';
     }

@@ -47,7 +47,7 @@ public class AddCommand implements Command {
             );
 
             newHuman.setId(collectionManager.generateNextId());
-            newHuman.setOwnerLogin(Const.DEFAULT_OWNER_LOGIN);
+            newHuman.setUserId(Const.DEFAULT_USER_ID);
 
             boolean added = collectionManager.addToDatabaseAndMemory(newHuman);
 

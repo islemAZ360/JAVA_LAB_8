@@ -9,7 +9,7 @@ public interface CollectionRepository<T> {
 
     void remove(long id) throws DatabaseException;
 
-    void clear(String ownerLogin) throws DatabaseException;
+    void clear(Long userId) throws DatabaseException;
 
     List<T> loadAll() throws DatabaseException;
 

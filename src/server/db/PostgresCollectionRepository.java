@@ -10,18 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostgresCollectionRepository implements CollectionRepository<HumanBeing> {
-    private final String url;
-    private final String user;
-    private final String password;
+    private final Connection connection;
 
-    public PostgresCollectionRepository(String url, String user, String password) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
-    }
-
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
+    public PostgresCollectionRepository(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -29,8 +21,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
         String sql = "SELECT nextval('human_being_id_seq')";
 
         try (
-                Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);
+                PreparedStatement statement = this.connection.prepareStatement(sql);
                 ResultSet resultSet = statement.executeQuery()
         ) {
             if (resultSet.next()) {
@@ -59,12 +50,11 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
                     minutes_of_waiting,
                     weapon_type,
                     car_cool,
-                    owner_login
+                    user_id
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (
-                Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setLong(1, humanBeing.getId());
@@ -79,7 +69,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
             statement.setInt(10, humanBeing.getMinutesOfWaiting());
             statement.setString(11, humanBeing.getWeaponType() == null ? null : humanBeing.getWeaponType().name());
             statement.setObject(12, humanBeing.getCar() == null ? null : humanBeing.getCar().isCool(), Types.BOOLEAN);
-            statement.setString(13, humanBeing.getOwnerLogin());
+            statement.setLong(13, humanBeing.getUserId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -102,11 +92,10 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
                     minutes_of_waiting = ?,
                     weapon_type = ?,
                     car_cool = ?
-                WHERE id = ? AND owner_login = ?
+                WHERE id = ? AND user_id = ?
                 """;
 
         try (
-                Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setString(1, humanBeing.getName());
@@ -121,7 +110,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
             statement.setString(10, humanBeing.getWeaponType() == null ? null : humanBeing.getWeaponType().name());
             statement.setObject(11, humanBeing.getCar() == null ? null : humanBeing.getCar().isCool(), Types.BOOLEAN);
             statement.setLong(12, humanBeing.getId());
-            statement.setString(13, humanBeing.getOwnerLogin());
+            statement.setLong(13, humanBeing.getUserId());
 
             int updatedRows = statement.executeUpdate();
             if (updatedRows == 0) {
@@ -137,7 +126,6 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
         String sql = "DELETE FROM human_beings WHERE id = ?";
 
         try (
-                Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setLong(1, id);
@@ -148,14 +136,13 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
     }
 
     @Override
-    public void clear(String ownerLogin) throws DatabaseException {
-        String sql = "DELETE FROM human_beings WHERE owner_login = ?";
+    public void clear(Long userId) throws DatabaseException {
+        String sql = "DELETE FROM human_beings WHERE user_id = ?";
 
         try (
-                Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
-            statement.setString(1, ownerLogin);
+            statement.setLong(1, userId);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException("Ошибка при очистке объектов пользователя", e);
@@ -177,14 +164,13 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
                        minutes_of_waiting,
                        weapon_type,
                        car_cool,
-                       owner_login
+                       user_id
                 FROM human_beings
                 """;
 
         List<HumanBeing> result = new ArrayList<>();
 
         try (
-                Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
                 ResultSet resultSet = statement.executeQuery()
         ) {
@@ -221,7 +207,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
         Boolean carCool = getNullableBoolean(resultSet, "car_cool");
         Car car = carCool == null ? null : new Car(carCool);
 
-        String ownerLogin = resultSet.getString("owner_login");
+        Long userId = resultSet.getLong("user_id");
 
         HumanBeing humanBeing = new HumanBeing(
                 id,
@@ -237,7 +223,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
                 car
         );
 
-        humanBeing.setOwnerLogin(ownerLogin);
+        humanBeing.setUserId(userId);
 
         return humanBeing;
     }

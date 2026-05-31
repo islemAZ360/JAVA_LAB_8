@@ -1,5 +1,6 @@
 package client;
 
+import client.auth.AccountInputHandler;
 import common.HumanBeingBuilder;
 import common.Request;
 import common.Response;
@@ -7,6 +8,7 @@ import common.StatusCode;
 import common.models.*;
 import common.utils.BooleanBuilder;
 import common.utils.LongBuilder;
+import server.auth.AccountRepository;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -23,6 +25,7 @@ public class InputManager {
     private final HumanBeingBuilder humanBeingBuilder;
     private final BooleanBuilder booleanBuilder;
     private final LongBuilder longBuilder;
+    private final AccountInputHandler accountInputHandler;
 
     private Set<String> globalRunningStack = new HashSet<>();
 
@@ -33,6 +36,7 @@ public class InputManager {
         this.booleanBuilder = new BooleanBuilder(scanner);
         this.humanBeingBuilder = new HumanBeingBuilder(this.scanner, this.coordinatesChecker, this.booleanBuilder);
         this.longBuilder = new LongBuilder(this.scanner);
+        this.accountInputHandler = new AccountInputHandler(scanner);
     }
 
     public HumanBeing readHumanbeing() {
@@ -60,6 +64,14 @@ public class InputManager {
         Request req = null;
 
         switch (commandName) {
+
+            case "login":
+                req = new Request(commandName, null, this.accountInputHandler.getLoginInfo());
+                break;
+
+            case "register":
+                req = new Request(commandName, null, this.accountInputHandler.getRegisterInfo());
+                break;
 
             case "add":
                 req = new Request(commandName, null, this.readHumanbeing());

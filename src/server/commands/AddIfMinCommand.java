@@ -41,7 +41,7 @@ public class AddIfMinCommand implements Command {
 
             HumanBeing newHuman = (HumanBeing) request.getObjectArgument();
             newHuman.setId(newId);
-            newHuman.setOwnerLogin(Const.DEFAULT_OWNER_LOGIN);
+            newHuman.setUserId(Const.DEFAULT_USER_ID);
 
             if (collectionManager.isEmpty()) {
                 collectionManager.addToDatabaseAndMemory(newHuman);

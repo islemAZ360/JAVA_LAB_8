@@ -43,9 +43,7 @@ public class ClearCommand implements Command {
                     flag.equals(CommandFlag.FORCE.getShortFlag())) {
 
                 int oldSize = collectionManager.size();
-                int removedCount = collectionManager.clearDatabaseAndMemory(Const.DEFAULT_OWNER_LOGIN);
-//                collectionManager.clearDatabaseAndMemory(Const.DEFAULT_OWNER_LOGIN);
-//                int removedCount = oldSize - collectionManager.size();
+                int removedCount = collectionManager.clearDatabaseAndMemory(Const.DEFAULT_USER_ID);
 
                 return new Response(
                         "Коллекция очищена. Удалено элементов: " + removedCount,

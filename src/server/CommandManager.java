@@ -1,6 +1,8 @@
 package server;
 
 import common.utils.HumanBeingFileManager;
+import server.auth.AccountRepository;
+import server.auth.AccountService;
 import server.commands.*;
 import common.Command;
 
@@ -11,7 +13,7 @@ public class CommandManager {
 
     private final Map<String, Command> commands = new HashMap<>();
 
-    public CommandManager(CollectionManager collectionManager) {
+    public CommandManager(CollectionManager collectionManager, AccountService accountService) {
         commands.put("help", new HelpCommand(this));
         commands.put("show", new ShowCommand(collectionManager));
         commands.put("info", new InfoCommand(collectionManager));
@@ -25,6 +27,8 @@ public class CommandManager {
         commands.put("filter_contains_name", new FilterContainsNameCommand(collectionManager));
         commands.put("filter_greater_than_car", new FilterGreaterThanCarCommand(collectionManager));
         commands.put("filter_less_than_minutes_of_waiting", new FilterLessThanMinutesOfWaitingCommand(collectionManager));
+        commands.put("login", new LoginCommand(accountService));
+        commands.put("register", new RegisterCommand(accountService));
 //        commands.put("save", new SaveCommand(collectionManager, humanBeingFileManager));
 //        commands.put("run_script_file", new ExecuteScriptCommand(collectionManager, humanBeingFileManager));
     }

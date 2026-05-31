@@ -1,0 +1,118 @@
+CREATE TYPE user_status AS ENUM ('ONLINE', 'OFFLINE', 'AWAY', 'BANNED'); -- database/enumerated types
+
+ALTER TABLE human_beings ADD COLUMN status user_status NOT NULL DEFAULT 'OFFLINE';
+ALTER TABLE human_beings DROP COLUMN status;
+
+ALTER TABLE users ADD COLUMN status user_status NOT NULL DEFAULT 'OFFLINE';
+
+ALTER TABLE users RENAME COLUMN password_hash TO hashed_password;
+
+ALTER TABLE users ALTER COLUMN email DROP NOT NULL; -- email cough null
+ALTER TABLE users ALTER COLUMN email SET NOT NULL; -- email not null
+
+ALTER TABLE users ADD COLUMN email VARCHAR(255); -- by default can null
+
+
+-- 1. Users table
+CREATE TABLE IF NOT EXISTS users (
+    id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_name      VARCHAR(64) NOT NULL UNIQUE,
+    password_hash  VARCHAR(128) NOT NULL,
+    status         user_status NOT NULL DEFAULT 'OFFLINE'
+);
+
+
+-- 2. Humanbeing table
+CREATE TABLE IF NOT EXISTS human_beings (
+    id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name                VARCHAR NOT NULL,
+    coord_x             INTEGER NOT NULL,
+    coord_y             BIGINT NOT NULL,
+    creation_date       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    real_hero           BOOLEAN NOT NULL,
+    has_toothpick       BOOLEAN NOT NULL,
+    impact_speed        DOUBLE PRECISION NOT NULL,
+    soundtrack_name     VARCHAR NOT NULL,
+    minutes_of_waiting  INTEGER NOT NULL,
+    weapon_type         VARCHAR,
+    car_cool            BOOLEAN,
+    user_id             BIGINT NOT NULL,
+
+    CONSTRAINT fk_human_beings_owner
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+
+
+
+-- Old version ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS users (
+    id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_name      VARCHAR(64) NOT NULL UNIQUE,
+    password_hash  VARCHAR(128) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS human_beings (
+    id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    name                VARCHAR NOT NULL,
+
+    coord_x             INTEGER NOT NULL,
+    coord_y             BIGINT NOT NULL,
+
+    creation_date       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    real_hero           BOOLEAN NOT NULL,
+    has_toothpick       BOOLEAN NOT NULL,
+
+    impact_speed        DOUBLE PRECISION NOT NULL,
+    soundtrack_name     VARCHAR NOT NULL,
+    minutes_of_waiting  INTEGER NOT NULL,
+
+    weapon_type         VARCHAR,
+    car_cool            BOOLEAN,
+
+    user_id             BIGINT NOT NULL, -- foreign key users(id)
+
+    CONSTRAINT fk_human_beings_owner
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+
+INSERT INTO users (user_name, password_hash)
+VALUES ('test_user', 'dummy_hash')
+ON CONFLICT (user_name) DO NOTHING;
+
+
+INSERT INTO human_beings (
+    name,
+    coord_x,
+    coord_y,
+    creation_date,
+    real_hero,
+    has_toothpick,
+    impact_speed,
+    soundtrack_name,
+    minutes_of_waiting,
+    weapon_type,
+    car_cool,
+    user_id
+) VALUES (
+    'Test Human',
+    10,
+    20,
+    NOW(),
+    true,
+    false,
+    100.5,
+    'test soundtrack',
+    5,
+    NULL,
+    true,
+    1
+);
