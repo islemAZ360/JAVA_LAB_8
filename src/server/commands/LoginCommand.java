@@ -1,15 +1,14 @@
 package server.commands;
 
-import common.Command;
-import common.Request;
-import common.Response;
-import common.StatusCode;
+import common.*;
+import server.ConnectionState;
+import server.auth.Account;
 import server.auth.AccountService;
 import server.auth.UserSession;
 
 import java.nio.channels.SelectionKey;
 
-public class LoginCommand implements Command {
+public class LoginCommand implements Command, RequireAuthorization {
     private final AccountService accountService;
 
     public LoginCommand(AccountService accountService) {
@@ -65,8 +64,12 @@ public class LoginCommand implements Command {
             String password = account.getPassword();
 
             if (accountService.login(username, password)) {
-                UserSession session = new UserSession(username);
-                key.attach(session);
+                Account sessionAccount = accountService.getSession(username, password);
+                UserSession session = new UserSession(sessionAccount.getUserId(), sessionAccount.getUsername());
+                ConnectionState connectionState = (ConnectionState) key.attachment();
+                connectionState.setUserSession(session);
+
+//                System.out.println(key.attachment().toString());
 
                 return new Response(
                         "Вход в систему успешен, привет '" + username + "' вернулся!",
@@ -75,7 +78,7 @@ public class LoginCommand implements Command {
                 );
             }
 
-            return new Response("Не удалось входить в систему", StatusCode.SERVER_ERROR, null);
+            return new Response("Не удалось входить в систему", StatusCode.UNAUTHORIZED, null);
         } catch (ClassCastException e) {
             return new Response("Ошибка: передан объект неверного типа", StatusCode.BAD_REQUEST, null);
         } catch (Exception e) {

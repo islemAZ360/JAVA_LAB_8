@@ -21,6 +21,7 @@ public enum StatusCode implements Serializable {
     FORMAT_INVALID(404, "Неверный формат данных (ошибка типа данных)"),
     OUT_OF_RANGE(405, "Значение вне допустимого диапазона"),
     REQUIRED_FIELD_MISSING(406, "Отсутствуют обязательные поля"),
+    UNAUTHORIZED(407, "Доступ запрещён"),
 
     // Group 5xx: Server or System errors
     SERVER_ERROR(500, "Внутренняя ошибка сервера. Попробуйте позже"),

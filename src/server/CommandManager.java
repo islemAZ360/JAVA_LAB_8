@@ -28,6 +28,7 @@ public class CommandManager {
         commands.put("filter_greater_than_car", new FilterGreaterThanCarCommand(collectionManager));
         commands.put("filter_less_than_minutes_of_waiting", new FilterLessThanMinutesOfWaitingCommand(collectionManager));
         commands.put("login", new LoginCommand(accountService));
+        commands.put("logout", new LogoutCommand(accountService));
         commands.put("register", new RegisterCommand(accountService));
 //        commands.put("save", new SaveCommand(collectionManager, humanBeingFileManager));
 //        commands.put("run_script_file", new ExecuteScriptCommand(collectionManager, humanBeingFileManager));

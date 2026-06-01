@@ -210,7 +210,7 @@ public class ServerMain {
                     state.dataBuffer = null;
                     state.hasReadSize = false;
 
-                    Response response = requestHandler.handle((Request) requestObj);
+                    Response response = requestHandler.handle((Request) requestObj, key);
                     sendResponse(sc, response);
                 }
             }

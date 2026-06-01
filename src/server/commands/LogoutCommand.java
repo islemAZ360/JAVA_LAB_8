@@ -1,12 +1,13 @@
 package server.commands;
 
-import common.Command;
-import common.Request;
-import common.Response;
-import common.StatusCode;
+import common.*;
+import server.ConnectionState;
 import server.auth.AccountService;
+import server.auth.UserSession;
 
-public class LogoutCommand implements Command {
+import java.nio.channels.SelectionKey;
+
+public class LogoutCommand implements Command, RequireAuthorization {
     private final AccountService accountService;
 
     public LogoutCommand(AccountService accountService) {
@@ -25,27 +26,36 @@ public class LogoutCommand implements Command {
 
     @Override
     public Response execute(Request request) {
-        if (request.getObjectArgument() == null) {
-            return new Response("Объект не передан", StatusCode.BAD_REQUEST, null);
-        }
+        return new Response("Вход в систему пока не произошел!", StatusCode.BAD_REQUEST, null);
+    }
 
+    @Override
+    public Response execute(Request request, SelectionKey key) {
         try {
-            client.auth.Account account = (client.auth.Account) request.getObjectArgument();
-            String username = account.getUsername();
+            // Delegation
+            if (key != null && key.attachment() != null) {
+                ConnectionState connectionState = (ConnectionState) key.attachment();
+                UserSession userSession = connectionState.getUserSession();
 
-            if (accountService.logout(username)) {
-                return new Response(
-                        "Вы успешно вышли из системы. До свидания, '" + username + "'!",
-                        StatusCode.OK,
-                        null
-                );
+                if (userSession != null) {
+                    String username = userSession.getUsername();
+                    if (username != null && accountService.logout(username)) {
+                        connectionState.setUserSession(null);
+                        return new Response(
+                                "Вы успешно вышли из системы. До свидания, '" + username + "'!",
+                                StatusCode.OK,
+                                null
+                        );
+                    }
+                }
             }
-
-            return new Response("Не удалось выйти из системы", StatusCode.SERVER_ERROR, null);
+            return execute(request);
+//            return new Response("Не удалось выйти из системы", StatusCode.SERVER_ERROR, null);
         } catch (ClassCastException e) {
             return new Response("Ошибка: передан объект неверного типа", StatusCode.BAD_REQUEST, null);
         } catch (Exception e) {
             return new Response("Ошибка при выходе из системы: " + e.getMessage(), StatusCode.SERVER_ERROR, null);
         }
     }
+
 }
