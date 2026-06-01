@@ -15,12 +15,12 @@ public class RegisterCommand implements Command {
 
     @Override
     public String getName() {
-        return "login";
+        return "register";
     }
 
     @Override
     public String getDescription() {
-        return "login : вход в систему";
+        return "register : регистрация в систему";
     }
 
     @Override

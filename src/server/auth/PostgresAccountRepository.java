@@ -27,16 +27,19 @@ public class PostgresAccountRepository implements AccountRepository {
 
     @Override
     public Account findByUsername(String username) {
-        String sql = "SELECT user_name, hashed_password, email FROM users WHERE user_name = ?";
+        String sql = "SELECT id, user_name, hashed_password, email, status FROM users WHERE user_name = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     Account account = new Account(
+                            resultSet.getLong("id"),
                             resultSet.getString("user_name"),
                             resultSet.getString("hashed_password"),
-                            resultSet.getString("email")
+                            resultSet.getString("email"),
+                            UserStatus.valueOf(resultSet.getString("status"))
                     );
+                    System.out.println(account.getUserId());
                     return account;
                 }
             }

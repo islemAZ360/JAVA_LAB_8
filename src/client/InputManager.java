@@ -69,6 +69,10 @@ public class InputManager {
                 req = new Request(commandName, null, this.accountInputHandler.getLoginInfo());
                 break;
 
+            case "logout":
+                req = new Request(commandName, null, null);
+                break;
+
             case "register":
                 req = new Request(commandName, null, this.accountInputHandler.getRegisterInfo());
                 break;

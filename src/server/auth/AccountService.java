@@ -35,4 +35,11 @@ public class AccountService {
         return account.getStatus() == UserStatus.OFFLINE;
     }
 
+    public Account getSession(String username, String rawPassword) throws Exception {
+        if(login(username, rawPassword)) {
+            return accountRepository.findByUsername(username);
+        }
+        return null;
+    }
+
 }

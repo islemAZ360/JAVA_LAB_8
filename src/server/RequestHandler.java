@@ -5,6 +5,8 @@ import common.Response;
 import common.Command;
 import common.StatusCode;
 
+import java.nio.channels.SelectionKey;
+
 public class RequestHandler {
 
     private final CommandManager commandManager;
@@ -15,7 +17,7 @@ public class RequestHandler {
         this.commandSuggester = new CommandSuggester(commandManager);
     }
 
-    public Response handle(Request request) {
+    public Response handle(Request request, SelectionKey key) {
         if (request == null) {
             return new Response("Запрос не может быть null", StatusCode.BAD_REQUEST, null);
         }
@@ -37,7 +39,7 @@ public class RequestHandler {
         }
 
         try {
-            return command.execute(request);
+            return command.execute(request, key);
         } catch (Exception e) {
             return new Response("Ошибка при выполнении команды: " + e.getMessage(), StatusCode.SERVER_ERROR, null);
         }
