@@ -18,7 +18,8 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
 
     @Override
     public long generateNextId() throws DatabaseException {
-        String sql = "SELECT nextval('human_being_id_seq')";
+//        Race Condition
+        String sql = "SELECT nextval('human_beings_id_seq')";
 
         try (
                 PreparedStatement statement = this.connection.prepareStatement(sql);
@@ -34,11 +35,12 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
         }
     }
 
+// DB auto generate id => need update with collection
     @Override
-    public void add(HumanBeing humanBeing) throws DatabaseException {
+    public long add(HumanBeing humanBeing) throws DatabaseException {
+//        remove id here because id will be auto generated in db/ and strict mode of db not let insert id manually
         String sql = """
                 INSERT INTO human_beings (
-                    id,
                     name,
                     coord_x,
                     coord_y,
@@ -51,27 +53,33 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
                     weapon_type,
                     car_cool,
                     user_id
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
                 """;
 
         try (
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
-            statement.setLong(1, humanBeing.getId());
-            statement.setString(2, humanBeing.getName());
-            statement.setInt(3, humanBeing.getCoordinates().getX());
-            statement.setLong(4, humanBeing.getCoordinates().getY());
-            statement.setTimestamp(5, Timestamp.valueOf(humanBeing.getCreationDate()));
-            statement.setBoolean(6, humanBeing.isRealHero());
-            statement.setBoolean(7, humanBeing.isHasToothpick());
-            statement.setDouble(8, humanBeing.getImpactSpeed());
-            statement.setString(9, humanBeing.getSoundtrackName());
-            statement.setInt(10, humanBeing.getMinutesOfWaiting());
-            statement.setString(11, humanBeing.getWeaponType() == null ? null : humanBeing.getWeaponType().name());
-            statement.setObject(12, humanBeing.getCar() == null ? null : humanBeing.getCar().isCool(), Types.BOOLEAN);
-            statement.setLong(13, humanBeing.getUserId());
+            statement.setString(1, humanBeing.getName());
+            statement.setInt(2, humanBeing.getCoordinates().getX());
+            statement.setLong(3, humanBeing.getCoordinates().getY());
+            statement.setTimestamp(4, Timestamp.valueOf(humanBeing.getCreationDate()));
+            statement.setBoolean(5, humanBeing.isRealHero());
+            statement.setBoolean(6, humanBeing.isHasToothpick());
+            statement.setDouble(7, humanBeing.getImpactSpeed());
+            statement.setString(8, humanBeing.getSoundtrackName());
+            statement.setInt(9, humanBeing.getMinutesOfWaiting());
+            statement.setString(10, humanBeing.getWeaponType() == null ? null : humanBeing.getWeaponType().name());
+            statement.setObject(11, humanBeing.getCar() == null ? null : humanBeing.getCar().isCool(), Types.BOOLEAN);
+            statement.setLong(12, humanBeing.getUserId());
 
-            statement.executeUpdate();
+//            System.out.println(statement);
+//            statement.executeUpdate();
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+//                    return rs.getLong("id"); // or
+                    return rs.getLong(1); // faster
+                } else return 0L;
+            }
         } catch (SQLException e) {
             throw new DatabaseException("Ошибка при добавлении объекта в БД", e);
         }

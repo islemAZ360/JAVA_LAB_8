@@ -62,6 +62,10 @@ public class CollectionManager extends TreeSet<HumanBeing> {
         return super.addAll(collection);
     }
 
+    public long getNextIdInRepository() {
+        return this.generateNextId();
+    }
+
     /**
      * Старый memory-only метод.
      * Для удаления через команды использовать removeFromDatabaseAndMemory().
@@ -95,6 +99,21 @@ public class CollectionManager extends TreeSet<HumanBeing> {
                 "\n>> Тип: " + this.getClass().getGenericSuperclass().getTypeName() +
                 "\n>> Дата инициализации: " + this.creationTime +
                 "\n>> Количество элементов: " + this.size();
+    }
+
+    //    Factory design pattern
+    public HumanBeing generateNewInstance(HumanBeing humanBeing) {
+        return new HumanBeing(
+            humanBeing.getName(),
+            humanBeing.getCoordinates(),
+            humanBeing.isRealHero(),
+            humanBeing.isHasToothpick(),
+            humanBeing.getImpactSpeed(),
+            humanBeing.getSoundtrackName(),
+            humanBeing.getMinutesOfWaiting(),
+            humanBeing.getWeaponType(),
+            humanBeing.getCar()
+        );
     }
 
     public String show() {
@@ -233,9 +252,11 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Добавление по правилу Issue #3:
      * сначала БД, затем коллекция в памяти.
      */
-    public boolean addToDatabaseAndMemory(HumanBeing humanBeing) throws DatabaseException {
-        repository.add(humanBeing);
-        return super.add(humanBeing);
+    public long addToDatabaseAndMemory(HumanBeing humanBeing) throws DatabaseException {
+        long newId = repository.add(humanBeing);
+        humanBeing.setId(newId);
+        super.add(humanBeing);
+        return newId;
     }
 
     /**

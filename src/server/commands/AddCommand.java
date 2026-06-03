@@ -1,14 +1,18 @@
 package server.commands;
 
-import common.Command;
-import common.Request;
-import common.Response;
-import common.StatusCode;
+import common.*;
 import common.models.Const;
 import common.models.HumanBeing;
 import server.CollectionManager;
+import server.ConnectionState;
+import server.auth.Account;
+import server.auth.UserSession;
 
-public class AddCommand implements Command {
+import java.nio.channels.SelectionKey;
+import java.util.Objects;
+import java.util.Optional;
+
+public class AddCommand implements Command, RequireAuthorization {
     private final CollectionManager collectionManager;
 
     public AddCommand(CollectionManager collectionManager) {
@@ -27,41 +31,51 @@ public class AddCommand implements Command {
 
     @Override
     public Response execute(Request request) {
-        if (request.getObjectArgument() == null) {
-            return new Response("Объект не передан", StatusCode.BAD_REQUEST, null);
+        return executeAfterAuthorization(request,  null);
+    }
+
+    @Override
+    public Response execute(Request request, SelectionKey key) {
+        ConnectionState connectionState = (ConnectionState) key.attachment();
+
+        // Проверка авторизации (Guard Clause)
+        if (connectionState == null || !connectionState.isLoggedIn()) {
+            return new Response(
+                    "Вы должны войти в систему для использования!",
+                    StatusCode.UNAUTHORIZED,
+                    null
+            );
         }
 
+        UserSession userSession = connectionState.getUserSession();
+        Long userId = userSession.getUserId();
+
+        return executeAfterAuthorization(request, userId);
+    }
+
+    private Response executeAfterAuthorization(Request request, Long userId) {
+        return Optional.ofNullable(request.getObjectArgument())
+                .filter(HumanBeing.class::isInstance)
+                .map(HumanBeing.class::cast)
+                .filter(tempHuman -> Objects.nonNull(userId))
+                .map(tempHuman -> processAddition(tempHuman, userId))
+                .orElse(new Response("Ошибка: объект не передан или имеет неверный тип", StatusCode.BAD_REQUEST, null));
+    }
+
+    // 3. Вынесение бизнес-логики добавления в отдельный метод
+    private Response processAddition(HumanBeing tempHuman, Long userId) {
         try {
-            HumanBeing tempHuman = (HumanBeing) request.getObjectArgument();
+            HumanBeing newHuman = collectionManager.generateNewInstance(tempHuman);
+            newHuman.setUserId(userId);
+//            long nextHumanId = collectionManager.getNextIdInRepository();
+//            newHuman.setId(nextHumanId);
+            long nextHumanId = collectionManager.addToDatabaseAndMemory(newHuman);
 
-            HumanBeing newHuman = new HumanBeing(
-                    tempHuman.getName(),
-                    tempHuman.getCoordinates(),
-                    tempHuman.isRealHero(),
-                    tempHuman.isHasToothpick(),
-                    tempHuman.getImpactSpeed(),
-                    tempHuman.getSoundtrackName(),
-                    tempHuman.getMinutesOfWaiting(),
-                    tempHuman.getWeaponType(),
-                    tempHuman.getCar()
-            );
-
-            newHuman.setId(collectionManager.generateNextId());
-            newHuman.setUserId(Const.DEFAULT_USER_ID);
-
-            boolean added = collectionManager.addToDatabaseAndMemory(newHuman);
-
-            if (added) {
-                return new Response(
-                        "Элемент добавлен. ID: " + newHuman.getId(),
-                        StatusCode.OK,
-                        null
-                );
+            if (nextHumanId != 0) {
+                return new Response("Элемент добавлен. ID: " + nextHumanId, StatusCode.OK, null);
             }
-
             return new Response("Не удалось добавить элемент", StatusCode.SERVER_ERROR, null);
-        } catch (ClassCastException e) {
-            return new Response("Ошибка: передан объект неверного типа", StatusCode.BAD_REQUEST, null);
+
         } catch (Exception e) {
             return new Response("Ошибка при добавлении: " + e.getMessage(), StatusCode.SERVER_ERROR, null);
         }

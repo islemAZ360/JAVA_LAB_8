@@ -43,14 +43,9 @@ public class ServerMain {
 
         if (USE_CLOUD) {
             // Supabase
-            // Чек-лист для проверки строки (символ за символом):
-            // Сначала идет: jdbc:postgresql:// (всего один раз).
-            // Затем сразу адрес хоста: aws-1-eu-west-2.pooler.supabase.com
-            // Затем двоеточие и порт: :6543
-            // В конце слэш и имя базы данных: /postgres
-            dbUrl = "jdbc:postgresql://aws-1-eu-west-2.pooler.supabase.com:6543/postgres";
-            dbUser = "postgres.jpbfipdamfvisstxjjpz";
-            dbPassword = "javalab7pro";
+            dbUrl = Const.CLOUD_DB_URL;
+            dbUser = Const.CLOUD_DB_USER_ENV;
+            dbPassword = Const.CLOUD_DB_PASSWORD_ENV;
         } else {
             // Local
             dbUrl = Const.DB_URL;

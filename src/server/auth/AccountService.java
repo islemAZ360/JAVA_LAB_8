@@ -35,6 +35,11 @@ public class AccountService {
         return account.getStatus() == UserStatus.OFFLINE;
     }
 
+    public boolean isBanned(String username) {
+        Account account = accountRepository.findByUsername(username);
+        return account.getStatus() == UserStatus.BANNED;
+    }
+
     public Account getSession(String username, String rawPassword) throws Exception {
         if(login(username, rawPassword)) {
             return accountRepository.findByUsername(username);
