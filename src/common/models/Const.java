@@ -26,10 +26,17 @@ public final class Const {
     public static final int DB_PORT = 5432;
     public static final String DB_NAME = "humanbeings";
     public static final String DB_URL = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
-
-
     public static final String DB_USER_ENV = "DB_USER";
     public static final String DB_PASSWORD_ENV = "DB_PASSWORD";
+    public static final String CLOUD_DB_URL = "jdbc:postgresql://aws-1-eu-west-2.pooler.supabase.com:6543/postgres";
+    public static final String CLOUD_DB_USER_ENV = "postgres.jpbfipdamfvisstxjjpz";
+    public static final String CLOUD_DB_PASSWORD_ENV = "javalab7pro";
+
+    // Чек-лист для проверки строки (символ за символом):
+    // Сначала идет: jdbc:postgresql:// (всего один раз).
+    // Затем сразу адрес хоста: aws-1-eu-west-2.pooler.supabase.com
+    // Затем двоеточие и порт: :6543
+    // В конце слэш и имя базы данных: /postgres
 
     public static final String RESET = "\u001B[0m";
     public static final String RED = "\u001B[31m";

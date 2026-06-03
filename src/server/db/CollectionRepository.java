@@ -3,7 +3,7 @@ package server.db;
 import java.util.List;
 
 public interface CollectionRepository<T> {
-    void add(T element) throws DatabaseException;
+    long add(T element) throws DatabaseException;
 
     void update(T element) throws DatabaseException;
 

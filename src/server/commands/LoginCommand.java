@@ -37,6 +37,14 @@ public class LoginCommand implements Command, RequireAuthorization {
             String password = account.getPassword();
 
             if (accountService.login(username, password)) {
+                if (accountService.isBanned(username)) {
+                    return new Response(
+                            "Ваш аккаунт блокирован из-за нарурения нашего правила!",
+                            StatusCode.OK,
+                            null
+                    );
+                }
+
                 return new Response(
                         "Вход в систему успешен, привет '" + username + "' вернулся!",
                         StatusCode.OK,
