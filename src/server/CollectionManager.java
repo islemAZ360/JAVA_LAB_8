@@ -324,11 +324,13 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Удаляет элементы, которые больше заданного элемента.
      * Сначала удаляет из БД, затем из памяти.
      */
-    public int removeGreaterFromDatabaseAndMemory(HumanBeing element) throws DatabaseException {
+    public int removeGreaterFromDatabaseAndMemory(HumanBeing element, Long userId) throws DatabaseException {
         List<HumanBeing> toRemove = new ArrayList<>();
 
         for (HumanBeing human : this) {
-            if (human.compareTo(element) > 0) {
+            if (human.compareTo(element) > 0
+                    && human.getUserId() != null
+                    && human.getUserId().equals(userId)) {
                 toRemove.add(human);
             }
         }

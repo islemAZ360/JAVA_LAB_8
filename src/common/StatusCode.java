@@ -22,6 +22,7 @@ public enum StatusCode implements Serializable {
     OUT_OF_RANGE(405, "Значение вне допустимого диапазона"),
     REQUIRED_FIELD_MISSING(406, "Отсутствуют обязательные поля"),
     UNAUTHORIZED(407, "Доступ запрещён"),
+    FORBIDDEN(403, "Forbidden"),
 
     // Group 5xx: Server or System errors
     SERVER_ERROR(500, "Внутренняя ошибка сервера. Попробуйте позже"),

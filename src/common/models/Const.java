@@ -45,7 +45,7 @@ public final class Const {
     public static final String BLUE = "\u001B[34m";
 
     // test for issue 3
-    public static final Long DEFAULT_USER_ID = 2L;
+//    public static final Long DEFAULT_USER_ID = 2L;
 
 //  relative
 //  getId, getName, getCoordinates, getCreationDate, isRealHero, isHasToothpick, getImpactSpeed, getSoundtrackName, getMinutesOfWaiting, getWeaponType, getCar
