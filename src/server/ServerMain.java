@@ -9,6 +9,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 import common.Request;
 import common.Serializer;
@@ -29,6 +33,10 @@ public class ServerMain {
     private static final Logger logger = LogManager.getLogger(ServerMain.class);
 
     private static RequestHandler requestHandler;
+
+    private static final ForkJoinPool readPool = new ForkJoinPool();
+    private static final ExecutorService processPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static final ExecutorService writePool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private static final AtomicInteger currentConnections = new AtomicInteger(0);
 
@@ -86,9 +94,13 @@ public class ServerMain {
         CommandManager commandManager = new CommandManager(collectionManager, accountService);
         requestHandler = new RequestHandler(commandManager);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() ->
-                logger.info("Сервер завершает работу. Коллекция хранится в PostgreSQL, сохранение в файл не выполняется.")
-        ));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Сервер завершает работу. Выполняется остановка пулов потоков...");
+            readPool.shutdown();
+            processPool.shutdown();
+            writePool.shutdown();
+            logger.info("Коллекция хранится в PostgreSQL, сохранение в файл не выполняется.");
+        }));
 
         try (Selector selector = Selector.open();
              ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
@@ -98,7 +110,7 @@ public class ServerMain {
 
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            logger.info("\uD83D\uDE80 Server NIO is running at {}: {}", Const.host, Const.port);
+            logger.info("Server NIO is running at {}: {}", Const.host, Const.port);
 
             while (true) {
                 if (selector.select(1000) == 0) continue;
@@ -132,7 +144,7 @@ public class ServerMain {
             clientChannel.configureBlocking(false);
             clientChannel.register(selector, SelectionKey.OP_READ, new ConnectionState());
 
-            logger.info("\uD83E\uDD1D Sent greeting and accepted: {}", clientChannel.getRemoteAddress());
+            logger.info("Sent greeting and accepted: {}", clientChannel.getRemoteAddress());
             logger.info("Новое подключение принято. Всего подключений: {}", connectionCount);
 
             sendResponse(clientChannel, new Response(
@@ -173,7 +185,7 @@ public class ServerMain {
                     key.cancel();
                     sc.close();
                     currentConnections.getAndDecrement();
-                    logger.info("👋 Client leaved.");
+                    logger.info("Client left.");
                     return;
                 }
 
@@ -181,7 +193,7 @@ public class ServerMain {
                     state.headerBuffer.flip();
                     int size = state.headerBuffer.getInt();
 
-                    logger.info("\uD83D\uDCE6 Received Object: {} bytes", size);
+                    logger.info("Received Object: {} bytes", size);
 
                     if (size > 0) {
                         state.dataBuffer = ByteBuffer.allocate(size);
@@ -197,20 +209,34 @@ public class ServerMain {
 
                 if (!state.dataBuffer.hasRemaining()) {
                     byte[] data = state.dataBuffer.array();
-                    Object requestObj = Serializer.deserialize(data);
-
-                    logger.info("\uD83D\uDCE5 Received Request: {}", requestObj);
 
                     state.headerBuffer.clear();
                     state.dataBuffer = null;
                     state.hasReadSize = false;
 
-                    Response response = requestHandler.handle((Request) requestObj, key);
-                    sendResponse(sc, response);
+                    CompletableFuture.supplyAsync(() -> {
+                        try {
+                            Object requestObj = Serializer.deserialize(data);
+                            logger.info("Received Request: {}", requestObj);
+                            return (Request) requestObj;
+                        } catch (Exception e) {
+                            logger.error("Ошибка десериализации: {}", e.getMessage());
+                            return null;
+                        }
+                    }, readPool).thenApplyAsync(request -> {
+                        if (request != null) {
+                            return requestHandler.handle(request, key);
+                        }
+                        return null;
+                    }, processPool).thenAcceptAsync(response -> {
+                        if (response != null) {
+                            sendResponse(sc, response);
+                        }
+                    }, writePool);
                 }
             }
         } catch (Exception e) {
-            logger.error("❌ Reading data error: {}", e.getMessage());
+            logger.error("Reading data error: {}", e.getMessage());
 
             try {
                 sc.close();
@@ -233,9 +259,9 @@ public class ServerMain {
                 channel.write(buffer);
             }
 
-            logger.info("📤 Send response to Client ({} bytes)", data.length);
+            logger.info("Send response to Client ({} bytes)", data.length);
         } catch (IOException e) {
-            logger.error("❌ Response sending error: {}", e.getMessage());
+            logger.error("Response sending error: {}", e.getMessage());
 
             try {
                 channel.close();
