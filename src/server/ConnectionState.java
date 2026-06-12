@@ -4,6 +4,17 @@ import server.auth.UserSession;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Класс ConnectionState представляет собой изолированный узел, хранящий состояние
+ * текущего сетевого соединения клиента с сервером.
+ * 
+ * Используется в главном цикле селектора (Selector) внутри ServerMain для:
+ * - Управления буферами чтения (headerBuffer, dataBuffer), предотвращая 
+ *   блокировку потока при частичном получении данных.
+ * - Отслеживания состояния авторизации пользователя (UserSession), 
+ *   позволяя связывать каждый SocketChannel с конкретным пользователем
+ *   и управлять сессией в связке с ClientMain, ServerMain и ReconnectingEffectManager.
+ */
 public class ConnectionState {
     ByteBuffer headerBuffer = ByteBuffer.allocate(4);   // 4 byte for header
     ByteBuffer dataBuffer = null;                               // data

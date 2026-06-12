@@ -76,36 +76,38 @@ public class AddIfMaxCommand implements Command, RequireAuthorization {
             newHuman.setId(newId);
             newHuman.setUserId(userId);
 
-            if (collectionManager.isEmpty()) {
-                collectionManager.addToDatabaseAndMemory(newHuman);
+            synchronized (collectionManager) {
+                if (collectionManager.isEmpty()) {
+                    collectionManager.addToDatabaseAndMemory(newHuman);
+
+                    return new Response(
+                            "Коллекция пуста. Элемент добавлен. ID: "
+                                    + newHuman.getId(),
+                            StatusCode.OK,
+                            null
+                    );
+                }
+
+                Long maxId = collectionManager.getMaxId();
+
+                if (newHuman.getId() > maxId) {
+                    collectionManager.addToDatabaseAndMemory(newHuman);
+
+                    return new Response(
+                            "Элемент добавлен, так как его ID больше максимального. ID: "
+                                    + newHuman.getId(),
+                            StatusCode.OK,
+                            null
+                    );
+                }
 
                 return new Response(
-                        "Коллекция пуста. Элемент добавлен. ID: "
-                                + newHuman.getId(),
-                        StatusCode.OK,
+                        "Элемент не добавлен: его ID не превышает максимальный ID в коллекции ("
+                                + maxId + ")",
+                        StatusCode.ID_INVALID,
                         null
                 );
             }
-
-            Long maxId = collectionManager.getMaxId();
-
-            if (newHuman.getId() > maxId) {
-                collectionManager.addToDatabaseAndMemory(newHuman);
-
-                return new Response(
-                        "Элемент добавлен, так как его ID больше максимального. ID: "
-                                + newHuman.getId(),
-                        StatusCode.OK,
-                        null
-                );
-            }
-
-            return new Response(
-                    "Элемент не добавлен: его ID не превышает максимальный ID в коллекции ("
-                            + maxId + ")",
-                    StatusCode.ID_INVALID,
-                    null
-            );
 
         } catch (Exception e) {
             return new Response(

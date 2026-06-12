@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Predicate;
 
-public class CollectionManager extends TreeSet<HumanBeing> {
+public class CollectionManager extends ConcurrentSkipListSet<HumanBeing> {
     private final java.time.LocalDateTime creationTime = java.time.LocalDateTime.now();
     private final CollectionRepository<HumanBeing> repository;
 
@@ -192,7 +192,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
         return true;
     }
 
-    public HumanBeing getMax() {
+    public synchronized HumanBeing getMax() {
         if (this.isEmpty()) {
             return null;
         }
@@ -207,7 +207,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
         return max == null ? null : max.getId();
     }
 
-    public HumanBeing getMin() {
+    public synchronized HumanBeing getMin() {
         if (this.isEmpty()) {
             return null;
         }
@@ -236,7 +236,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
     /**
      * Загружает коллекцию из БД в память при запуске сервера.
      */
-    public void loadFromRepository() throws DatabaseException {
+    public synchronized void loadFromRepository() throws DatabaseException {
         super.clear();
         super.addAll(repository.loadAll());
     }
@@ -244,7 +244,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
     /**
      * Получает следующий id из PostgreSQL sequence.
      */
-    public long generateNextId() throws DatabaseException {
+    public synchronized long generateNextId() throws DatabaseException {
         return repository.generateNextId();
     }
 
@@ -252,7 +252,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Добавление по правилу Issue #3:
      * сначала БД, затем коллекция в памяти.
      */
-    public long addToDatabaseAndMemory(HumanBeing humanBeing) throws DatabaseException {
+    public synchronized long addToDatabaseAndMemory(HumanBeing humanBeing) throws DatabaseException {
         long newId = repository.add(humanBeing);
         humanBeing.setId(newId);
         super.add(humanBeing);
@@ -263,7 +263,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Обновление по правилу Issue #3:
      * сначала БД, затем объект в памяти.
      */
-    public boolean updateInDatabaseAndMemory(long id, HumanBeing newHuman) throws DatabaseException {
+    public synchronized boolean updateInDatabaseAndMemory(long id, HumanBeing newHuman) throws DatabaseException {
         HumanBeing oldHuman = getHumanById(id);
 
         if (oldHuman == null) {
@@ -296,7 +296,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Удаление по правилу Issue #3:
      * сначала БД, затем коллекция в памяти.
      */
-    public boolean removeFromDatabaseAndMemory(long id) throws DatabaseException {
+    public synchronized boolean removeFromDatabaseAndMemory(long id) throws DatabaseException {
         HumanBeing human = getHumanById(id);
 
         if (human == null) {
@@ -311,7 +311,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Очистка объектов конкретного пользователя:
      * сначала БД, затем коллекция в памяти.
      */
-    public int clearDatabaseAndMemory(Long userId) throws DatabaseException {
+    public synchronized int clearDatabaseAndMemory(Long userId) throws DatabaseException {
         int oldSize = this.size();
 
         repository.clear(userId);
@@ -324,7 +324,7 @@ public class CollectionManager extends TreeSet<HumanBeing> {
      * Удаляет элементы, которые больше заданного элемента.
      * Сначала удаляет из БД, затем из памяти.
      */
-    public int removeGreaterFromDatabaseAndMemory(HumanBeing element, Long userId) throws DatabaseException {
+    public synchronized int removeGreaterFromDatabaseAndMemory(HumanBeing element, Long userId) throws DatabaseException {
         List<HumanBeing> toRemove = new ArrayList<>();
 
         for (HumanBeing human : this) {

@@ -76,36 +76,38 @@ public class AddIfMinCommand implements Command, RequireAuthorization {
             newHuman.setId(newId);
             newHuman.setUserId(userId);
 
-            if (collectionManager.isEmpty()) {
-                collectionManager.addToDatabaseAndMemory(newHuman);
+            synchronized (collectionManager) {
+                if (collectionManager.isEmpty()) {
+                    collectionManager.addToDatabaseAndMemory(newHuman);
+
+                    return new Response(
+                            "Коллекция пуста. Элемент добавлен. ID: "
+                                    + newHuman.getId(),
+                            StatusCode.OK,
+                            null
+                    );
+                }
+
+                long minId = collectionManager.getMin().getId();
+
+                if (newHuman.getId() < minId) {
+                    collectionManager.addToDatabaseAndMemory(newHuman);
+
+                    return new Response(
+                            "Элемент добавлен, так как его ID меньше минимального. ID: "
+                                    + newHuman.getId(),
+                            StatusCode.OK,
+                            null
+                    );
+                }
 
                 return new Response(
-                        "Коллекция пуста. Элемент добавлен. ID: "
-                                + newHuman.getId(),
-                        StatusCode.OK,
+                        "Элемент не добавлен: его ID не меньше минимального ID в коллекции ("
+                                + minId + ")",
+                        StatusCode.ID_INVALID,
                         null
                 );
             }
-
-            long minId = collectionManager.getMin().getId();
-
-            if (newHuman.getId() < minId) {
-                collectionManager.addToDatabaseAndMemory(newHuman);
-
-                return new Response(
-                        "Элемент добавлен, так как его ID меньше минимального. ID: "
-                                + newHuman.getId(),
-                        StatusCode.OK,
-                        null
-                );
-            }
-
-            return new Response(
-                    "Элемент не добавлен: его ID не меньше минимального ID в коллекции ("
-                            + minId + ")",
-                    StatusCode.ID_INVALID,
-                    null
-            );
 
         } catch (Exception e) {
             return new Response(
