@@ -46,7 +46,7 @@ public class ServerMain {
 
     private static final int MAX_CONNECTIONS = 2;
 
-    private static final boolean USE_CLOUD = true;
+    private static final boolean USE_CLOUD = false;
 
 //    public static final Connection getConnection() {
 //        String dbUrl;
