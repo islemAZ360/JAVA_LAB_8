@@ -29,6 +29,10 @@ import server.auth.SessionManager;
 import server.db.CollectionRepository;
 import server.db.PostgresCollectionRepository;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class ServerMain {
     private static final Logger logger = LogManager.getLogger(ServerMain.class);
 
@@ -44,29 +48,50 @@ public class ServerMain {
 
     private static final boolean USE_CLOUD = true;
 
-    public static final Connection getConnection() {
-        String dbUrl;
-        String dbUser;
-        String dbPassword;
+//    public static final Connection getConnection() {
+//        String dbUrl;
+//        String dbUser;
+//        String dbPassword;
+//
+//        if (USE_CLOUD) {
+//            // Supabase
+//            dbUrl = Const.CLOUD_DB_URL;
+//            dbUser = Const.CLOUD_DB_USER_ENV;
+//            dbPassword = Const.CLOUD_DB_PASSWORD_ENV;
+//        } else {
+//            // Local
+//            dbUrl = Const.DB_URL;
+//            dbUser = System.getenv(Const.DB_USER_ENV);
+//            dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+//        }
+//
+//        try {
+//            Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+//            return conn;
+//        } catch (SQLException e) {
+//            logger.error("Не удалось поключить к PostgreSQL");
+//            return null;
+//        }
+//    }
 
-        if (USE_CLOUD) {
-            // Supabase
-            dbUrl = Const.CLOUD_DB_URL;
-            dbUser = Const.CLOUD_DB_USER_ENV;
-            dbPassword = Const.CLOUD_DB_PASSWORD_ENV;
-        } else {
-            // Local
-            dbUrl = Const.DB_URL;
-            dbUser = System.getenv(Const.DB_USER_ENV);
-            dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+    public static Connection getConnection() {
+        String dbUrl = Const.DB_URL;
+        String dbUser = System.getenv(Const.DB_USER_ENV);
+        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+
+        System.out.println("DB_URL = " + dbUrl);
+        System.out.println("DB_USER = " + dbUser);
+        System.out.println("DB_PASSWORD exists = " + (dbPassword != null));
+
+        if (dbUser == null || dbPassword == null) {
+            throw new RuntimeException("DB_USER или DB_PASSWORD еще не установлены");
         }
 
         try {
-            Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-            return conn;
+            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         } catch (SQLException e) {
-            logger.error("Не удалось поключить к PostgreSQL");
-            return null;
+            logger.error("Не удается подключиться PostgreSQL: {}", e.getMessage());
+            throw new RuntimeException("Ошибка соединения PostgreSQL", e);
         }
     }
 

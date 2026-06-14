@@ -19,7 +19,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
     @Override
     public long generateNextId() throws DatabaseException {
 //        Race Condition
-        String sql = "SELECT nextval('human_beings_id_seq')";
+        String sql = "SELECT nextval('human_being_id_seq')";
 
         try (
                 PreparedStatement statement = this.connection.prepareStatement(sql);

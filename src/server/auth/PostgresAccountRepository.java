@@ -64,7 +64,7 @@ public class PostgresAccountRepository implements AccountRepository {
 
     @Override
     public boolean updateStatus(Long userId, UserStatus status) {
-        String sql = "UPDATE users SET status = ?::user_status WHERE user_id = ?";
+        String sql = "UPDATE users SET status = ?::user_status WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, status.name());
             statement.setLong(2, userId);
@@ -77,7 +77,7 @@ public class PostgresAccountRepository implements AccountRepository {
 
     @Override
     public boolean changePassword(Long userId, String oldPassword, String newPassword) {
-        String sql = "UPDATE users SET hashed_password = ? WHERE user_id = ? AND hashed_password = ?";
+        String sql = "UPDATE users SET hashed_password = ? WHERE id = ? AND hashed_password = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, PasswordHasher.hashSha384(newPassword));
             statement.setLong(2, userId);

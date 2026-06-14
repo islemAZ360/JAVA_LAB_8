@@ -26,16 +26,27 @@ public final class Const {
 //    public static String host = "192.268.10.80";
 
 //    PostgreSQL
-//    public static final String DB_HOST = "pg";
-    public static final String DB_HOST = "localhost";
-    public static final int DB_PORT = 5432;
-    public static final String DB_NAME = "humanbeings";
-    public static final String DB_URL = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
+
+
+//    public static final String DB_HOST = "localhost";
+//    public static final int DB_PORT = 5432;
+//    public static final String DB_NAME = "humanbeings";
+//    public static final String DB_URL = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
+//    public static final String DB_USER_ENV = "DB_USER";
+//    public static final String DB_PASSWORD_ENV = "DB_PASSWORD";
+//    public static final String CLOUD_DB_URL = "jdbc:postgresql://aws-1-eu-west-2.pooler.supabase.com:6543/postgres";
+//    public static final String CLOUD_DB_USER_ENV = "postgres.jpbfipdamfvisstxjjpz";
+//    public static final String CLOUD_DB_PASSWORD_ENV = "javalab7pro";
+
+    public static final String DB_HOST = System.getenv().getOrDefault("DB_HOST", "pg");
+    public static final int DB_PORT = Integer.parseInt(System.getenv().getOrDefault("DB_PORT", "5432"));
+    public static final String DB_NAME = System.getenv().getOrDefault("DB_NAME", "studs");
+
+    public static final String DB_URL =
+            "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
+
     public static final String DB_USER_ENV = "DB_USER";
     public static final String DB_PASSWORD_ENV = "DB_PASSWORD";
-    public static final String CLOUD_DB_URL = "jdbc:postgresql://aws-1-eu-west-2.pooler.supabase.com:6543/postgres";
-    public static final String CLOUD_DB_USER_ENV = "postgres.jpbfipdamfvisstxjjpz";
-    public static final String CLOUD_DB_PASSWORD_ENV = "javalab7pro";
 
     // Чек-лист для проверки строки (символ за символом):
     // Сначала идет: jdbc:postgresql:// (всего один раз).

@@ -1,3 +1,5 @@
+org.postgresql:postgresql:42.7.3
+
 CREATE TYPE user_status AS ENUM ('ONLINE', 'OFFLINE', 'AWAY', 'BANNED'); -- database/enumerated types
 
 ALTER TABLE human_beings ADD COLUMN status user_status NOT NULL DEFAULT 'OFFLINE';

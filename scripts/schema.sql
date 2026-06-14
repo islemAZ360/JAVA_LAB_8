@@ -1,14 +1,22 @@
+DO $$
+BEGIN
+    CREATE TYPE user_status AS ENUM ('ONLINE', 'OFFLINE', 'AWAY', 'BANNED');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
+
 CREATE TABLE IF NOT EXISTS users (
-    id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_name      VARCHAR(64) NOT NULL UNIQUE,
-    password_hash  VARCHAR(128) NOT NULL,
-    status         user_status NOT NULL DEFAULT 'OFFLINE'
+    id               BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_name        VARCHAR(64) NOT NULL UNIQUE,
+    hashed_password  VARCHAR(128) NOT NULL,
+    email            VARCHAR(255),
+    status           user_status NOT NULL DEFAULT 'OFFLINE'
 );
 
 CREATE SEQUENCE IF NOT EXISTS human_being_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE IF NOT EXISTS human_beings (
-    id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id                  BIGINT PRIMARY KEY DEFAULT nextval('human_being_id_seq'),
     name                VARCHAR NOT NULL,
     coord_x             INTEGER NOT NULL,
     coord_y             BIGINT NOT NULL,
@@ -27,3 +35,5 @@ CREATE TABLE IF NOT EXISTS human_beings (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
+
+ALTER SEQUENCE human_being_id_seq OWNED BY human_beings.id;
