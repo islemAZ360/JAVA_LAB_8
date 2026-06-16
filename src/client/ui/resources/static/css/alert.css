@@ -1,0 +1,34 @@
+.ui-alert {
+    -fx-padding: 12;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.ui-alert-title {
+    -fx-font-weight: bold;
+}
+
+.ui-alert-message {
+    -fx-text-fill: text-muted;
+}
+
+.ui-alert-info {
+    -fx-background-color: bg-surface;
+    -fx-border-color: accent;
+}
+
+.ui-alert-success {
+    -fx-background-color: bg-surface;
+    -fx-border-color: success;
+}
+
+.ui-alert-warning {
+    -fx-background-color: bg-surface;
+    -fx-border-color: warning;
+}
+
+.ui-alert-error {
+    -fx-background-color: bg-surface;
+    -fx-border-color: destructive;
+}

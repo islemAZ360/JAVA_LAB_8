@@ -1,0 +1,34 @@
+.ui-data-table-wrap {
+    -fx-background-color: transparent;
+}
+
+.ui-data-table {
+    -fx-background-color: bg-surface;
+    -fx-border-color: border-color;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.ui-data-table .column-header-background {
+    -fx-background-color: bg-elevated;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.ui-data-table .column-header, .ui-data-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: border-color;
+}
+
+.ui-data-table .table-row-cell {
+    -fx-background-color: bg-surface;
+    -fx-text-fill: text-primary;
+}
+
+.ui-data-table .table-row-cell:selected {
+    -fx-background-color: accent;
+}
+
+.ui-data-table .table-cell {
+    -fx-text-fill: text-primary;
+    -fx-border-color: border-color;
+}

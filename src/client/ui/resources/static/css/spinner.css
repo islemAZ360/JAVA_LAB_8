@@ -1,0 +1,7 @@
+.ui-spinner-wrap {
+    -fx-padding: 10;
+}
+
+.ui-spinner {
+    -fx-progress-color: accent;
+}
