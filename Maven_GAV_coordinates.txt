@@ -1,0 +1,6 @@
+Координаты GAV (GroupId:ArtifactId:Version) для библиотек JavaFX
+
+* Интерфейсный пакет (Обязательно): org.openjfx:javafx-controls:21
+* Пакет для чтения файлов разметки (FXML): org.openjfx:javafx-fxml:21
+* Пакет графики и эффектов: org.openjfx:javafx-graphics:21
+* Базовый пакет системы (Ядро): org.openjfx:javafx-base:21
