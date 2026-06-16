@@ -9,17 +9,17 @@ public final class CssLoader {
     private CssLoader() {}
 
     private static final List<String> STYLESHEETS = List.of(
-            "/static/css/global.css",
-            "/static/css/button.css",
-            "/static/css/card.css",
-            "/static/css/alert.css",
-            "/static/css/form.css",
-            "/static/css/data-table.css",
-            "/static/css/sidebar.css",
-            "/static/css/dialog.css",
-            "/static/css/avatar.css",
-            "/static/css/spinner.css",
-            "/static/css/visualization.css"
+            "/client/ui/resources/static/css/global.css",
+            "/client/ui/resources/static/css/button.css",
+            "/client/ui/resources/static/css/card.css",
+            "/client/ui/resources/static/css/alert.css",
+            "/client/ui/resources/static/css/form.css",
+            "/client/ui/resources/static/css/data-table.css",
+            "/client/ui/resources/static/css/sidebar.css",
+            "/client/ui/resources/static/css/dialog.css",
+            "/client/ui/resources/static/css/avatar.css",
+            "/client/ui/resources/static/css/spinner.css",
+            "/client/ui/resources/static/css/visualization.css"
     );
 
     public static void applyTo(Scene scene) {
