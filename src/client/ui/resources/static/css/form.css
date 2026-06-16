@@ -1,0 +1,45 @@
+.ui-field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: text-primary;
+}
+
+.ui-field-helper {
+    -fx-font-size: 11px;
+    -fx-text-fill: text-muted;
+}
+
+.ui-field-error {
+    -fx-font-size: 11px;
+    -fx-text-fill: destructive;
+}
+
+.ui-input, .text-field, .password-field, .ui-select {
+    -fx-background-color: bg-elevated;
+    -fx-text-fill: text-primary;
+    -fx-prompt-text-fill: text-muted;
+    -fx-background-radius: 9;
+    -fx-border-color: border-color;
+    -fx-border-radius: 9;
+    -fx-padding: 8 10 8 10;
+}
+
+.ui-input-group {
+    -fx-background-color: bg-elevated;
+    -fx-background-radius: 9;
+    -fx-border-color: border-color;
+    -fx-border-radius: 9;
+}
+
+.ui-input-prefix, .ui-input-suffix {
+    -fx-padding: 8 10 8 10;
+    -fx-text-fill: text-muted;
+}
+
+.form-message {
+    -fx-text-fill: warning;
+}
+
+.human-form-grid {
+    -fx-padding: 18;
+}

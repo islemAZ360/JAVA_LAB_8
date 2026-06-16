@@ -1,0 +1,8 @@
+.ui-avatar-circle {
+    -fx-fill: accent;
+}
+
+.ui-avatar-initials {
+    -fx-text-fill: accent-foreground;
+    -fx-font-weight: bold;
+}

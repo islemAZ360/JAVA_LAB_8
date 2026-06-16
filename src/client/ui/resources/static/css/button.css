@@ -1,0 +1,41 @@
+.ui-button {
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+    -fx-font-weight: 600;
+    -fx-border-radius: 9;
+}
+
+.ui-button-md { -fx-padding: 8 14 8 14; }
+.ui-button-sm { -fx-padding: 5 10 5 10; -fx-font-size: 12px; }
+.ui-button-lg { -fx-padding: 11 18 11 18; -fx-font-size: 15px; }
+.ui-button-icon { -fx-padding: 8; -fx-min-width: 34; -fx-min-height: 34; }
+
+.ui-button-default {
+    -fx-background-color: accent;
+    -fx-text-fill: accent-foreground;
+}
+
+.ui-button-secondary {
+    -fx-background-color: bg-elevated;
+    -fx-text-fill: text-primary;
+}
+
+.ui-button-outline {
+    -fx-background-color: transparent;
+    -fx-border-color: border-color;
+    -fx-text-fill: text-primary;
+}
+
+.ui-button-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: text-muted;
+}
+
+.ui-button-destructive {
+    -fx-background-color: destructive;
+    -fx-text-fill: destructive-foreground;
+}
+
+.ui-button:hover {
+    -fx-opacity: 0.88;
+}

@@ -1,0 +1,23 @@
+.object-canvas {
+    -fx-background-radius: 16;
+}
+
+.ui-empty {
+    -fx-padding: 14;
+    -fx-background-color: bg-elevated;
+    -fx-background-radius: 12;
+}
+
+.ui-empty-icon {
+    -fx-font-size: 26px;
+    -fx-text-fill: text-muted;
+}
+
+.ui-empty-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: text-primary;
+}
+
+.ui-empty-description {
+    -fx-text-fill: text-muted;
+}

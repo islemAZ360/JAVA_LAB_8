@@ -1,0 +1,89 @@
+.root {
+    bg-primary: #0f172a;
+    bg-surface: #111827;
+    bg-elevated: #1f2937;
+    border-color: #334155;
+    text-primary: #f8fafc;
+    text-muted: #94a3b8;
+    accent: #38bdf8;
+    accent-foreground: #082f49;
+    destructive: #ef4444;
+    destructive-foreground: #ffffff;
+    success: #22c55e;
+    warning: #f59e0b;
+
+    -fx-font-family: "Inter", "Segoe UI", "Arial";
+    -fx-background-color: bg-primary;
+}
+
+.theme-light {
+    bg-primary: #f8fafc;
+    bg-surface: #ffffff;
+    bg-elevated: #f1f5f9;
+    border-color: #cbd5e1;
+    text-primary: #0f172a;
+    text-muted: #64748b;
+    accent: #0284c7;
+    accent-foreground: #ffffff;
+    destructive: #dc2626;
+    destructive-foreground: #ffffff;
+    success: #16a34a;
+    warning: #d97706;
+}
+
+.theme-cyberpunk {
+    bg-primary: #030014;
+    bg-surface: #10002b;
+    bg-elevated: #240046;
+    border-color: #7b2cbf;
+    text-primary: #e0aaff;
+    text-muted: #c77dff;
+    accent: #80ffdb;
+    accent-foreground: #030014;
+    destructive: #ff006e;
+    destructive-foreground: #ffffff;
+    success: #06d6a0;
+    warning: #ffd166;
+}
+
+.label {
+    -fx-text-fill: text-primary;
+}
+
+.top-bar {
+    -fx-padding: 0 0 12 0;
+    -fx-alignment: center-left;
+}
+
+.main-view, .login-view {
+    -fx-background-color: bg-primary;
+}
+
+.main-content {
+    -fx-padding: 0 0 0 14;
+}
+
+.current-user-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.command-bar {
+    -fx-padding: 8 0 0 0;
+    -fx-alignment: center-left;
+}
+
+.object-info {
+    -fx-text-fill: text-muted;
+    -fx-padding: 8;
+    -fx-background-color: bg-elevated;
+    -fx-background-radius: 8;
+}
+
+.dir-rtl {
+    -fx-node-orientation: right-to-left;
+}
+
+.dir-ltr {
+    -fx-node-orientation: left-to-right;
+}

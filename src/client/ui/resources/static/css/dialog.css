@@ -1,0 +1,17 @@
+.ui-dialog {
+    -fx-background-color: bg-primary;
+    -fx-padding: 12;
+}
+
+.ui-dialog-content {
+    -fx-background-color: bg-surface;
+    -fx-background-radius: 16;
+    -fx-border-color: border-color;
+    -fx-border-radius: 16;
+    -fx-padding: 14;
+}
+
+.ui-dialog-footer {
+    -fx-padding: 12 0 0 0;
+    -fx-alignment: center-right;
+}
