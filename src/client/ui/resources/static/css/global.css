@@ -59,6 +59,22 @@
     -fx-background-color: bg-primary;
 }
 
+.login-view .ui-card {
+    -fx-max-width: 420px;
+    -fx-max-height: 500px;
+}
+
+.login-view .ui-card-header {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e3a8a;
+    -fx-alignment: center;
+}
+
+.login-view .ui-card-header VBox {
+    -fx-alignment: center;
+}
+
 .main-content {
     -fx-padding: 0 0 0 14;
 }
