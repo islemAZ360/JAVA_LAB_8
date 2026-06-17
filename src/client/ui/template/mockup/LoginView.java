@@ -25,7 +25,12 @@ public class LoginView extends StackPane {
         getStyleClass().add("login-view");
 
         UiCard card = new UiCard(Messages.get(Messages.Key.LOGIN_TITLE), "HumanBeing Collection Client");
-        card.setMaxWidth(420);
+//        Multi css class
+//        card.getTitleLabel().getStyleClass().addAll("login-view", "ui-card-title");
+//        CSS replace
+//        card.setMaxWidth(420);
+//        card.setMaxHeight(500);
+
         username.setPromptText(Messages.get(Messages.Key.USERNAME));
         password.setPromptText(Messages.get(Messages.Key.PASSWORD));
 

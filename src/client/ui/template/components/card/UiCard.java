@@ -25,9 +25,10 @@ public class UiCard extends VBox {
         description.getStyleClass().add("ui-card-description");
 
         titleBox.getChildren().addAll(title, description);
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        header.getChildren().addAll(titleBox, spacer);
+//        Region spacer = new Region();
+//        HBox.setHgrow(spacer, Priority.ALWAYS);
+//        header.getChildren().addAll(titleBox, spacer);
+        header.getChildren().addAll(titleBox);
         header.getStyleClass().add("ui-card-header");
         content.getStyleClass().add("ui-card-content");
         footer.getStyleClass().add("ui-card-footer");
@@ -44,6 +45,10 @@ public class UiCard extends VBox {
     public UiCard setTitle(String value) {
         title.setText(value == null ? "" : value);
         return this;
+    }
+
+    public Label getTitleLabel() {
+        return this.title;
     }
 
     public UiCard setDescription(String value) {
