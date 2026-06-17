@@ -1,16 +1,53 @@
-.ui-sidebar {
+.ui-sidebar, .dashboard-nav {
     -fx-background-color: bg-surface;
-    -fx-background-radius: 16;
-    -fx-border-radius: 16;
-    -fx-border-color: border-color;
-    -fx-padding: 14;
+    -fx-border-color: transparent border-color transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 16 12 12 12;
     -fx-spacing: 12;
-    -fx-pref-width: 190;
 }
 
 .ui-sidebar-title {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: text-primary;
+}
+
+.dashboard-nav-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: text-muted;
+}
+
+.dashboard-nav-tree {
+    -fx-background-color: transparent;
+    -fx-border-color: border-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 6;
+}
+
+.dashboard-nav-tree .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: text-primary;
+    -fx-font-size: 12px;
+    -fx-padding: 8 10 8 10;
+    -fx-background-radius: 8;
+}
+
+.dashboard-nav-tree .tree-cell:selected {
+    -fx-background-color: bg-elevated;
+    -fx-text-fill: text-primary;
+}
+
+.dashboard-nav-tree .tree-cell:filled:hover {
+    -fx-background-color: bg-elevated;
+}
+
+.dashboard-nav-tree .tree-disclosure-node .arrow {
+    -fx-background-color: text-muted;
 }
 
 .ui-sidebar-menu {
@@ -19,9 +56,17 @@
 
 .ui-sidebar-item {
     -fx-alignment: center-left;
+    -fx-background-radius: 8;
+    -fx-text-fill: text-muted;
 }
 
 .ui-sidebar-item-selected {
     -fx-background-color: bg-elevated;
     -fx-text-fill: text-primary;
+}
+
+.ui-sidebar-footer {
+    -fx-padding: 10 0 0 0;
+    -fx-border-color: border-color transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
 }

@@ -1,5 +1,7 @@
 package client.ui.template.mockup;
 
+import client.ui.template.core.OwnerColorPalette;
+import client.ui.template.model.HumanBeingUiModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -9,18 +11,20 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
-import client.ui.template.model.HumanBeingUiModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.OptionalLong;
 import java.util.function.Consumer;
 
 public class ObjectVisualizationCanvas extends Canvas {
     private final List<HumanBeingUiModel> items = new ArrayList<>();
     private final DoubleProperty animationScale = new SimpleDoubleProperty(1.0);
     private Consumer<HumanBeingUiModel> onObjectSelected = h -> {};
+    private OptionalLong selectedId = OptionalLong.empty();
 
     public ObjectVisualizationCanvas() {
         getStyleClass().add("object-canvas");
@@ -34,6 +38,11 @@ public class ObjectVisualizationCanvas extends Canvas {
         items.clear();
         if (newItems != null) items.addAll(newItems);
         animateAppearance();
+    }
+
+    public void setSelectedObject(HumanBeingUiModel selected) {
+        selectedId = selected == null ? OptionalLong.empty() : OptionalLong.of(selected.id());
+        draw();
     }
 
     public void setOnObjectSelected(Consumer<HumanBeingUiModel> onObjectSelected) {
@@ -55,7 +64,7 @@ public class ObjectVisualizationCanvas extends Canvas {
         double h = getHeight();
         gc.clearRect(0, 0, w, h);
 
-        gc.setFill(Color.web("#111827"));
+        gc.setFill(Color.web("#09090b"));
         gc.fillRoundRect(0, 0, w, h, 18, 18);
 
         drawGrid(gc, w, h);
@@ -66,12 +75,13 @@ public class ObjectVisualizationCanvas extends Canvas {
     }
 
     private void drawGrid(GraphicsContext gc, double w, double h) {
-        gc.setStroke(Color.web("#374151"));
+        gc.setStroke(Color.web("#27272a"));
         gc.setLineWidth(1);
         for (int x = 0; x < w; x += 40) gc.strokeLine(x, 0, x, h);
         for (int y = 0; y < h; y += 40) gc.strokeLine(0, y, w, y);
 
-        gc.setStroke(Color.web("#6b7280"));
+        gc.setStroke(Color.web("#71717a"));
+        gc.setLineWidth(1.2);
         gc.strokeLine(w / 2, 0, w / 2, h);
         gc.strokeLine(0, h / 2, w, h / 2);
     }
@@ -79,18 +89,29 @@ public class ObjectVisualizationCanvas extends Canvas {
     private void drawObject(GraphicsContext gc, HumanBeingUiModel item) {
         double[] xy = toCanvas(item);
         double radius = radiusOf(item) * animationScale.get();
-        Color color = ownerColor(item.ownerLogin());
+        Color color = OwnerColorPalette.colorFor(item.ownerLogin());
+        Color textColor = OwnerColorPalette.textFor(color);
+        boolean selected = selectedId.isPresent() && selectedId.getAsLong() == item.id();
 
-        gc.setGlobalAlpha(0.85);
+        gc.setGlobalAlpha(0.88);
         gc.setFill(color);
         gc.fillOval(xy[0] - radius, xy[1] - radius, radius * 2, radius * 2);
         gc.setGlobalAlpha(1.0);
-        gc.setStroke(Color.WHITE);
-        gc.setLineWidth(2);
+
+        gc.setStroke(selected ? Color.web("#fafafa") : Color.web("#e4e4e7"));
+        gc.setLineWidth(selected ? 4 : 2);
         gc.strokeOval(xy[0] - radius, xy[1] - radius, radius * 2, radius * 2);
 
-        gc.setFill(Color.WHITE);
-        gc.fillText(String.valueOf(item.id()), xy[0] - 4, xy[1] + 4);
+        if (selected) {
+            gc.setStroke(Color.web("#fafafa"));
+            gc.setLineWidth(1.2);
+            gc.strokeOval(xy[0] - radius - 6, xy[1] - radius - 6, radius * 2 + 12, radius * 2 + 12);
+        }
+
+        gc.setFill(textColor);
+        gc.setFont(Font.font(13));
+        String idText = String.valueOf(item.id());
+        gc.fillText(idText, xy[0] - idText.length() * 3.5, xy[1] + 4);
     }
 
     private void handleClick(MouseEvent event) {
@@ -100,10 +121,12 @@ public class ObjectVisualizationCanvas extends Canvas {
             double dx = event.getX() - xy[0];
             double dy = event.getY() - xy[1];
             if (dx * dx + dy * dy <= radius * radius) {
+                setSelectedObject(item);
                 onObjectSelected.accept(item);
                 return;
             }
         }
+        setSelectedObject(null);
     }
 
     private double[] toCanvas(HumanBeingUiModel item) {
@@ -115,10 +138,5 @@ public class ObjectVisualizationCanvas extends Canvas {
 
     private double radiusOf(HumanBeingUiModel item) {
         return Math.max(12, Math.min(42, 10 + item.impactSpeed()));
-    }
-
-    private Color ownerColor(String owner) {
-        int hash = owner == null ? 0 : Math.abs(owner.hashCode());
-        return Color.hsb(hash % 360, 0.72, 0.92);
     }
 }

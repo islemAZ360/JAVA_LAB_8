@@ -1,14 +1,15 @@
 .root {
-    bg-primary: #0f172a;
-    bg-surface: #111827;
-    bg-elevated: #1f2937;
-    border-color: #334155;
-    text-primary: #f8fafc;
-    text-muted: #94a3b8;
-    accent: #38bdf8;
-    accent-foreground: #082f49;
+    bg-primary: #09090b;
+    bg-surface: #09090b;
+    bg-elevated: #18181b;
+    bg-muted: #27272a;
+    border-color: #27272a;
+    text-primary: #fafafa;
+    text-muted: #a1a1aa;
+    accent: #fafafa;
+    accent-foreground: #09090b;
     destructive: #ef4444;
-    destructive-foreground: #ffffff;
+    destructive-foreground: #fafafa;
     success: #22c55e;
     warning: #f59e0b;
 
@@ -16,15 +17,32 @@
     -fx-background-color: bg-primary;
 }
 
+.theme-dark {
+    bg-primary: #09090b;
+    bg-surface: #09090b;
+    bg-elevated: #18181b;
+    bg-muted: #27272a;
+    border-color: #27272a;
+    text-primary: #fafafa;
+    text-muted: #a1a1aa;
+    accent: #fafafa;
+    accent-foreground: #09090b;
+    destructive: #ef4444;
+    destructive-foreground: #fafafa;
+    success: #22c55e;
+    warning: #f59e0b;
+}
+
 .theme-light {
-    bg-primary: #f8fafc;
+    bg-primary: #fafafa;
     bg-surface: #ffffff;
-    bg-elevated: #f1f5f9;
-    border-color: #cbd5e1;
-    text-primary: #0f172a;
-    text-muted: #64748b;
-    accent: #0284c7;
-    accent-foreground: #ffffff;
+    bg-elevated: #f4f4f5;
+    bg-muted: #e4e4e7;
+    border-color: #e4e4e7;
+    text-primary: #09090b;
+    text-muted: #71717a;
+    accent: #18181b;
+    accent-foreground: #fafafa;
     destructive: #dc2626;
     destructive-foreground: #ffffff;
     success: #16a34a;
@@ -35,6 +53,7 @@
     bg-primary: #030014;
     bg-surface: #10002b;
     bg-elevated: #240046;
+    bg-muted: #3c096c;
     border-color: #7b2cbf;
     text-primary: #e0aaff;
     text-muted: #c77dff;
@@ -50,13 +69,25 @@
     -fx-text-fill: text-primary;
 }
 
-.top-bar {
-    -fx-padding: 0 0 12 0;
-    -fx-alignment: center-left;
+.app-shell, .main-view, .login-view {
+    -fx-background-color: bg-primary;
 }
 
-.main-view, .login-view {
-    -fx-background-color: bg-primary;
+.top-bar {
+    -fx-min-height: 66px;
+    -fx-pref-height: 66px;
+    -fx-padding: 0 18 0 18;
+    -fx-spacing: 14;
+    -fx-alignment: center-left;
+    -fx-background-color: bg-surface;
+    -fx-border-color: transparent transparent border-color transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.app-logo {
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: text-primary;
 }
 
 .login-view .ui-card {
@@ -67,7 +98,7 @@
 .login-view .ui-card-header {
     -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1e3a8a;
+    -fx-text-fill: text-primary;
     -fx-alignment: center;
 }
 
@@ -76,24 +107,50 @@
 }
 
 .main-content {
-    -fx-padding: 0 0 0 14;
+    -fx-background-color: bg-primary;
 }
 
 .current-user-label {
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
+.sidebar-user-name {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: text-muted;
+}
+
 .command-bar {
-    -fx-padding: 8 0 0 0;
+    -fx-padding: 6 0 0 0;
     -fx-alignment: center-left;
 }
 
-.object-info {
+.status-label, .object-info {
     -fx-text-fill: text-muted;
-    -fx-padding: 8;
+    -fx-padding: 10;
     -fx-background-color: bg-elevated;
-    -fx-background-radius: 8;
+    -fx-background-radius: 10;
+    -fx-border-color: border-color;
+    -fx-border-radius: 10;
+}
+
+.page {
+    -fx-background-color: bg-primary;
+}
+
+.page-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+}
+
+.page-description {
+    -fx-text-fill: text-muted;
+}
+
+.page-scroll {
+    -fx-background: bg-primary;
+    -fx-background-color: bg-primary;
 }
 
 .dir-rtl {
@@ -102,4 +159,14 @@
 
 .dir-ltr {
     -fx-node-orientation: left-to-right;
+}
+
+
+.main-body-split {
+    -fx-background-color: bg-primary;
+}
+
+.main-body-split > .split-pane-divider {
+    -fx-background-color: border-color;
+    -fx-padding: 0 1 0 1;
 }
