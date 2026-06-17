@@ -12,7 +12,7 @@ public class RequestSender implements AutoCloseable {
     private final DataOutputStream dos;
     private final DataInputStream dis;
 
-    RequestSender(DataOutputStream dos, DataInputStream dis) {
+    public RequestSender(DataOutputStream dos, DataInputStream dis) {
         this.dos = dos;
         this.dis = dis;
     }

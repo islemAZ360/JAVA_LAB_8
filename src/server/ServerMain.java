@@ -46,54 +46,54 @@ public class ServerMain {
 
     private static final int MAX_CONNECTIONS = 2;
 
-    private static final boolean USE_CLOUD = false;
+    private static final boolean USE_CLOUD = true;
 
-//    public static final Connection getConnection() {
-//        String dbUrl;
-//        String dbUser;
-//        String dbPassword;
-//
-//        if (USE_CLOUD) {
-//            // Supabase
-//            dbUrl = Const.CLOUD_DB_URL;
-//            dbUser = Const.CLOUD_DB_USER_ENV;
-//            dbPassword = Const.CLOUD_DB_PASSWORD_ENV;
-//        } else {
-//            // Local
-//            dbUrl = Const.DB_URL;
-//            dbUser = System.getenv(Const.DB_USER_ENV);
-//            dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
-//        }
-//
-//        try {
-//            Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-//            return conn;
-//        } catch (SQLException e) {
-//            logger.error("Не удалось поключить к PostgreSQL");
-//            return null;
-//        }
-//    }
+    public static final Connection getConnection() {
+        String dbUrl;
+        String dbUser;
+        String dbPassword;
 
-    public static Connection getConnection() {
-        String dbUrl = Const.DB_URL;
-        String dbUser = System.getenv(Const.DB_USER_ENV);
-        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
-
-        System.out.println("DB_URL = " + dbUrl);
-        System.out.println("DB_USER = " + dbUser);
-        System.out.println("DB_PASSWORD exists = " + (dbPassword != null));
-
-        if (dbUser == null || dbPassword == null) {
-            throw new RuntimeException("DB_USER или DB_PASSWORD еще не установлены");
+        if (USE_CLOUD) {
+            // Supabase
+            dbUrl = Const.CLOUD_DB_URL;
+            dbUser = Const.CLOUD_DB_USER_ENV;
+            dbPassword = Const.CLOUD_DB_PASSWORD_ENV;
+        } else {
+            // Local
+            dbUrl = Const.DB_URL;
+            dbUser = System.getenv(Const.DB_USER_ENV);
+            dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
         }
 
         try {
-            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            return conn;
         } catch (SQLException e) {
-            logger.error("Не удается подключиться PostgreSQL: {}", e.getMessage());
-            throw new RuntimeException("Ошибка соединения PostgreSQL", e);
+            logger.error("Не удалось поключить к PostgreSQL");
+            return null;
         }
     }
+
+//    public static Connection getConnection() {
+//        String dbUrl = Const.DB_URL;
+//        String dbUser = System.getenv(Const.DB_USER_ENV);
+//        String dbPassword = System.getenv(Const.DB_PASSWORD_ENV);
+//
+//        System.out.println("DB_URL = " + dbUrl);
+//        System.out.println("DB_USER = " + dbUser);
+//        System.out.println("DB_PASSWORD exists = " + (dbPassword != null));
+//
+//        if (dbUser == null || dbPassword == null) {
+//            throw new RuntimeException("DB_USER или DB_PASSWORD еще не установлены");
+//        }
+//
+//        try {
+//            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+//        } catch (SQLException e) {
+//            logger.error("Не удается подключиться PostgreSQL: {}", e.getMessage());
+//            throw new RuntimeException("Ошибка соединения PostgreSQL", e);
+//        }
+//    }
 
     public static CollectionRepository<HumanBeing> getHumanbeingRepository(Connection conn) {
         return new PostgresCollectionRepository(conn);
