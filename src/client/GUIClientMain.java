@@ -1,13 +1,13 @@
 package client;
 
-import client.ui.template.core.CssLoader;
-import client.ui.template.core.Theme;
-import client.ui.template.core.ThemeManager;
-import client.ui.template.integration.AuthResult;
-import client.ui.template.integration.Lab7CommandGateway;
-import client.ui.template.integration.MockLab7CommandGateway;
-import client.ui.template.mockup.LoginView;
-import client.ui.template.mockup.MainPrototypeView;
+import client.gui.core.CssLoader;
+import client.gui.core.Theme;
+import client.gui.core.ThemeManager;
+import client.gui.integration.AuthResult;
+import client.gui.integration.Lab7CommandGateway;
+import client.gui.integration.MockLab7CommandGateway;
+import client.gui.mockup.LoginView;
+import client.gui.mockup.MainPrototypeView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
