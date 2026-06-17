@@ -1,11 +1,13 @@
 .object-canvas {
-    -fx-background-radius: 16;
+    -fx-background-radius: 12;
 }
 
 .ui-empty {
     -fx-padding: 14;
     -fx-background-color: bg-elevated;
     -fx-background-radius: 12;
+    -fx-border-color: border-color;
+    -fx-border-radius: 12;
 }
 
 .ui-empty-icon {

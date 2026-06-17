@@ -1,8 +1,8 @@
 .ui-button {
-    -fx-background-radius: 9;
+    -fx-background-radius: 8;
     -fx-cursor: hand;
     -fx-font-weight: 600;
-    -fx-border-radius: 9;
+    -fx-border-radius: 8;
 }
 
 .ui-button-md { -fx-padding: 8 14 8 14; }
@@ -38,4 +38,9 @@
 
 .ui-button:hover {
     -fx-opacity: 0.88;
+}
+
+.ui-button:disabled {
+    -fx-opacity: 0.42;
+    -fx-cursor: default;
 }

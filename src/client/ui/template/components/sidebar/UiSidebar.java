@@ -36,6 +36,9 @@ public class UiSidebar extends VBox {
         });
         buttons.add(button);
         menu.getChildren().add(button);
+        if (buttons.size() == 1) {
+            setSelected(button);
+        }
         return this;
     }
 
