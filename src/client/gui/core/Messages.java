@@ -482,10 +482,12 @@ public final class Messages {
         DATATABLE_CARD_TITLE(new Translation("Коллекция HumanBeing", "Kolekcia HumanBeing", "Koleksioni HumanBeing", "HumanBeing collection")),
         DATATABLE_CARD_DESC(new Translation("Каждое поле объекта показано отдельной колонкой.", "Každé pole objektu je zobrazené v samostatnom stĺpci.", "Çdo fushë e objektit shfaqet në një kolonë të veçantë.", "Each object field is shown in a separate column.")),
 
+        OBJECTS_DETECTED_BY_RADAR(new Translation("Объекты обнаружены радаром лаб 8", "Objekty boli detegované radarom lab 8", "Objektet u zbuluan nga radari lab 8", "Objects were detected by radar lab 8")),
         VISUALIZATION_CLICK_HINT(new Translation("Кликните по объекту на canvas", "Kliknite na objekt na canvas", "Klikoni mbi objektin në canvas", "Click object on canvas")),
         VISUALIZATION_ANIMATION_TITLE(new Translation("Анимация", "Animácia", "Animacion", "Animation")),
         VISUALIZATION_ANIMATION_DESC(new Translation("При обновлении данных Canvas запускает анимацию.", "Pri aktualizácii dát Canvas spustí animáciu.", "Gjatë përditësimit të të dhënave Canvas fillon animacionin.", "Canvas triggers animation on data update.")),
         VISUALIZATION_RELOAD(new Translation("Перезагрузить", "Znovu načítať", "Rifresko", "Reload and animate")),
+        VISUALIZATION_RESET_ORIGIN(new Translation("Сбросить начало координат", "Resetovat počátek", "Rikthe origjinën", "Reset origin")),
         VISUALIZATION_CARD_TITLE(new Translation("Область визуализации", "Oblasť vizualizácie", "Zona e vizualizimit", "Visualization area")),
         VISUALIZATION_CARD_DESC(new Translation("Интерактивный Canvas", "Interaktívny Canvas", "Canvas ndërveprues", "Interactive Canvas")),
 

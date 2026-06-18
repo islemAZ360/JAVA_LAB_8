@@ -1,0 +1,91 @@
+.ui-data-table-wrap {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.ui-data-table {
+    -fx-background-color: bg-surface;
+    -fx-border-color: border-color;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-box-border: transparent;
+}
+
+.ui-data-table .scroll-bar:vertical,
+.ui-data-table .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-height: 0;
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-padding: 0;
+}
+
+.ui-data-table .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+.ui-data-table .column-header-background {
+    -fx-background-color: bg-elevated;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.ui-data-table .column-header, .ui-data-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent border-color border-color transparent;
+    -fx-border-width: 0 1 1 0;
+}
+
+.ui-data-table .filler {
+    -fx-background-radius: 0 10 0 0;
+}
+
+.ui-data-table .column-header:last-visible {
+    -fx-border-color: transparent transparent border-color transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.ui-data-table .column-header .label {
+    -fx-text-fill: text-primary;
+    -fx-font-weight: 700;
+}
+
+.ui-data-table .table-row-cell {
+    -fx-background-color: bg-surface;
+    -fx-text-fill: text-primary;
+    -fx-border-color: transparent transparent border-color transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.ui-data-table .table-row-cell:selected {
+    -fx-background-color: bg-muted;
+}
+
+.ui-data-table .table-cell {
+    -fx-text-fill: text-primary;
+    -fx-border-color: transparent border-color transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.ui-data-table .table-cell:last-visible {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.ui-data-table .table-row-cell:last-visible {
+    -fx-background-radius: 0 0 10 10;
+}
+
+.ui-data-table .empty-table-row-cell {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 0 10 10;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.ui-data-table .corner {
+    -fx-background-color: transparent;
+}

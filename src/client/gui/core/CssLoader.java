@@ -9,17 +9,27 @@ public final class CssLoader {
     private CssLoader() {}
 
     private static final List<String> STYLESHEETS = List.of(
+//            Global css
             "/client/gui/resources/static/css/global.css",
-            "/client/gui/resources/static/css/button.css",
-            "/client/gui/resources/static/css/card.css",
-            "/client/gui/resources/static/css/alert.css",
-            "/client/gui/resources/static/css/form.css",
-            "/client/gui/resources/static/css/data-table.css",
-            "/client/gui/resources/static/css/sidebar.css",
-            "/client/gui/resources/static/css/dialog.css",
-            "/client/gui/resources/static/css/avatar.css",
-            "/client/gui/resources/static/css/spinner.css",
-            "/client/gui/resources/static/css/visualization.css"
+
+//            Components css
+            "/client/gui/resources/static/css/components/button.css",
+            "/client/gui/resources/static/css/components/card.css",
+            "/client/gui/resources/static/css/components/alert.css",
+            "/client/gui/resources/static/css/components/form.css",
+            "/client/gui/resources/static/css/components/data-table.css",
+            "/client/gui/resources/static/css/components/sidebar.css",
+            "/client/gui/resources/static/css/components/dialog.css",
+            "/client/gui/resources/static/css/components/avatar.css",
+            "/client/gui/resources/static/css/components/spinner.css",
+            "/client/gui/resources/static/css/components/visualization.css",
+
+//            Pages css
+            "/client/gui/resources/static/css/pages/data-table-page.css",
+            "/client/gui/resources/static/css/pages/visualization-page.css",
+            "/client/gui/resources/static/css/pages/show-case-page.css"
+
+//            ... update here if add more style in future!
     );
 
     public static void applyTo(Scene scene) {

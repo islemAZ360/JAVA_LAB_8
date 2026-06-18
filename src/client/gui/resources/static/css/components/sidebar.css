@@ -14,7 +14,7 @@
     -fx-min-width: 0px;
 }
 
-/* Hide scroll bar in navigator when content lager than its container width */
+/* Hide scroll bar in navigator when content larger than its container width */
 .dashboard-nav .scroll-bar {
     -fx-opacity: 0;
     -fx-padding: 0;

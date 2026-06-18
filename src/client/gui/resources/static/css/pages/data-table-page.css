@@ -1,0 +1,4 @@
+.page.data-table-page .ui-data-table-wrap {
+    -fx-max-height: 9999;
+    -fx-pref-height: 9999;
+}

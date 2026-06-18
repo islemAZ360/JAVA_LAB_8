@@ -37,6 +37,7 @@ public class DataTablePage extends BasePage {
         this.gateway = gateway;
         this.table = createHumanTable();
         this.table.setItems(gateway.show());
+        this.getStyleClass().add("data-table-page");
 
         buildContent();
     }

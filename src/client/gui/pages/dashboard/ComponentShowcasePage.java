@@ -25,8 +25,10 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.util.Comparator;
 import java.util.List;
@@ -49,8 +51,12 @@ public class ComponentShowcasePage extends BasePage {
         buildContent();
     }
 
+
     private void buildContent() {
-        this.getChildren().addAll(
+        VBox container = new VBox(20); // gap:20
+        container.getStyleClass().add("show-case-page");
+
+        container.getChildren().addAll(
                 buildAlertShowcase(),
                 buildButtonShowcase(),
                 buildFormShowcase(),
@@ -58,6 +64,22 @@ public class ComponentShowcasePage extends BasePage {
                 buildResizableDialogShowcase(),
                 buildSmallTableShowcase()
         );
+
+//        No wrap in scrollPane
+//        this.getChildren().addAll(
+//                buildAlertShowcase(),
+//                buildButtonShowcase(),
+//                buildFormShowcase(),
+//                buildCardEmptyAvatarSpinnerShowcase(),
+//                buildResizableDialogShowcase(),
+//                buildSmallTableShowcase()
+//        );
+
+        ScrollPane scrollPane = wrapInScroll(container);
+
+        setVGrow(scrollPane);
+
+        this.getChildren().add(scrollPane);
     }
 
     // ========================================

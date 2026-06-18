@@ -1,0 +1,76 @@
+.page.visualization-page .canvas-control {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-fill-height: true;
+    -fx-max-width: Infinity;
+}
+
+/*===============================================================
+!!! IMPORTANT CANVAS CAN NOT AUTORESIZE; FIXED WIDTH, HEIGHT ONLY
+=================================================================*/
+
+.page.visualization-page .ui-card-header {
+    -fx-pref-width: Infinity;
+    -fx-max-width: Infinity;
+    -fx-hgrow: always;
+}
+
+.page.visualization-page .canvas-wrapper {
+    -fx-min-width: 720px;
+    -fx-min-height: 500px;
+
+    -fx-max-width: 2000px;
+    -fx-max-height: 2000px;
+
+    -fx-hgrow: always;
+
+    -fx-pref-width: 700px;
+    -fx-pref-height: -1;    /* -1 auto compute (USE_COMPUTED_SIZE) */
+}
+
+.page.visualization-page .main-canvas {
+    -fx-min-width: 300px;
+    -fx-min-height: 300px;
+
+    -fx-max-width: 2000px;
+    -fx-max-height: 2000px;
+
+    -fx-hgrow: always;
+
+    -fx-pref-width: 2000px;
+    -fx-pref-height: 2000px;
+}
+
+.page.visualization-page .cartoon-canvas {
+    -fx-min-width: 300px;
+    -fx-min-height: 300px;
+
+    -fx-max-width: 500px;
+    -fx-max-height: 500px;
+
+    -fx-hgrow: always;
+
+    -fx-pref-width: 2000px;
+    -fx-pref-height: 2000px;
+}
+
+.page.visualization-page .canvas-control .ui-button-default {
+    -fx-min-width: 150px;
+}
+
+.page.visualization-page .canvas-control .object-info {
+    -fx-hgrow: always;
+    -fx-min-width: 500px;
+    -fx-pref-width: 9999px;
+}
+
+/* Đoạn comment đã được sửa lỗi chính tả phòng khi bạn mở lại sử dụng */
+/*
+.page.visualization-page .object-detected-area {
+    -fx-hgrow: always;
+    -fx-max-height: 500px;
+    -fx-max-width: 500px;
+    -fx-pref-height: 9999px;
+    -fx-pref-width: 9999px;
+}
+*/

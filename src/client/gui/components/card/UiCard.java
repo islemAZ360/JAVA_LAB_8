@@ -23,15 +23,21 @@ public class UiCard extends VBox {
         description.getStyleClass().add("ui-card-description");
 
         titleBox.getChildren().addAll(title, description);
+
 //        Region spacer = new Region();
 //        HBox.setHgrow(spacer, Priority.ALWAYS);
 //        header.getChildren().addAll(titleBox, spacer);
+
         header.getChildren().addAll(titleBox);
         header.getStyleClass().add("ui-card-header");
         content.getStyleClass().add("ui-card-content");
         footer.getStyleClass().add("ui-card-footer");
 
         getChildren().addAll(header, content, footer);
+
+//        Content grow max height (use CSS instead to reuse/ layout isolate with style)
+//        VBox.setVgrow(content, javafx.scene.layout.Priority.ALWAYS);
+//        content.setMaxHeight(Double.MAX_VALUE);
     }
 
     public UiCard(String titleText, String descriptionText) {
