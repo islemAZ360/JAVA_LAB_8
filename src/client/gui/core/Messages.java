@@ -386,11 +386,14 @@ public final class Messages {
         // ========================================
         // MENU ITEMS
         // ========================================
-        MENU_PROTOTYPE(new Translation("1. Прототип Lab 8", "1. Prototype Lab 8", "1. Prototip Lab 8", "1. Lab 8 Prototype")),
-        MENU_COMPONENTS(new Translation("2. Система компонентов", "2. Systém komponentov", "2. Sistemi i komponentëve", "2. UI Component System")),
-        MENU_DATA_TABLE(new Translation("3. Таблица данных", "3. Tabuľka dát", "3. Tabela e të dhënave", "3. Data Table + Streams")),
-        MENU_VISUALIZATION(new Translation("4. Визуализация Canvas", "4. Vizualizácia Canvas", "4. Vizualizimi Canvas", "4. Canvas Visualization")),
-        MENU_SETTINGS(new Translation("5. Тема / RTL / i18n", "5. Téma / RTL / i18n", "5. Tema / RTL / i18n", "5. Theme / RTL / i18n")),
+        MENU_PROTOTYPE(new Translation("Прототип Lab 8", "Prototype Lab 8", "Prototip Lab 8", "Lab 8 Prototype")),
+        MENU_COMPONENTS(new Translation("Система компонентов", "Systém komponentov", "Sistemi i komponentëve", "UI Component System")),
+        MENU_DATA_TABLE(new Translation("Таблица данных", "Tabuľka dát", "Tabela e të dhënave", "Data Table + Streams")),
+        MENU_VISUALIZATION(new Translation("Визуализация Canvas", "Vizualizácia Canvas", "Vizualizimi Canvas", "Canvas Visualization")),
+        MENU_FILM(new Translation("Фильмы", "Filmy", "Filma", "Movies")),
+        MENU_BROWSER(new Translation("Браузер", "Prehliadač", "Shfletuesi", "Browser")),
+        MENU_TERMINAL(new Translation("Терминал", "Terminál", "Terminali", "Terminal")),
+        MENU_SETTINGS(new Translation("Тема / RTL / i18n", "Téma / RTL / i18n", "Tema / RTL / i18n", "Theme / RTL / i18n")),
 
         // ========================================
         // PAGES
