@@ -45,9 +45,9 @@ public class InputManagerGateway implements Lab7CommandGateway {
     private final InputManager  inputManager;
     private String currentUser = null;
 
-    // -------------------------------------------------------------------------
+    // -
     // Initialization
-    // -------------------------------------------------------------------------
+    // -
 
     public InputManagerGateway(RequestSender sender) {
         this.sender       = sender;
@@ -79,9 +79,9 @@ public class InputManagerGateway implements Lab7CommandGateway {
         return connect(Const.host, Const.port);
     }
 
-    // -------------------------------------------------------------------------
+    // -
     // AUTH — bypass InputManager (it reads Scanner, GUI already has the data ready)
-    // -------------------------------------------------------------------------
+    // -
 
     @Override
     public AuthResult login(String username, String password) {
@@ -115,9 +115,9 @@ public class InputManagerGateway implements Lab7CommandGateway {
         }
     }
 
-    // -------------------------------------------------------------------------
+    // -
     // READ — use InputManager.handleCommand() since it doesn't read stdin
-    // -------------------------------------------------------------------------
+    // -
 
     @Override
     @SuppressWarnings("unchecked")
@@ -149,10 +149,10 @@ public class InputManagerGateway implements Lab7CommandGateway {
         }
     }
 
-    // -------------------------------------------------------------------------
+    // -
     // WRITE — bypass InputManager (it reads Scanner to get HumanBeing)
     // GUI already has the object ready -> pass it directly as objectArgument
-    // -------------------------------------------------------------------------
+    // -
 
     @Override
     public HumanBeingUiModel add(HumanBeingUiModel model) {
@@ -269,9 +269,9 @@ public class InputManagerGateway implements Lab7CommandGateway {
         }
     }
 
-    // -------------------------------------------------------------------------
+    // -
     // MAPPING: HumanBeingUiModel → HumanBeing (domain)
-    // -------------------------------------------------------------------------
+    // -
 
     private HumanBeing toDomain(HumanBeingUiModel m) {
         return new HumanBeing(
@@ -287,9 +287,9 @@ public class InputManagerGateway implements Lab7CommandGateway {
         );
     }
 
-    // -------------------------------------------------------------------------
+    // -
     // MAPPING: HumanBeing (domain) → HumanBeingUiModel
-    // -------------------------------------------------------------------------
+    // -
 
     private HumanBeingUiModel toUiModel(HumanBeing hb) {
         Car domainCar = hb.getCar();
@@ -311,9 +311,9 @@ public class InputManagerGateway implements Lab7CommandGateway {
         );
     }
 
-    // -------------------------------------------------------------------------
+    // -
     // ENUM MAPPING — 1-to-1 mapping after synchronizing WeaponTypeUi with WeaponType
-    // -------------------------------------------------------------------------
+    // -
 
     private WeaponType toWeaponDomain(WeaponTypeUi ui) {
         if (ui == null) return null;

@@ -1,4 +1,55 @@
+/* ===== UI COMPONENT LIBRARY — GLOBAL CSS =====
+   All CSS variables defined here. Theme overrides below.
+   v2
+   ===
+   v1
+   ================================================ */
 .root {
+        /* Colors */
+    color-bg:          #0f1117;
+    color-surface:     #1a1d2e;
+    color-surface-2:   #222540;
+    color-border:      #2d3155;
+    color-text:        #e2e8f0;
+    color-text-muted:  #64748b;
+    color-primary:     #6366f1;
+    color-primary-fg:  #ffffff;
+    color-secondary:   #334155;
+    color-secondary-fg:#cbd5e1;
+    color-destructive: #ef4444;
+    color-destructive-fg:#fff;
+    color-success:     #22c55e;
+    color-success-fg:  #fff;
+    color-warning:     #f59e0b;
+    color-warning-fg:  #000;
+    color-info:        #38bdf8;
+    color-info-fg:     #000;
+    color-accent:      #7c3aed;
+    color-accent-fg:   #fff;
+
+    /* Radius */
+    radius-sm:  4px;
+    radius-md:  8px;
+    radius-lg:  12px;
+    radius-full: 9999px;
+
+    /* Spacing */
+    space-1: 4px;  space-2: 8px;  space-3: 12px;
+    space-4: 16px; space-5: 20px; space-6: 24px;
+
+    /* Typography */
+    font-xs:   11px; font-sm: 12px; font-md: 13px;
+    -fx-font-size: 14px; font-lg: 16px; font-xl: 18px;
+    font-2xl:  22px; font-3xl: 28px; font-4xl: 36px;
+
+    /* Transitions */
+    transition: 150ms ease;
+    transition-slow: 300ms ease;
+
+    /* -fx-font-family: "Segoe UI", "Inter", "San Francisco", system; */
+    -fx-background-color: #09090b;
+    -fx-text-fill: #fafafa;
+/* ===================================================== */
     bg-primary: #09090b;
     bg-surface: #09090b;
     bg-elevated: #18181b;
@@ -34,6 +85,13 @@
 }
 
 .theme-light {
+    color-bg:         #ffffff;
+    color-surface:    #f8fafc;
+    color-surface-2:  #f1f5f9;
+    color-border:     #e2e8f0;
+    color-text:       #0f172a;
+    color-text-muted: #94a3b8;
+/* =================================================== */
     bg-primary: #fafafa;
     bg-surface: #ffffff;
     bg-elevated: #f4f4f5;
@@ -50,6 +108,13 @@
 }
 
 .theme-cyberpunk {
+    color-bg:         #05001a;
+    color-surface:    #0a0035;
+    color-border:     #4b0082;
+    color-text:       #00ffee;
+    color-primary:    #ff00ff;
+    color-text-muted: #886688;
+/* ==================================================== */
     bg-primary: #030014;
     bg-surface: #10002b;
     bg-elevated: #240046;
@@ -64,6 +129,11 @@
     success: #06d6a0;
     warning: #ffd166;
 }
+
+/* Shadows */
+.shadow-sm{-fx-effect:dropshadow(three-pass-box,rgba(0,0,0,0.4),3,0,0,1);}
+.shadow-md{-fx-effect:dropshadow(three-pass-box,rgba(0,0,0,0.5),12,0,0,4);}
+.shadow-lg{-fx-effect:dropshadow(three-pass-box,rgba(0,0,0,0.6),24,0,0,8);}
 
 .label {
     -fx-text-fill: text-primary;
@@ -189,6 +259,13 @@
     -fx-background-color: bg-primary;
 }
 
+/* ── SCROLLBAR ── */
+/* .scroll-bar { -fx-background-color: transparent; }
+.scroll-bar .thumb { -fx-background-color: color-border; -fx-background-radius: radius-full; }
+.scroll-bar .thumb:hover { -fx-background-color: color-text-muted; }
+.scroll-bar .track { -fx-background-color: transparent; }
+.scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-opacity: 0; -fx-min-width: 0; -fx-min-height: 0; } */
+
 /* Visible:hodden the scroll bar not disable*/
 .page-scroll .scroll-bar:vertical,
 .page-scroll .scroll-bar:horizontal {
@@ -213,7 +290,6 @@
 .dir-ltr {
     -fx-node-orientation: left-to-right;
 }
-
 
 .main-body-split {
     -fx-background-color: bg-primary;

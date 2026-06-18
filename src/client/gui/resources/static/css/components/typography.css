@@ -1,0 +1,13 @@
+.ui-h1{-fx-font-size:36px;-fx-font-weight:bold;-fx-text-fill:#09090b;}
+.ui-h2{-fx-font-size:30px;-fx-font-weight:bold;-fx-text-fill:#09090b;}
+.ui-h3{-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#09090b;}
+.ui-h4{-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:#09090b;}
+.ui-p{-fx-font-size:16px;-fx-text-fill:#09090b;}
+.ui-lead{-fx-font-size:20px;-fx-text-fill:#71717a;}
+.ui-large{-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#09090b;}
+.ui-small{-fx-font-size:14px;-fx-text-fill:#09090b;}
+.ui-muted{-fx-font-size:14px;-fx-text-fill:#71717a;}
+.ui-blockquote{-fx-font-size:16px;-fx-font-style:italic;-fx-text-fill:#71717a;-fx-border-color:#18181b;-fx-border-width:0 0 0 3px;-fx-padding:4px 0 4px 12px;}
+.ui-code{-fx-font-family:"JetBrains Mono","Fira Code","Consolas",monospace;-fx-background-color:#f4f4f5;-fx-padding:12px 16px;-fx-background-radius:6px;-fx-font-size:14px;-fx-text-fill:#09090b;}
+.ui-inline-code{-fx-font-family:"JetBrains Mono","Fira Code","Consolas",monospace;-fx-background-color:#f4f4f5;-fx-padding:2px 6px;-fx-background-radius:4px;-fx-font-size:14px;-fx-text-fill:#09090b;}
+.ui-kbd{-fx-font-family:"JetBrains Mono","Consolas",monospace;-fx-background-color:#f4f4f5;-fx-border-color:#e4e4e7;-fx-border-width:1px;-fx-background-radius:4px;-fx-border-radius:4px;-fx-padding:2px 6px;-fx-font-size:12px;-fx-text-fill:#09090b;}

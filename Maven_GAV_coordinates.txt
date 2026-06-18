@@ -6,4 +6,4 @@
 * Базовый пакет системы (Ядро): org.openjfx:javafx-base:21
 
 vm option
---module-path "lib" --add-modules javafx.controls,javafx.fxml
+module-path "lib" add-modules javafx.controls,javafx.fxml

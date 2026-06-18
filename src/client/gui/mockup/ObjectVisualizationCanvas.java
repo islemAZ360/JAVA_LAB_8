@@ -286,7 +286,7 @@ public class ObjectVisualizationCanvas extends Canvas {
         Color textColor = OwnerColorPalette.textFor(baseColor);
         boolean selected = selectedId.isPresent() && selectedId.getAsLong() == item.id();
 
-        // --- ZOOM IN / OUT ANIMATION SYSTEM BASED ON RADAR SWEEP ---
+        // - ZOOM IN / OUT ANIMATION SYSTEM BASED ON RADAR SWEEP -
         double centerX = canvasW / 2 + offsetX;
         double centerY = canvasH / 2 + offsetY;
 
@@ -312,7 +312,7 @@ public class ObjectVisualizationCanvas extends Canvas {
         double currentRadius = animatedRadiusMap.getOrDefault(item.id(), minRadius);
         currentRadius += (targetRadius - currentRadius) * 0.04;
         animatedRadiusMap.put(item.id(), currentRadius);
-        // ----------------------------------------------------
+        // 
 
         gc.setGlobalAlpha(glowFactor);
 
