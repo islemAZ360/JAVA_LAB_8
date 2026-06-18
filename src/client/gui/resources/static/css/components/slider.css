@@ -1,0 +1,5 @@
+.ui-slider .track{-fx-background-color:#f4f4f5;-fx-pref-height:6px;-fx-background-radius:999px;}
+.ui-slider .thumb{-fx-background-color:#18181b;-fx-pref-width:18px;-fx-pref-height:18px;-fx-background-radius:999px;}
+.ui-slider .thumb:hover{-fx-background-color:#3f3f46;}
+.ui-slider-label{-fx-font-size:12px;-fx-font-weight:bold;-fx-text-fill:#09090b;}
+.ui-slider-value{-fx-font-size:11px;-fx-text-fill:#71717a;}

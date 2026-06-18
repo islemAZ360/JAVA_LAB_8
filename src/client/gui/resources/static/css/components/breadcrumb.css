@@ -1,0 +1,4 @@
+.ui-breadcrumb-link{-fx-text-fill:#71717a;-fx-font-size:12px;-fx-underline:false;-fx-border-width:0;-fx-background-color:transparent;-fx-padding:0;}
+.ui-breadcrumb-link:hover{-fx-text-fill:#09090b;}
+.ui-breadcrumb-current{-fx-text-fill:#09090b;-fx-font-size:12px;-fx-font-weight:bold;}
+.ui-breadcrumb-sep{-fx-text-fill:#71717a;-fx-font-size:11px;-fx-padding:0 2px;}

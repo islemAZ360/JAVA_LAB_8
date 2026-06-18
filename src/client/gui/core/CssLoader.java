@@ -23,6 +23,17 @@ public final class CssLoader {
             "/client/gui/resources/static/css/components/avatar.css",
             "/client/gui/resources/static/css/components/spinner.css",
             "/client/gui/resources/static/css/components/visualization.css",
+            "/client/gui/resources/static/css/components/accordion.css",
+            "/client/gui/resources/static/css/components/badge.css",
+            "/client/gui/resources/static/css/components/pagination.css",
+            "/client/gui/resources/static/css/components/progress.css",
+            "/client/gui/resources/static/css/components/skeleton.css",
+            "/client/gui/resources/static/css/components/slider.css",
+            "/client/gui/resources/static/css/components/tabs.css",
+            "/client/gui/resources/static/css/components/toast.css",
+            "/client/gui/resources/static/css/components/tooltip.css",
+            "/client/gui/resources/static/css/components/typography.css",
+            "/client/gui/resources/static/css/components/breadcrumb.css",
 
 //            Pages css
             "/client/gui/resources/static/css/pages/data-table-page.css",

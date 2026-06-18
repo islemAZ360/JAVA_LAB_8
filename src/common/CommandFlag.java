@@ -1,8 +1,8 @@
 package common;
 
 public enum CommandFlag {
-    FORCE("-f", "--force"),
-    YES("-y", "--yes");
+    FORCE("-f", "force"),
+    YES("-y", "yes");
 
     private final String shortFlag;
     private final String longFlag;

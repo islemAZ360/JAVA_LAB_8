@@ -1,0 +1,5 @@
+.ui-tabs{-fx-background-color:transparent;-fx-tab-min-height:36px;}
+.ui-tabs .tab-header-area{-fx-background-color:#f4f4f5;-fx-background-radius:6px 6px 0 0;-fx-border-radius:6px 6px 0 0;}
+.ui-tab{-fx-background-color:transparent;-fx-text-fill:#71717a;-fx-font-size:12px;-fx-padding:6px 16px;}
+.ui-tab:selected{-fx-background-color:#ffffff;-fx-text-fill:#09090b;-fx-border-color:transparent transparent #18181b transparent;-fx-border-width:0 0 2px 0;}
+.ui-tab:hover{-fx-text-fill:#09090b;}
