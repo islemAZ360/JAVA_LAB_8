@@ -1,0 +1,7 @@
+.page.show-case-page .ui-data-table-wrap {
+    -fx-prefheight : -1;
+}
+
+.page.show-case-page .ui-data-table {
+    -fx-prefheight : -1;
+}

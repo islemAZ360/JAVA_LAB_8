@@ -20,6 +20,8 @@
 
 .ui-card-content {
     -fx-padding: 4 0 4 0;
+    -fx-max-height: -1; /* default value ~ auto in web css */
+    -fx-pref-height: -1;
 }
 
 .ui-card-footer {

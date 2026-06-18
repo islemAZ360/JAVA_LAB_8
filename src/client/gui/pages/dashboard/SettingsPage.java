@@ -10,6 +10,7 @@ import client.gui.core.Messages;
 import client.gui.core.Theme;
 import client.gui.layout.BasePage;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -131,7 +132,10 @@ public class SettingsPage extends BasePage {
                 langPreview
         );
 
-        this.getChildren().addAll(themeCard, directionCard, langCard);
+        VBox cardWrapper = new VBox(8);
+        cardWrapper.getChildren().addAll(themeCard, directionCard, langCard);
+
+        this.getChildren().addAll(wrapInScroll(cardWrapper));
     }
 
     // ========================================

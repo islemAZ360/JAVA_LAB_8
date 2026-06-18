@@ -172,6 +172,7 @@
 
 .page {
     -fx-background-color: bg-primary;
+    -fx-height: 500px
 }
 
 .page-title {
@@ -186,6 +187,23 @@
 .page-scroll {
     -fx-background: bg-primary;
     -fx-background-color: bg-primary;
+}
+
+/* Visible:hodden the scroll bar not disable*/
+.page-scroll .scroll-bar:vertical,
+.page-scroll .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-height: 0;
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-padding: 0;
+}
+
+.page-scroll .corner {
+    -fx-background-color: transparent;
 }
 
 .dir-rtl {
