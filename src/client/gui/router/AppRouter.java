@@ -4,17 +4,14 @@ import client.gui.layout.MainShell;
 import client.gui.controller.AuthController;
 import client.gui.pages.auth.LoginView;
 import client.gui.pages.auth.RegisterView;
-import client.gui.pages.dashboard.PrototypePage;
-import client.gui.pages.dashboard.ComponentShowcasePage;
-import client.gui.pages.dashboard.DataTablePage;
-import client.gui.pages.dashboard.SettingsPage;
-import client.gui.pages.dashboard.VisualizationPage;
+import client.gui.pages.dashboard.*;
 import client.gui.core.Direction;
 import client.gui.core.Messages;
 import client.gui.core.RtlSupport;
 import client.gui.core.Theme;
 import client.gui.core.ThemeManager;
 import client.gui.integration.Lab7CommandGateway;
+import client.gui.pages.dashboard.TerminalPage;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -92,6 +89,12 @@ public class AppRouter {
                 () -> showDataTable());
         currentShell.addItem(Messages.get(Messages.Key.MENU_VISUALIZATION),
                 () -> showVisualization());
+        currentShell.addItem(Messages.get(Messages.Key.MENU_FILM),
+                () -> showFilm());
+        currentShell.addItem(Messages.get(Messages.Key.MENU_BROWSER),
+                () -> showBrowser());
+        currentShell.addItem(Messages.get(Messages.Key.MENU_TERMINAL),
+                () -> showTerminal());
         currentShell.addItem(Messages.get(Messages.Key.MENU_SETTINGS),
                 () -> showSettings());
 
@@ -127,6 +130,18 @@ public class AppRouter {
 
     private void showVisualization() {
         currentShell.setContent(new VisualizationPage(gateway));
+    }
+
+    private void showFilm() {
+        currentShell.setContent(new FilmPage(gateway));
+    }
+
+    private void showBrowser() {
+        currentShell.setContent(new BrowserPage(gateway));
+    }
+
+    private void showTerminal() {
+        currentShell.setContent(new TerminalPage(gateway));
     }
 
     private void showSettings() {

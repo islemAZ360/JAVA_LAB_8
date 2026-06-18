@@ -7,6 +7,7 @@ import client.gui.components.button.UiButton;
 import client.gui.components.card.UiCard;
 import client.gui.core.Messages;
 import client.gui.integration.Lab7CommandGateway;
+import client.gui.mockup.CartoonAnimationCanvas;
 import client.gui.mockup.ObjectVisualizationCanvas;
 import client.gui.layout.BasePage;
 import javafx.scene.control.Label;
