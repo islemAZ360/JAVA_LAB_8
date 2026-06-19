@@ -1,12 +1,15 @@
 package main.java.client.gui.pages.dashboard;
 
+import main.java.client.gui.core.Messages;
 import main.java.client.gui.integration.Lab7CommandGateway;
 import main.java.client.gui.layout.BasePage;
 import main.java.client.gui.mockup.CartoonAnimationCanvas;
 
 public class BrowserPage extends BasePage {
     public BrowserPage(Lab7CommandGateway gateway) {
-        super("Film page", "film for fun");
+        super(
+                Messages.get(Messages.Key.PAGE_BROWSER_TITLE),
+                Messages.get(Messages.Key.PAGE_BROWSER_DESCRIPTION));
         this.buildContent();
     }
 

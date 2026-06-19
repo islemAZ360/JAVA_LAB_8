@@ -1,7 +1,7 @@
 package main.java.client.gui.router;
 
 import main.java.client.gui.layout.MainShell;
-import main.java.client.gui.controller.AuthController;
+import main.java.client.gui.controllers.AuthController;
 import main.java.client.gui.pages.auth.LoginView;
 import main.java.client.gui.pages.auth.RegisterView;
 import main.java.client.gui.pages.dashboard.*;
