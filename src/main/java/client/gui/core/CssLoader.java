@@ -39,7 +39,8 @@ public final class CssLoader {
 //            Pages css
             "/main/resources/static/css/pages/data-table-page.css",
             "/main/resources/static/css/pages/visualization-page.css",
-            "/main/resources/static/css/pages/show-case-page.css"
+            "/main/resources/static/css/pages/show-case-page.css",
+            "/main/resources/static/css/pages/browser-page.css"
 
 //            ... update here if add more style in future!
     );

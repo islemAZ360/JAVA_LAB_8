@@ -419,6 +419,9 @@ public final class Messages {
         PAGE_FILM_TITLE(new Translation("Страница фильма", "Filmová stránka", "Halaman film", "Film page")),
         PAGE_FILM_DESCRIPTION(new Translation("Страница cho vui", "Stránka pro zábavu", "Halaman cho vui", "page for fun")),
 
+        PAGE_LAB_8_OS_TITLE(new Translation("Страница Лаб 8 ОС", "Stránka Lab 8 OS", "Halaman Lab 8 OS", "Lab 8 OS")),
+        PAGE_LAB_8_OS_DESCRIPTION(new Translation("Новая операционная система для лабораторной 8", "Nový operační systém pro lab 8", "Sistem operasi baru untuk lab 8", "new operating system Lab 8")),
+
         PAGE_SETTINGS_TITLE(new Translation("Тема / RTL / i18n", "Téma / RTL / i18n", "Tema / RTL / i18n", "Theme / RTL / i18n")),
         PAGE_SETTINGS_DESCRIPTION(new Translation("Переключение темы, направления и языка.", "Prepínanie témy, smeru a jazyka.", "Ndërrimi i temës, drejtimit dhe gjuhës.", "Switch theme, direction and language.")),
 
