@@ -244,7 +244,7 @@ public class ObjectVisualizationCanvas extends Canvas {
         // 2. Draw military-style concentric circles of the Radar at the actual center
         gc.setStroke(Color.web("#1a441a"));
         gc.setLineWidth(1.2);
-        for (int r = 80; r <= 800; r += 80) {
+        for (int r = 80; r <= 4000; r += 80) {
             gc.strokeOval(centerX - r, centerY - r, r * 2, r * 2);
         }
 
