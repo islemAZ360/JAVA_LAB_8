@@ -1,0 +1,12 @@
+package main.java.client.gui.core;
+
+public enum FieldRole {
+    TITLE,
+    SUBTITLE,
+    META,
+    BADGE,
+    SUCCESS,
+    WARNING,
+    DANGER,
+    MUTED
+}
