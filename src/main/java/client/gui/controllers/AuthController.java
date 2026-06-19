@@ -1,4 +1,4 @@
-package main.java.client.gui.controller;
+package main.java.client.gui.controllers;
 
 import main.java.client.gui.pages.auth.RegisterView;
 import main.java.client.gui.router.AppRouter;

@@ -1,5 +1,6 @@
 package main.java.client.gui.pages.dashboard;
 
+import main.java.client.gui.core.Messages;
 import main.java.client.gui.integration.Lab7CommandGateway;
 import main.java.client.gui.layout.BasePage;
 import main.java.client.gui.mockup.CartoonAnimationCanvas;
@@ -9,7 +10,9 @@ import javafx.scene.layout.VBox;
 
 public class FilmPage extends BasePage {
     public FilmPage(Lab7CommandGateway gateway) {
-        super("Film page", "film for fun");
+        super(
+                Messages.get(Messages.Key.PAGE_FILM_TITLE),
+                Messages.get(Messages.Key.PAGE_FILM_TITLE));
         this.buildContent();
     }
 

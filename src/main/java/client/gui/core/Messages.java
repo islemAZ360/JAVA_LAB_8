@@ -410,6 +410,15 @@ public final class Messages {
         PAGE_VISUALIZATION_TITLE(new Translation("Визуализация Canvas", "Vizualizácia Canvas", "Vizualizimi Canvas", "Canvas Visualization")),
         PAGE_VISUALIZATION_DESCRIPTION(new Translation("Объекты рисуются графическими примитивами.", "Objekty sa vykresľujú grafickými primitívami.", "Objektet vizatohen me primitive grafike.", "Objects are rendered as graphical primitives.")),
 
+        PAGE_TERMINAL_TITLE(new Translation("Терминальная страница", "Terminálová stránka", "Halaman terminal", "Terminal page")),
+        PAGE_TERMINAL_DESCRIPTION(new Translation("Уникальный терминал для лабораторной 8 ^_^", "Unikátní terminál pro lab 8 ^_^", "Terminal unik untuk lab 8 ^_^", "unique terminal for lab 8 ^_^")),
+
+        PAGE_BROWSER_TITLE(new Translation("Страница браузера", "Stránka prohlížeče", "Halaman browser", "Browser page")),
+        PAGE_BROWSER_DESCRIPTION(new Translation("Страница для интернет-браузера", "Stránka pro internetový prohlížeč", "Halaman untuk internet browser", "page for browser internet")),
+
+        PAGE_FILM_TITLE(new Translation("Страница фильма", "Filmová stránka", "Halaman film", "Film page")),
+        PAGE_FILM_DESCRIPTION(new Translation("Страница cho vui", "Stránka pro zábavu", "Halaman cho vui", "page for fun")),
+
         PAGE_SETTINGS_TITLE(new Translation("Тема / RTL / i18n", "Téma / RTL / i18n", "Tema / RTL / i18n", "Theme / RTL / i18n")),
         PAGE_SETTINGS_DESCRIPTION(new Translation("Переключение темы, направления и языка.", "Prepínanie témy, smeru a jazyka.", "Ndërrimi i temës, drejtimit dhe gjuhës.", "Switch theme, direction and language.")),
 

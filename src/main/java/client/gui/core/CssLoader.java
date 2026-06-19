@@ -34,6 +34,7 @@ public final class CssLoader {
             "/main/resources/static/css/components/tooltip.css",
             "/main/resources/static/css/components/typography.css",
             "/main/resources/static/css/components/breadcrumb.css",
+            "/main/resources/static/css/components/terminal.css",
 
 //            Pages css
             "/main/resources/static/css/pages/data-table-page.css",
