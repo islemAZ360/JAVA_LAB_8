@@ -29,6 +29,8 @@ public class UiDataTable<T> extends VBox {
         getStyleClass().add("ui-data-table-wrap");
         table.getStyleClass().add("ui-data-table");
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        // включаем множественный выбор для массового удаления
+        table.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
         getChildren().add(table);
         VBox.setVgrow(table, javafx.scene.layout.Priority.ALWAYS);
     }
@@ -127,6 +129,11 @@ public class UiDataTable<T> extends VBox {
 
     public T getSelectedItem() {
         return table.getSelectionModel().getSelectedItem();
+    }
+
+    // возвращаем все выбранные строки — нужно для массового удаления
+    public java.util.List<T> getSelectedItems() {
+        return new ArrayList<>(table.getSelectionModel().getSelectedItems());
     }
 
     public TableView<T> table() {

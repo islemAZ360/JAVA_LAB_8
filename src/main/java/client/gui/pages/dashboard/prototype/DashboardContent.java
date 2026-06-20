@@ -106,6 +106,10 @@ public class DashboardContent extends BorderPane {
         });
 
         commandBar.bindSelection(tablePanel.dataTable().table().getSelectionModel().selectedItemProperty());
+        // кнопка удаления активна, если выбран хотя бы один объект
+        commandBar.bindDeleteToSelectionSize(
+                javafx.beans.binding.Bindings.size(tablePanel.dataTable().table().getSelectionModel().getSelectedItems())
+        );
     }
 
     private void configureSecondaryPanels() {
@@ -199,16 +203,29 @@ public class DashboardContent extends BorderPane {
     }
 
     private void deleteSelected() {
-        HumanBeingUiModel selected = tablePanel.getSelectedItem();
-        if (selected == null) return;
+        // берём все выбранные строки, а не только одну
+        List<HumanBeingUiModel> selectedItems = tablePanel.dataTable().getSelectedItems();
+        if (selectedItems == null || selectedItems.isEmpty()) return;
 
-        if (!selected.ownerLogin().equals(currentUser)) {
-            setStatus("Нельзя удалить объект другого пользователя: owner=" + selected.ownerLogin());
-            return;
+        int deleted = 0;
+        int skipped = 0;
+        for (HumanBeingUiModel item : selectedItems) {
+            // чужие объекты удалять нельзя — пропускаем
+            if (!item.ownerLogin().equals(currentUser)) {
+                skipped++;
+                continue;
+            }
+            if (gateway.removeById(item.id())) {
+                deleted++;
+            }
         }
 
-        boolean removed = gateway.removeById(selected.id());
-        refreshData(removed ? "Объект удалён: id=" + selected.id() : "Объект не был удалён");
+        StringBuilder status = new StringBuilder();
+        status.append("Удалено объектов: ").append(deleted);
+        if (skipped > 0) {
+            status.append(", пропущено (чужие): ").append(skipped);
+        }
+        refreshData(status.toString());
     }
 
     private void removeGreaterSelected() {

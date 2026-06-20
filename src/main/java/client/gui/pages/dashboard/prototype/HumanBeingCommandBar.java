@@ -49,14 +49,21 @@ public class HumanBeingCommandBar extends HBox {
      * Bind selection state to buttons that require a selected item.
      */
     public void bindSelection(ObjectExpression<HumanBeingUiModel> selectedItemProperty) {
-        List<UiButton> needsSelection = List.of(
+        // edit/info/remove_greater работают с одним объектом — им нужен единичный выбор
+        List<UiButton> needsSingleSelection = List.of(
                 editButton,
-                deleteButton,
                 infoButton,
                 removeGreaterButton
         );
-        needsSelection.forEach(button ->
+        needsSingleSelection.forEach(button ->
                 button.disableProperty().bind(selectedItemProperty.isNull())
+        );
+    }
+
+    // отдельный метод: биндим кнопку удаления под множественный выбор
+    public void bindDeleteToSelectionSize(javafx.beans.value.ObservableNumberValue selectionSize) {
+        deleteButton.disableProperty().bind(
+                javafx.beans.binding.Bindings.lessThan(selectionSize, 1)
         );
     }
 
