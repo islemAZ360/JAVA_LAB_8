@@ -12,25 +12,39 @@ import main.java.client.gui.components.item.UiItem;
 import main.java.client.gui.core.Messages;
 import main.java.client.gui.integration.Lab7CommandGateway;
 import main.java.client.gui.layout.BasePage;
+import main.java.client.gui.model.HumanBeingUiModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class BrowserPage extends BasePage {
+
+    private final Lab7CommandGateway gateway;
+    private List<HumanBeingUiModel> allItems = List.of();
+    private VBox itemContainer;
+
     public BrowserPage(Lab7CommandGateway gateway) {
         super(
                 Messages.get(Messages.Key.PAGE_BROWSER_TITLE),
                 Messages.get(Messages.Key.PAGE_BROWSER_DESCRIPTION));
+        this.gateway = gateway;
         this.buildContent();
     }
 
     private void buildContent() {
-//        Scene scene = new Scene(new StackPane(canvas), 800, 600);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-        HBox searchBar = this.buildSearchBar();
-        VBox searchResultArea = this.buildSearchResultArea();
         this.getStyleClass().add("browser-page");
+
+        // получаем реальные данные с сервера и настраиваем живой поиск
+        allItems = gateway.show();
+
+        HBox searchBar = buildSearchBar();
+        VBox searchResultArea = buildSearchResultArea();
+
+        // первичная отрисовка списка
+        renderItems(allItems);
+
         this.getChildren().addAll(searchBar, searchResultArea);
     }
 
@@ -40,6 +54,15 @@ public class BrowserPage extends BasePage {
 
         UiButton searchButton = new UiButton("search", ButtonVariant.DEFAULT);
         searchButton.applySize(ButtonSize.DEFAULT);
+
+        // живой поиск: фильтруем при каждом изменении текста
+        searchInput.input().textProperty().addListener((obs, oldVal, newVal) -> {
+            String q = newVal == null ? "" : newVal.toLowerCase(Locale.ROOT);
+            List<HumanBeingUiModel> filtered = allItems.stream()
+                    .filter(h -> contains(h.name(), q) || contains(h.ownerLogin(), q))
+                    .collect(Collectors.toList());
+            renderItems(filtered);
+        });
 
         HBox searchBar = new HBox(20);
         HBox.setHgrow(searchInput, Priority.ALWAYS);
@@ -51,27 +74,36 @@ public class BrowserPage extends BasePage {
         VBox searchResultArea = new VBox(6);
         searchResultArea.getStyleClass().add("search-result-area");
 
-        // Mock data
-        List<UiItem> itemList = new ArrayList<>();
-        for (int i = 1; i <= 20 ; i++) {
-            UiItem item = new UiItem("result " + i, "subtitle " + i);
-            itemList.add(item);
-        }
+        itemContainer = new VBox();
 
-        VBox container = new VBox();
-        container.getChildren().addAll(itemList);
-
-        ScrollPane scrollPane = new ScrollPane(container);
-        scrollPane.setFitToWidth(true); // Ensures the container expands to fit the width
-
-        // Make the ScrollPane and its inner viewport transparent
+        ScrollPane scrollPane = new ScrollPane(itemContainer);
+        scrollPane.setFitToWidth(true);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
-
-        // OPTIMIZATION: Make the scroll pane expand vertically to fill the screen
+        // скролл заполняет всё доступное пространство по вертикали
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
         searchResultArea.getChildren().addAll(scrollPane);
         return searchResultArea;
+    }
+
+    // перестраиваем список UiItem из отфильтрованных данных
+    private void renderItems(List<HumanBeingUiModel> items) {
+        List<UiItem> uiItems = new ArrayList<>();
+        for (HumanBeingUiModel h : items) {
+            String title = h.name();
+            String subtitle = "ID: " + h.id()
+                    + " | Owner: " + h.ownerLogin()
+                    + " | Speed: " + h.impactSpeed();
+            uiItems.add(new UiItem(title, subtitle));
+        }
+        itemContainer.getChildren().setAll(uiItems);
+    }
+
+    // null-safe проверка вхождения подстроки
+    private boolean contains(String value, String query) {
+        return query == null
+                || query.isBlank()
+                || (value != null && value.toLowerCase(Locale.ROOT).contains(query));
     }
 }
