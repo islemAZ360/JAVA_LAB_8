@@ -7,6 +7,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -31,6 +32,13 @@ public class UiDataTable<T> extends VBox {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // включаем множественный выбор для массового удаления
         table.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
+        // Ctrl+A — выделить все строки
+        table.setOnKeyPressed(e -> {
+            if (e.isControlDown() && e.getCode() == KeyCode.A) {
+                table.getSelectionModel().selectAll();
+                e.consume();
+            }
+        });
         getChildren().add(table);
         VBox.setVgrow(table, javafx.scene.layout.Priority.ALWAYS);
     }
