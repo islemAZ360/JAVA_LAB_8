@@ -159,21 +159,24 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
 
     @Override
     public List<HumanBeing> loadAll() throws DatabaseException {
+        // джоиним таблицу юзеров, чтобы получить имя владельца
         String sql = """
-                SELECT id,
-                       name,
-                       coord_x,
-                       coord_y,
-                       creation_date,
-                       real_hero,
-                       has_toothpick,
-                       impact_speed,
-                       soundtrack_name,
-                       minutes_of_waiting,
-                       weapon_type,
-                       car_cool,
-                       user_id
-                FROM human_beings
+                SELECT hb.id,
+                       hb.name,
+                       hb.coord_x,
+                       hb.coord_y,
+                       hb.creation_date,
+                       hb.real_hero,
+                       hb.has_toothpick,
+                       hb.impact_speed,
+                       hb.soundtrack_name,
+                       hb.minutes_of_waiting,
+                       hb.weapon_type,
+                       hb.car_cool,
+                       hb.user_id,
+                       u.user_name AS owner_name
+                FROM human_beings hb
+                LEFT JOIN users u ON hb.user_id = u.id
                 """;
 
         List<HumanBeing> result = new ArrayList<>();
@@ -216,6 +219,8 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
         Car car = carCool == null ? null : new Car(carCool);
 
         Long userId = resultSet.getLong("user_id");
+        // читаем имя владельца из джоина
+        String ownerName = resultSet.getString("owner_name");
 
         HumanBeing humanBeing = new HumanBeing(
                 id,
@@ -232,6 +237,7 @@ public class PostgresCollectionRepository implements CollectionRepository<HumanB
         );
 
         humanBeing.setUserId(userId);
+        humanBeing.setOwnerLogin(ownerName);
 
         return humanBeing;
     }
