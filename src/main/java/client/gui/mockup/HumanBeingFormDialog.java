@@ -122,11 +122,14 @@ public class HumanBeingFormDialog extends UiDialog {
 
     private void saveResult() {
         try {
-            String humanName = required(name.getText(), "name");
+            // прогоняем сырые значения через доменные проверки ДО создания модели
+            String humanName = main.java.common.HumanBeingChecker.checkName(required(name.getText(), "name"));
             int coordinateX = parseX(required(x.getText(), "coordinates.x"));
             long coordinateY = parseY(required(y.getText(), "coordinates.y"));
-            double speed = Double.parseDouble(required(impactSpeed.getText(), "impactSpeed"));
-            long waiting = Long.parseLong(required(minutes.getText(), "minutesOfWaiting"));
+            double speed = main.java.common.HumanBeingChecker.checkImpactSpeed(
+                    Double.parseDouble(required(impactSpeed.getText(), "impactSpeed")));
+            int waiting = main.java.common.HumanBeingChecker.checkMinutesOfWaiting(
+                    Integer.parseInt(required(minutes.getText(), "minutesOfWaiting")));
             String parsedCarName = required(carName.getText(), "car.name");
 
             result = new HumanBeingUiModel(
@@ -147,7 +150,7 @@ public class HumanBeingFormDialog extends UiDialog {
             // число не распарсилось — показываем понятное сообщение, диалог не закрываем
             showError("Некорректное число: " + ex.getMessage());
         } catch (IllegalArgumentException ex) {
-            // вылезли за границы домена (например X=745)
+            // доменная проверка провалилась (checkName, checkImpactSpeed и т.п.)
             showError(ex.getMessage());
         } catch (Exception ex) {
             showError(ex.getMessage());

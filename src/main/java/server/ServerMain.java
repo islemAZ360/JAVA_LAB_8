@@ -276,8 +276,11 @@ public class ServerMain {
             buffer.put(data);
             buffer.flip();
 
-            while (buffer.hasRemaining()) {
-                channel.write(buffer);
+            // блокируем канал, чтобы потоки из writePool не перемешали байты ответа
+            synchronized (channel) {
+                while (buffer.hasRemaining()) {
+                    channel.write(buffer);
+                }
             }
 
             logger.info("Send response to Client ({} bytes)", data.length);
