@@ -29,6 +29,7 @@ public class ShowCommand implements Command {
     @Override
     public Response execute(Request request) {
         String result = collectionManager.show();
-        return new Response(result, StatusCode.OK, null);
+        // передаём саму коллекцию как data, иначе клиент получит null и таблица будет пустой
+        return new Response(result, StatusCode.OK, new java.util.ArrayList<>(collectionManager));
     }
 }
