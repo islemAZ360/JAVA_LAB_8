@@ -275,6 +275,17 @@ public class InputManagerGateway implements Lab7CommandGateway {
         if (command == null || command.isBlank()) {
             return CommandResult.fail("Пустая команда");
         }
+
+        // команды, требующие ввода объекта через Scanner, намертво вешают фоновый поток
+        // — перехватываем их до InputManager и просим юзера пользоваться GUI
+        String cmdName = command.trim().split("\\s+")[0].toLowerCase();
+        if (cmdName.equals("add") || cmdName.equals("update")
+                || cmdName.equals("add_if_max") || cmdName.equals("add_if_min")) {
+            return CommandResult.fail(
+                    "Эта команда требует ввода объекта. Пожалуйста, используйте кнопки графического интерфейса (GUI)."
+            );
+        }
+
         try {
             Response resp = inputManager.handleCommand(command);
             if (resp == null) {
