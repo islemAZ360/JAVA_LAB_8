@@ -1,5 +1,6 @@
 package main.java.client.gui.pages.dashboard;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -24,6 +25,7 @@ public class BrowserPage extends BasePage {
     private final Lab7CommandGateway gateway;
     private List<HumanBeingUiModel> allItems = List.of();
     private VBox itemContainer;
+    private Label emptyLabel;
 
     public BrowserPage(Lab7CommandGateway gateway) {
         super(
@@ -36,8 +38,9 @@ public class BrowserPage extends BasePage {
     private void buildContent() {
         this.getStyleClass().add("browser-page");
 
-        // получаем реальные данные с сервера и настраиваем живой поиск
+        // получаем реальные данные с сервера
         allItems = gateway.show();
+        if (allItems == null) allItems = List.of();
 
         HBox searchBar = buildSearchBar();
         VBox searchResultArea = buildSearchResultArea();
@@ -46,6 +49,8 @@ public class BrowserPage extends BasePage {
         renderItems(allItems);
 
         this.getChildren().addAll(searchBar, searchResultArea);
+        // область результатов должна заполнять всю страницу по вертикали
+        VBox.setVgrow(searchResultArea, Priority.ALWAYS);
     }
 
     private HBox buildSearchBar() {
@@ -57,10 +62,30 @@ public class BrowserPage extends BasePage {
 
         // живой поиск: фильтруем при каждом изменении текста
         searchInput.input().textProperty().addListener((obs, oldVal, newVal) -> {
-            String q = newVal == null ? "" : newVal.toLowerCase(Locale.ROOT);
-            List<HumanBeingUiModel> filtered = allItems.stream()
-                    .filter(h -> contains(h.name(), q) || contains(h.ownerLogin(), q))
-                    .collect(Collectors.toList());
+            String q = newVal == null ? "" : newVal.toLowerCase(Locale.ROOT).trim();
+            List<HumanBeingUiModel> filtered;
+            if (q.isEmpty()) {
+                // пустой запрос — показываем всё
+                filtered = allItems;
+            } else {
+                filtered = allItems.stream()
+                        .filter(h -> contains(h.name(), q) || contains(h.ownerLogin(), q))
+                        .collect(Collectors.toList());
+            }
+            renderItems(filtered);
+        });
+
+        // кнопка тоже запускает фильтр
+        searchButton.setOnAction(e -> {
+            String q = searchInput.getText() == null ? "" : searchInput.getText().toLowerCase(Locale.ROOT).trim();
+            List<HumanBeingUiModel> filtered;
+            if (q.isEmpty()) {
+                filtered = allItems;
+            } else {
+                filtered = allItems.stream()
+                        .filter(h -> contains(h.name(), q) || contains(h.ownerLogin(), q))
+                        .collect(Collectors.toList());
+            }
             renderItems(filtered);
         });
 
@@ -73,17 +98,27 @@ public class BrowserPage extends BasePage {
     private VBox buildSearchResultArea() {
         VBox searchResultArea = new VBox(6);
         searchResultArea.getStyleClass().add("search-result-area");
+        searchResultArea.setMinHeight(200);
 
         itemContainer = new VBox();
+        itemContainer.setMinHeight(100);
+
+        // заглушка когда нет результатов
+        emptyLabel = new Label("No results found");
+        emptyLabel.getStyleClass().add("page-description");
+        emptyLabel.setVisible(false);
+        emptyLabel.setManaged(false);
 
         ScrollPane scrollPane = new ScrollPane(itemContainer);
         scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        scrollPane.setMinHeight(200);
 
         // скролл заполняет всё доступное пространство по вертикали
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
-        searchResultArea.getChildren().addAll(scrollPane);
+        searchResultArea.getChildren().addAll(scrollPane, emptyLabel);
         return searchResultArea;
     }
 
@@ -98,12 +133,18 @@ public class BrowserPage extends BasePage {
             uiItems.add(new UiItem(title, subtitle));
         }
         itemContainer.getChildren().setAll(uiItems);
+
+        // показываем заглушку если список пуст
+        boolean empty = uiItems.isEmpty();
+        emptyLabel.setText(empty ? "No results found" : "");
+        emptyLabel.setVisible(empty);
+        emptyLabel.setManaged(empty);
     }
 
     // null-safe проверка вхождения подстроки
     private boolean contains(String value, String query) {
-        return query == null
-                || query.isBlank()
-                || (value != null && value.toLowerCase(Locale.ROOT).contains(query));
+        if (query == null || query.isBlank()) return true;
+        if (value == null) return false;
+        return value.toLowerCase(Locale.ROOT).contains(query);
     }
 }
