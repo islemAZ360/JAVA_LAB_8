@@ -51,6 +51,7 @@ public class AddIfMinCommand implements Command, RequireAuthorization {
 
             UserSession session = connectionState.getUserSession();
             Long userId = session.getUserId();
+            String username = session.getUsername();
 
             Long newId = Long.parseLong(request.getStringArgument());
 
@@ -75,6 +76,8 @@ public class AddIfMinCommand implements Command, RequireAuthorization {
 
             newHuman.setId(newId);
             newHuman.setUserId(userId);
+            // сохраняем имя владельца в памяти, чтобы сразу отобразить в UI
+            newHuman.setOwnerLogin(username);
 
             synchronized (collectionManager) {
                 if (collectionManager.isEmpty()) {

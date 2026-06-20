@@ -58,6 +58,7 @@ public class UpdateCommand implements Command, RequireAuthorization {
 
             UserSession session = connectionState.getUserSession();
             Long userId = session.getUserId();
+            String username = session.getUsername();
 
             long id = Long.parseLong(request.getStringArgument());
 
@@ -90,6 +91,8 @@ public class UpdateCommand implements Command, RequireAuthorization {
             HumanBeing newHuman = (HumanBeing) request.getObjectArgument();
             newHuman.setId(id);
             newHuman.setUserId(userId);
+            // сохраняем имя владельца в памяти, чтобы сразу отобразить в UI
+            newHuman.setOwnerLogin(username);
 
             boolean updated = collectionManager.updateInDatabaseAndMemory(id, newHuman);
 

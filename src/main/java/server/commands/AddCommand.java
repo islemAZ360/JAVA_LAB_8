@@ -29,7 +29,7 @@ public class AddCommand implements Command, RequireAuthorization {
 
     @Override
     public Response execute(Request request) {
-        return executeAfterAuthorization(request,  null);
+        return executeAfterAuthorization(request, null, null);
     }
 
     @Override
@@ -47,24 +47,27 @@ public class AddCommand implements Command, RequireAuthorization {
 
         UserSession userSession = connectionState.getUserSession();
         Long userId = userSession.getUserId();
+        String username = userSession.getUsername();
 
-        return executeAfterAuthorization(request, userId);
+        return executeAfterAuthorization(request, userId, username);
     }
 
-    private Response executeAfterAuthorization(Request request, Long userId) {
+    private Response executeAfterAuthorization(Request request, Long userId, String username) {
         return Optional.ofNullable(request.getObjectArgument())
                 .filter(HumanBeing.class::isInstance)
                 .map(HumanBeing.class::cast)
                 .filter(tempHuman -> Objects.nonNull(userId))
-                .map(tempHuman -> processAddition(tempHuman, userId))
+                .map(tempHuman -> processAddition(tempHuman, userId, username))
                 .orElse(new Response("Ошибка: объект не передан или имеет неверный тип", StatusCode.BAD_REQUEST, null));
     }
 
     // 3. Вынесение бизнес-логики добавления в отдельный метод
-    private Response processAddition(HumanBeing tempHuman, Long userId) {
+    private Response processAddition(HumanBeing tempHuman, Long userId, String username) {
         try {
             HumanBeing newHuman = collectionManager.generateNewInstance(tempHuman);
             newHuman.setUserId(userId);
+            // сохраняем имя владельца в памяти, чтобы сразу отобразить в UI
+            newHuman.setOwnerLogin(username);
 //            long nextHumanId = collectionManager.getNextIdInRepository();
 //            newHuman.setId(nextHumanId);
             long nextHumanId = collectionManager.addToDatabaseAndMemory(newHuman);
