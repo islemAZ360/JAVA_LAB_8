@@ -23,6 +23,7 @@ public class LoginView extends StackPane {
 
     private final TextField username = new TextField();
     private final PasswordField password = new PasswordField();
+    private final TextField passwordVisible = new TextField();
 
     private final Label usernameError = new Label();
     private final Label passwordError = new Label();
@@ -43,6 +44,9 @@ public class LoginView extends StackPane {
         // Input placeholders from i18n
         username.setPromptText(Messages.get(Messages.Key.USERNAME));
         password.setPromptText(Messages.get(Messages.Key.PASSWORD));
+        passwordVisible.setPromptText(Messages.get(Messages.Key.PASSWORD));
+        password.getStyleClass().add("ui-input");
+        passwordVisible.getStyleClass().add("ui-input");
 
         // Login button
         UiButton loginBtn = new UiButton(
@@ -78,7 +82,7 @@ public class LoginView extends StackPane {
         VBox form = new VBox(8,
                 new UiField(Messages.get(Messages.Key.USERNAME), username),
                 usernameError,
-                new UiField(Messages.get(Messages.Key.PASSWORD), password),
+                new UiField(Messages.get(Messages.Key.PASSWORD), buildPasswordToggleField(password, passwordVisible)),
                 passwordError,
                 message,
                 loginBtn,
@@ -129,5 +133,33 @@ public class LoginView extends StackPane {
 
     public void showServerError(String text) {
         message.setText(text);
+    }
+
+    // переключатель видимости пароля: StackPane со скрытым и открытым полем + кнопка
+    private javafx.scene.Node buildPasswordToggleField(PasswordField hidden, TextField visible) {
+        // держим текст обоих полей синхронизированным
+        hidden.textProperty().bindBidirectional(visible.textProperty());
+        visible.setVisible(false);
+        visible.setManaged(false);
+
+        StackPane stack = new StackPane(hidden, visible);
+        HBox.setHgrow(stack, Priority.ALWAYS);
+
+        UiButton toggle = new UiButton("Показать", ButtonVariant.GHOST);
+        toggle.setMinWidth(Region.USE_PREF_SIZE);
+        toggle.setOnAction(e -> {
+            boolean show = !visible.isVisible();
+            hidden.setVisible(!show);
+            hidden.setManaged(!show);
+            visible.setVisible(show);
+            visible.setManaged(show);
+            toggle.setText(show ? "Скрыть" : "Показать");
+            // фокус переводим на то поле, которое сейчас активно
+            (show ? visible : hidden).requestFocus();
+        });
+
+        HBox box = new HBox(6, stack, toggle);
+        box.setAlignment(Pos.CENTER_LEFT);
+        return box;
     }
 }
