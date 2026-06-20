@@ -21,4 +21,7 @@ public interface Lab7CommandGateway {
     HumanBeingUiModel addIfMax(HumanBeingUiModel humanBeing);
     HumanBeingUiModel addIfMin(HumanBeingUiModel humanBeing);
     int removeGreater(HumanBeingUiModel humanBeing);
+
+    // произвольная команда из терминала — возвращает сообщение и статус
+    CommandResult executeRawCommand(String command);
 }

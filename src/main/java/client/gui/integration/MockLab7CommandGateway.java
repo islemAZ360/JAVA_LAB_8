@@ -99,4 +99,28 @@ public class MockLab7CommandGateway implements Lab7CommandGateway {
                 && h.impactSpeed() > humanBeing.impactSpeed());
         return before - items.size();
     }
+
+    // обработка произвольной команды для мока — поддерживаем базовые команды
+    @Override
+    public CommandResult executeRawCommand(String command) {
+        if (command == null || command.isBlank()) {
+            return CommandResult.fail("Пустая команда");
+        }
+        String[] parts = command.trim().split("\\s+", 2);
+        String cmd = parts[0];
+        return switch (cmd) {
+            case "show" -> CommandResult.ok(items.stream()
+                    .map(h -> "id=" + h.id() + " name=" + h.name() + " owner=" + h.ownerLogin())
+                    .reduce((a, b) -> a + "\n" + b)
+                    .orElse("Коллекция пуста"));
+            case "info" -> CommandResult.ok(info());
+            case "help" -> CommandResult.ok("Доступные команды: show, info, help, add, update, remove_by_id, clear, exit");
+            case "clear" -> {
+                int n = clearMine();
+                yield CommandResult.ok("Удалено объектов: " + n);
+            }
+            case "exit" -> CommandResult.ok("Сессия завершена (мок-режим)");
+            default -> CommandResult.fail("Неизвестная команда (мок): " + cmd);
+        };
+    }
 }

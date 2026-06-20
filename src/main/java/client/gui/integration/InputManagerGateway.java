@@ -29,15 +29,15 @@ import java.util.Scanner;
 
 *   Clear separation of concerns:
 
-*   InputManager.handleCommand() ← main gateway, used for commands that do not require stdin from the GUI:
+*   InputManager.handleCommand() = main gateway, used for commands that do not require stdin from the GUI:
 *   show, info, removeById, removeGreater, clear
 
-*   reqSender.sendRequest() ← direct bypass, used when the GUI already has the data ready:
+*   reqSender.sendRequest() = direct bypass, used when the GUI already has the data ready:
 *   login, register, add, update, addIfMax, addIfMin
-*   (these commands in InputManager read from Scanner — unusable in GUI)
+*   (these commands in InputManager read from Scanner -- unusable in GUI)
 
 *   Flow:
-*   [UI] → Lab7CommandGateway → InputManagerGateway → InputManager / RequestSender → Server
+*   [UI] -> Lab7CommandGateway -> InputManagerGateway -> InputManager / RequestSender -> Server
 */
 public class InputManagerGateway implements Lab7CommandGateway {
 
@@ -269,8 +269,30 @@ public class InputManagerGateway implements Lab7CommandGateway {
         }
     }
 
+    // выполняем произвольную команду через InputManager — те команды, что не читают stdin
+    @Override
+    public CommandResult executeRawCommand(String command) {
+        if (command == null || command.isBlank()) {
+            return CommandResult.fail("Пустая команда");
+        }
+        try {
+            Response resp = inputManager.handleCommand(command);
+            if (resp == null) {
+                return CommandResult.fail("Нет ответа от сервера");
+            }
+            return new CommandResult(
+                    resp.getMessage() == null ? "" : resp.getMessage(),
+                    resp.isSuccess()
+            );
+        } catch (IOException e) {
+            return CommandResult.fail("Ошибка соединения с сервером: " + e.getMessage());
+        } catch (Exception e) {
+            return CommandResult.fail("Ошибка выполнения команды: " + e.getMessage());
+        }
+    }
+
     // -
-    // MAPPING: HumanBeingUiModel → HumanBeing (domain)
+    // MAPPING: HumanBeingUiModel -> HumanBeing (domain)
     // -
 
     private HumanBeing toDomain(HumanBeingUiModel m) {
@@ -288,7 +310,7 @@ public class InputManagerGateway implements Lab7CommandGateway {
     }
 
     // -
-    // MAPPING: HumanBeing (domain) → HumanBeingUiModel
+    // MAPPING: HumanBeing (domain) -> HumanBeingUiModel
     // -
 
     private HumanBeingUiModel toUiModel(HumanBeing hb) {

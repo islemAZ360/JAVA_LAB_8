@@ -83,7 +83,7 @@ public class UiTerminalPanel extends VBox {
         // Ensure the terminal is always on top in the stack
         panel.toFront();
 
-        // When root resizes → panel takes full width
+        // When root resizes, panel takes full width
         panel.prefWidthProperty().bind(root.widthProperty());
         panel.maxWidthProperty().bind(root.widthProperty());
 
@@ -167,7 +167,7 @@ public class UiTerminalPanel extends VBox {
     // ═══════════════════════════════════════════════════════════════════════════
 
     private HBox buildTabBar(String tabName) {
-        tabLabel.setText("▶  " + tabName);
+        tabLabel.setText("> " + tabName);
         tabLabel.getStyleClass().add("ui-terminal-tab-label");
 
         HBox activeTab = new HBox(tabLabel);
@@ -183,20 +183,20 @@ public class UiTerminalPanel extends VBox {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Action buttons — only visible when expanded
-        Button clearBtn = actionBtn("✕ Clear", () -> clear());
-        Button wrapBtn  = actionBtn("⊡ Wrap",  null);
-        Button timeBtn  = actionBtn("⏱",       null);
-        Button closeBtn = new Button("✕");
+        Button clearBtn = actionBtn("[x] Clear", () -> clear());
+        Button wrapBtn  = actionBtn("[W] Wrap",  null);
+        Button timeBtn  = actionBtn("[T]",       null);
+        Button closeBtn = new Button("[x]");
         closeBtn.getStyleClass().add("ui-terminal-close-btn");
         closeBtn.setOnAction(e -> collapse());
 
         wrapBtn.setOnAction(e -> {
             toggleWrap();
-            wrapBtn.setText(wrapText ? "⊡ Wrap ✓" : "⊡ Wrap");
+            wrapBtn.setText(wrapText ? "[W] Wrap *" : "[W] Wrap");
         });
         timeBtn.setOnAction(e -> {
             toggleTimestamp();
-            timeBtn.setText(showTimestamp ? "⏱ ✓" : "⏱");
+            timeBtn.setText(showTimestamp ? "[T] *" : "[T]");
         });
 
         lineCount.getStyleClass().add("ui-terminal-line-count");
@@ -299,7 +299,7 @@ public class UiTerminalPanel extends VBox {
     public void expand() {
         if (isExpanded) return;
         isExpanded = true;
-        tabLabel.setText("▼  " + tabLabel.getText().replaceAll("^[▶▼]\\s+", ""));
+        tabLabel.setText("v " + tabLabel.getText().replaceAll("^[><v]\\s+", ""));
 
         // Prepare bodyBox for parallel animation (invisible but managed)
         bodyBox.setVisible(true);
@@ -334,7 +334,7 @@ public class UiTerminalPanel extends VBox {
     public void collapse() {
         if (!isExpanded) return;
         isExpanded = false;
-        tabLabel.setText("▶  " + tabLabel.getText().replaceAll("^[▶▼]\\s+", ""));
+        tabLabel.setText("> " + tabLabel.getText().replaceAll("^[><v]\\s+", ""));
 
         // Capture current dynamic height to avoid stuttering if interrupted
         double currentHeight = getPrefHeight();
@@ -379,7 +379,7 @@ public class UiTerminalPanel extends VBox {
         });
         handle.setOnMouseDragged(e -> {
             if (!isExpanded) return;
-            double delta = startY[0] - e.getScreenY(); // drag up → increase
+            double delta = startY[0] - e.getScreenY(); // drag up = increase
             panelHeight = Math.max(80, Math.min(600, startH[0] + delta));
             setPrefHeight(TAB_BAR_H + panelHeight);
             e.consume();
