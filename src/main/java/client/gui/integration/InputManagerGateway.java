@@ -280,7 +280,7 @@ public class InputManagerGateway implements Lab7CommandGateway {
                 m.realHero(),
                 m.hasToothpick(),
                 m.impactSpeed(),
-                "", // soundtrackName — UI doesn't have this field
+                "Default Track", // soundtrackName — поля в UI нет, ставим значение по умолчанию, иначе сервер отбивает объект
                 (int) m.minutesOfWaiting(), // domain uses int, UI uses long
                 toWeaponDomain(m.weaponType()),
                 new Car(m.car().cool()) // Car domain only has cool, no name
