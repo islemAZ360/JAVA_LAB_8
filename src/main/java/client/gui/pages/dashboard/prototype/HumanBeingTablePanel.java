@@ -81,16 +81,11 @@ public class HumanBeingTablePanel extends UiCard {
     private void configureControls() {
         filterInput.getStyleClass().add("ui-input");
 
+        // живой поиск: фильтруем сразу при вводе текста, без нажатия кнопки
+        filterInput.textProperty().addListener((obs, oldVal, newVal) -> applyLiveFilter(newVal));
+
         applyFilterButton.setOnAction(e -> {
-            String q = filterInput.getText() == null
-                    ? ""
-                    : filterInput.getText().toLowerCase(Locale.ROOT);
-
-            table.applyFilter(h -> contains(h.name(), q)
-                    || contains(h.ownerLogin(), q)
-                    || contains(String.valueOf(h.weaponType()), q)
-                    || contains(h.car().name(), q));
-
+            applyLiveFilter(filterInput.getText());
             setStatus(Messages.get(Messages.Key.STATUS_FILTER_APPLIED));
         });
 
@@ -103,6 +98,19 @@ public class HumanBeingTablePanel extends UiCard {
         sortButton.setOnAction(e -> {
             table.applySorter(Comparator.comparing(HumanBeingUiModel::name));
             setStatus(Messages.get(Messages.Key.STATUS_SORT_APPLIED));
+        });
+    }
+
+    // применяем фильтр по строке — проверяем все поля с защитой от null
+    private void applyLiveFilter(String query) {
+        String q = query == null ? "" : query.toLowerCase(Locale.ROOT);
+        table.applyFilter(h -> {
+            // null-safe: если поле null, просто пропускаем его в поиске
+            boolean nameMatch = contains(h.name(), q);
+            boolean ownerMatch = contains(h.ownerLogin(), q);
+            boolean weaponMatch = h.weaponType() != null && contains(String.valueOf(h.weaponType()), q);
+            boolean carMatch = h.car() != null && contains(h.car().name(), q);
+            return nameMatch || ownerMatch || weaponMatch || carMatch;
         });
     }
 

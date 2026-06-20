@@ -329,7 +329,8 @@ public class InputManagerGateway implements Lab7CommandGateway {
             hb.getMinutesOfWaiting(),
             toWeaponUi(hb.getWeaponType()),
             new CarUiModel("", domainCar != null && domainCar.isCool()),
-            currentUser != null ? currentUser : "unknown"
+            // берём реального владельца из доменного объекта, а не текущего пользователя
+            hb.getUserId() != null ? String.valueOf(hb.getUserId()) : "unknown"
         );
     }
 
