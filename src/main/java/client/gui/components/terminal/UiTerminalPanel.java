@@ -108,6 +108,8 @@ public class UiTerminalPanel extends VBox {
     private boolean wrapText      = false;
     private boolean showTimestamp = true;
     private double  panelHeight   = DEFAULT_H;
+    // в режиме полностраничной вставки отключаем анимации сворачивания
+    private boolean fullPageMode  = false;
 
     // ── UI ───────────────────────────────────────────────────────────────────
     private final TextFlow  logArea     = new TextFlow();
@@ -292,11 +294,38 @@ public class UiTerminalPanel extends VBox {
     //  Toggle expand / collapse
     // ═══════════════════════════════════════════════════════════════════════════
 
+    // включаем режим полностраничного терминала: без анимаций и ограничений высоты
+    public void setFullPageMode(boolean enabled) {
+        this.fullPageMode = enabled;
+        if (!enabled) return;
+
+        // сразу раскрываем, без анимации
+        isExpanded = true;
+        bodyBox.setVisible(true);
+        bodyBox.setManaged(true);
+        bodyBox.setOpacity(1.0);
+        VBox.setVgrow(bodyBox, Priority.ALWAYS);
+
+        // снимаем все ограничения высоты — пусть растёт на всю страницу
+        setMinHeight(Region.USE_COMPUTED_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+        setMaxHeight(Double.MAX_VALUE);
+
+        if (autoScroll) scrollToBottom();
+        inputField.requestFocus();
+    }
+
+    public boolean isFullPageMode() {
+        return fullPageMode;
+    }
+
     public void toggle() {
+        if (fullPageMode) return; // в полностраничном режиме сворачивание не нужно
         if (isExpanded) collapse(); else expand();
     }
 
     public void expand() {
+        if (fullPageMode) return; // уже раскрыт на всю страницу
         if (isExpanded) return;
         isExpanded = true;
         tabLabel.setText("v " + tabLabel.getText().replaceAll("^[><v]\\s+", ""));
@@ -332,6 +361,7 @@ public class UiTerminalPanel extends VBox {
     }
 
     public void collapse() {
+        if (fullPageMode) return; // сворачивать нельзя в полностраничном режиме
         if (!isExpanded) return;
         isExpanded = false;
         tabLabel.setText("> " + tabLabel.getText().replaceAll("^[><v]\\s+", ""));

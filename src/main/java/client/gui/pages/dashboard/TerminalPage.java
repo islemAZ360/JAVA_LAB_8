@@ -2,7 +2,6 @@ package main.java.client.gui.pages.dashboard;
 
 import javafx.application.Platform;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import main.java.client.gui.components.terminal.UiTerminalPanel;
 import main.java.client.gui.core.Messages;
@@ -33,24 +32,12 @@ public class TerminalPage extends BasePage {
         // обработчик команд из терминала
         terminal.setCommandHandler(this::executeCommandAsync);
 
-        // терминал должен занимать всю страницу
-        StackPane terminalWrapper = new StackPane(terminal);
-        terminalWrapper.getStyleClass().add("ui-terminal-wrapper");
-        terminalWrapper.setMaxWidth(Double.MAX_VALUE);
-        terminalWrapper.setMaxHeight(Double.MAX_VALUE);
-        StackPane.setAlignment(terminal, javafx.geometry.Pos.TOP_LEFT);
-        terminal.prefWidthProperty().bind(terminalWrapper.widthProperty());
-        terminal.maxWidthProperty().bind(terminalWrapper.widthProperty());
-        terminal.prefHeightProperty().bind(terminalWrapper.heightProperty());
-        terminal.maxHeightProperty().bind(terminalWrapper.heightProperty());
-        VBox.setVgrow(terminalWrapper, Priority.ALWAYS);
-
-        // раскрываем терминал на весь экран
-        terminal.expand();
+        // включаем полностраничный режим: терминал заполняет всю страницу без анимаций
+        terminal.setFullPageMode(true);
         terminal.showCommandInput(true);
 
-        this.getChildren().add(terminalWrapper);
-        VBox.setVgrow(terminalWrapper, Priority.ALWAYS);
+        this.getChildren().add(terminal);
+        VBox.setVgrow(terminal, Priority.ALWAYS);
     }
 
     // отправляем команду в фоновом потоке, чтобы не повесить UI
