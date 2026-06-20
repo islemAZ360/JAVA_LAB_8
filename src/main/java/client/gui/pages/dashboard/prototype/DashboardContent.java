@@ -241,7 +241,7 @@ public class DashboardContent extends BorderPane {
                 // UI трогаем только через runLater — иначе упадёт
                 Platform.runLater(() -> applyAutoRefreshedItems(fresh));
             } catch (Exception e) {
-                // сеть моргнула — фиг с ним, через 3 сек попробуем снова
+                // Игнорируем ошибку сети: повторная попытка будет выполнена через 3 секунды
             }
         }, AUTO_REFRESH_INTERVAL_SEC, AUTO_REFRESH_INTERVAL_SEC, TimeUnit.SECONDS);
     }
