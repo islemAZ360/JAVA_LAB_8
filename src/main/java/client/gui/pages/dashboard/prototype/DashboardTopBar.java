@@ -2,6 +2,7 @@ package main.java.client.gui.pages.dashboard.prototype;
 
 import main.java.client.gui.components.button.ButtonVariant;
 import main.java.client.gui.components.button.UiButton;
+import main.java.client.gui.core.LangEventBus;
 import main.java.client.gui.core.Messages;
 import main.java.client.gui.core.Theme;
 import javafx.geometry.Pos;
@@ -49,7 +50,8 @@ public class DashboardTopBar extends HBox {
 
         // Button actions
         langButton.setOnAction(e -> {
-            Messages.setLang(Messages.nextLang());
+            // используем шину событий для глобального обновления языка
+            LangEventBus.setLang(Messages.nextLang());
             if (this.onLanguageChanged != null) {
                 this.onLanguageChanged.run();
             }
