@@ -16,6 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.*;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.geometry.VPos;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -335,28 +337,32 @@ public class ObjectVisualizationCanvas extends Canvas {
             detectedInCurrentSweep.put(item.id(), false);
         }
 
-        // Draw the circle point (Using the continuously varying currentRadius)
-        gc.setFill(baseColor);
+        // рисуем кружок с полупрозрачной заливкой — так перекрытия выглядят аккуратнее
+        gc.setFill(Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 0.78));
         gc.fillOval(xy[0] - currentRadius, xy[1] - currentRadius, currentRadius * 2, currentRadius * 2);
 
-        // Only draw the border and ID text when the size is large enough to avoid a messy UI at the small circle center
+        // рамка: brighter-версия цвета владельца, чтобы кружки были различимы в скоплении
         if (currentRadius > 5.0) {
-            gc.setStroke(selected ? Color.web("#fafafa") : Color.web("#e4e4e7"));
-            gc.setLineWidth(selected ? 3 : 1.5);
+            Color strokeColor = baseColor.brighter();
+            gc.setStroke(selected ? Color.web("#fafafa") : strokeColor);
+            gc.setLineWidth(selected ? 2.5 : 1.2);
             gc.strokeOval(xy[0] - currentRadius, xy[1] - currentRadius, currentRadius * 2, currentRadius * 2);
 
             if (selected) {
+                // дополнительное кольцо выделения
                 gc.setStroke(Color.web("#fafafa"));
                 gc.setLineWidth(1.0);
-                gc.strokeOval(xy[0] - currentRadius - 5, xy[1] - currentRadius - 5, currentRadius * 2 + 10, currentRadius * 2 + 10);
+                gc.strokeOval(xy[0] - currentRadius - 4, xy[1] - currentRadius - 4, currentRadius * 2 + 8, currentRadius * 2 + 8);
             }
 
-            // Smoothly display the ID text according to the zoom level (sweepRatio range has been fixed)
+            // центрируем текст внутри радара по обеим осям
             gc.setGlobalAlpha(sweepRatio);
             gc.setFill(textColor);
-            gc.setFont(Font.font(11));
+            gc.setFont(Font.font(10));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.setTextBaseline(VPos.CENTER);
             String idText = String.valueOf(item.id());
-            gc.fillText(idText, xy[0] - idText.length() * 3.0, xy[1] + 4);
+            gc.fillText(idText, xy[0], xy[1]);
         }
 
         gc.setGlobalAlpha(1.0);
@@ -411,6 +417,7 @@ public class ObjectVisualizationCanvas extends Canvas {
     }
 
     private double radiusOf(HumanBeingUiModel item) {
-        return Math.max(12, Math.min(42, 10 + item.impactSpeed()));
+        // уменьшенные радиусы: мин 8, макс 22, чтобы объекты не перекрывали друг друга
+        return Math.max(8, Math.min(22, 8 + item.impactSpeed() * 0.15));
     }
 }
