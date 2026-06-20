@@ -67,15 +67,34 @@ public class UiDataTable<T> extends VBox {
     public UiDataTable<T> setRowStyle(Function<T, String> rowStyleFactory) {
         this.rowStyleFactory = rowStyleFactory;
         table.setRowFactory(tv -> new TableRow<>() {
+            {
+                // слушаем выделение строки и пересчитываем стиль — иначе inline-цвет владельца перекроет :selected
+                selectedProperty().addListener((obs, wasSel, isSel) -> applyRowStyle());
+            }
+
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null || UiDataTable.this.rowStyleFactory == null) {
+                applyRowStyle();
+            }
+
+            // считаем итоговый стиль: цвет владельца, а поверх — выделение, если строка выбрана
+            private void applyRowStyle() {
+                T item = getItem();
+                if (item == null || isEmpty() || UiDataTable.this.rowStyleFactory == null) {
                     setStyle("");
-                } else {
-                    String style = UiDataTable.this.rowStyleFactory.apply(item);
-                    setStyle(style == null ? "" : style);
+                    return;
                 }
+                String base = UiDataTable.this.rowStyleFactory.apply(item);
+                if (base == null) base = "";
+                if (isSelected()) {
+                    // выделяем выбранную строку яркой рамкой и фоном, переопределяя цвет владельца
+                    base = base
+                            + "-fx-background-color: #1e293b;"
+                            + "-fx-border-color: #6366f1 transparent #6366f1 transparent;"
+                            + "-fx-border-width: 2 0 2 0;";
+                }
+                setStyle(base);
             }
         });
         return this;
