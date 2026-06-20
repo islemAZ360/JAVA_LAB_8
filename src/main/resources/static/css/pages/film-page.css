@@ -1,0 +1,40 @@
+/* Film Page — стилизация страницы медиаплеера */
+
+/* отступы и интервалы страницы */
+.page.film-page {
+    -fx-spacing: 18;
+    -fx-padding: 20 22 22 22;
+}
+
+/* контейнер канваса: тёмный фон, скруглённые углы, мягкая тень */
+.page.film-page .film-canvas-container {
+    -fx-background-color: #0d0f14;
+    -fx-background-radius: 12;
+    -fx-border-color: #27272a;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 18, 0, 0, 6);
+    -fx-padding: 0;
+}
+
+/* канвас заполняет контейнер целиком */
+.page.film-page .film-canvas-container .cartoon-canvas {
+    -fx-background-radius: 12;
+}
+
+/* панель управления под канвасом */
+.page.film-page .film-control-bar {
+    -fx-background-color: bg-elevated;
+    -fx-background-radius: 10;
+    -fx-border-color: border-color;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 12 18 12 18;
+    -fx-spacing: 12;
+    -fx-alignment: center;
+}
+
+/* общий контейнер плеера */
+.page.film-page .film-player-layout {
+    -fx-spacing: 14;
+}

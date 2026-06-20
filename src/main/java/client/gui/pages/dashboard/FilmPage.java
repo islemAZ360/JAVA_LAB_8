@@ -2,7 +2,6 @@ package main.java.client.gui.pages.dashboard;
 
 import main.java.client.gui.components.button.ButtonVariant;
 import main.java.client.gui.components.button.UiButton;
-import main.java.client.gui.components.card.UiCard;
 import main.java.client.gui.core.Messages;
 import main.java.client.gui.integration.Lab7CommandGateway;
 import main.java.client.gui.layout.BasePage;
@@ -23,18 +22,20 @@ public class FilmPage extends BasePage {
     }
 
     private void buildContent() {
+        this.getStyleClass().add("film-page");
+
         CartoonAnimationCanvas canvas = new CartoonAnimationCanvas();
         canvas.getStyleClass().add("cartoon-canvas");
 
-        // канвас внутри StackPane, чтобы центрировался и растягивался
-        StackPane filmView = new StackPane(canvas);
-        filmView.setMinSize(0, 0);
-        filmView.setPrefSize(800, 500);
-        VBox.setVgrow(filmView, Priority.ALWAYS);
+        // контейнер канваса: тёмный фон, скруглённые углы, тень
+        StackPane canvasContainer = new StackPane(canvas);
+        canvasContainer.getStyleClass().add("film-canvas-container");
+        canvasContainer.setMinSize(0, 0);
+        VBox.setVgrow(canvasContainer, Priority.ALWAYS);
 
-        // панель управления анимацией
-        UiButton playPauseBtn = new UiButton("Pause", ButtonVariant.OUTLINE);
-        UiButton speedX1Btn = new UiButton("Speed x1", ButtonVariant.GHOST);
+        // панель управления строго под канвасом, не перекрывает его
+        UiButton playPauseBtn = new UiButton("Pause", ButtonVariant.SECONDARY);
+        UiButton speedX1Btn = new UiButton("Speed x1", ButtonVariant.SECONDARY);
         UiButton speedX2Btn = new UiButton("Speed x2", ButtonVariant.GHOST);
 
         playPauseBtn.setOnAction(e -> {
@@ -44,29 +45,25 @@ public class FilmPage extends BasePage {
 
         speedX1Btn.setOnAction(e -> {
             canvas.setSpeed(1.0);
-            speedX1Btn.applyVariant(ButtonVariant.OUTLINE);
+            speedX1Btn.applyVariant(ButtonVariant.SECONDARY);
             speedX2Btn.applyVariant(ButtonVariant.GHOST);
         });
 
         speedX2Btn.setOnAction(e -> {
             canvas.setSpeed(2.0);
-            speedX2Btn.applyVariant(ButtonVariant.OUTLINE);
+            speedX2Btn.applyVariant(ButtonVariant.SECONDARY);
             speedX1Btn.applyVariant(ButtonVariant.GHOST);
         });
 
-        HBox controlBar = new HBox(10, playPauseBtn, speedX1Btn, speedX2Btn);
-        controlBar.getStyleClass().add("canvas-control");
+        HBox controlBar = new HBox(12, playPauseBtn, speedX1Btn, speedX2Btn);
+        controlBar.getStyleClass().add("film-control-bar");
         controlBar.setAlignment(Pos.CENTER);
 
-        // упаковываем канвас и панель управления в карточку
-        UiCard filmCard = new UiCard(
-                Messages.get(Messages.Key.PAGE_FILM_TITLE),
-                "Interactive cartoon animation with playback controls"
-        );
-        filmCard.getStyleClass().add("film-card");
-        filmCard.content().getChildren().addAll(filmView, controlBar);
+        // общий макет: канвас сверху, панель управления снизу
+        VBox playerLayout = new VBox(14, canvasContainer, controlBar);
+        playerLayout.getStyleClass().add("film-player-layout");
 
-        this.getChildren().add(filmCard);
-        VBox.setVgrow(filmCard, Priority.ALWAYS);
+        this.getChildren().add(playerLayout);
+        VBox.setVgrow(playerLayout, Priority.ALWAYS);
     }
 }
