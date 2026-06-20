@@ -38,3 +38,7 @@ task.docx
 learn.md
 InputManagerGateway-reimplement.txt
 src.zip
+
+### Local code-dump tooling (not part of the project) ###
+scripts/combine-code.ps1
+JAVA_LAB_8_all_code.txt

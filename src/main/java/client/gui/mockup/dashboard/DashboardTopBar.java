@@ -69,10 +69,10 @@ public class DashboardTopBar extends HBox {
 
     public void refreshLanguage() {
         currentUserLabel.setText(Messages.get(Messages.Key.CURRENT_USER) + ": " + currentUser);
-        langButton.setText("🌐 " + Messages.getCurrentLang().displayName());
+        langButton.setText(Messages.getCurrentLang().displayName());
         themeButton.setText(currentTheme == Theme.DARK
-                ? "🌙 " + Messages.get(Messages.Key.THEME_DARK)
-                : "☀ " + Messages.get(Messages.Key.THEME_LIGHT));
+                ? Messages.get(Messages.Key.THEME_DARK)
+                : Messages.get(Messages.Key.THEME_LIGHT));
         logoutButton.setText(Messages.get(Messages.Key.LOGOUT));
     }
 }

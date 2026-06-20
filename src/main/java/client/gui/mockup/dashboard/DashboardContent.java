@@ -9,6 +9,7 @@ import main.java.client.gui.pages.dashboard.prototype.DashboardSection;
 import main.java.client.gui.pages.dashboard.prototype.HumanBeingCommandBar;
 import main.java.client.gui.pages.dashboard.prototype.HumanBeingTablePanel;
 import main.java.client.gui.pages.dashboard.prototype.HumanBeingVisualizationPanel;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -16,6 +17,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class DashboardContent extends BorderPane {
     private final String currentUser;
@@ -30,6 +34,16 @@ public class DashboardContent extends BorderPane {
 
     private List<HumanBeingUiModel> items = List.of();
     private main.java.client.gui.pages.dashboard.prototype.DashboardSection currentSection = main.java.client.gui.pages.dashboard.prototype.DashboardSection.COLLECTION;
+
+    // фоновый опрос коллекции: раз в 3 сек тянет свежие данные с сервера
+    private final ScheduledExecutorService autoRefreshExecutor =
+            Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "dashboard-auto-refresh");
+                t.setDaemon(true);
+                return t;
+            });
+    private static final long AUTO_REFRESH_INTERVAL_SEC = 3;
+    private volatile boolean autoRefreshRunning = true;
 
     public DashboardContent(String currentUser, Lab7CommandGateway gateway) {
         this.currentUser = currentUser == null || currentUser.isBlank() ? "demo_user" : currentUser;
@@ -46,6 +60,12 @@ public class DashboardContent extends BorderPane {
 
         refreshData("Данные загружены из gateway");
         showSection(main.java.client.gui.pages.dashboard.prototype.DashboardSection.COLLECTION);
+
+        // запускаем автообновление; при logout дашборд уходит со сцены — поток гаснет сам
+        startAutoRefresh();
+        sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) dispose();
+        });
     }
 
     public void setStatus(String status) {
@@ -213,6 +233,56 @@ public class DashboardContent extends BorderPane {
 
     private long nextId() {
         return items.stream().mapToLong(HumanBeingUiModel::id).max().orElse(0) + 1;
+    }
+
+    // фоновый поток: дёргаем gateway.show() НЕ в FX-потоке, раз в 3 секунды
+    private void startAutoRefresh() {
+        autoRefreshExecutor.scheduleAtFixedRate(() -> {
+            if (!autoRefreshRunning) return;
+            try {
+                List<HumanBeingUiModel> fresh = gateway.show();
+                if (!autoRefreshRunning) return;
+                // UI трогаем только через runLater — иначе упадёт
+                Platform.runLater(() -> applyAutoRefreshedItems(fresh));
+            } catch (Exception e) {
+                // сеть моргнула — фиг с ним, через 3 сек попробуем снова
+            }
+        }, AUTO_REFRESH_INTERVAL_SEC, AUTO_REFRESH_INTERVAL_SEC, TimeUnit.SECONDS);
+    }
+
+    // применяем свежие данные в FX-потоке, но выделение не сбрасываем
+    private void applyAutoRefreshedItems(List<HumanBeingUiModel> fresh) {
+        if (!autoRefreshRunning) return;
+
+        HumanBeingUiModel selected = tablePanel.getSelectedItem();
+        long selectedId = selected == null ? -1L : selected.id();
+
+        items = fresh == null ? List.of() : fresh;
+        tablePanel.setItems(items);
+        visualizationPanel.setItems(items);
+
+        // если объект ещё жив — возвращаем выделение в таблице и на канвасе
+        if (selectedId > 0) {
+            HumanBeingUiModel stillThere = items.stream()
+                    .filter(h -> h.id() == selectedId)
+                    .findFirst()
+                    .orElse(null);
+            if (stillThere != null) {
+                tablePanel.select(stillThere);
+                visualizationPanel.setSelectedObject(stillThere);
+            }
+        }
+    }
+
+    // гасим фоновый поток при логауте/закрытии дашборда
+    public void dispose() {
+        autoRefreshRunning = false;
+        autoRefreshExecutor.shutdownNow();
+        try {
+            autoRefreshExecutor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private enum CommandMode {
