@@ -403,7 +403,8 @@ public class ObjectVisualizationCanvas extends Canvas {
     }
 
     private double[] toCanvas(HumanBeingUiModel item) {
-        double scale = 28;
+        // уменьшаем масштаб, чтобы объекты не улетали за экран (координаты до 440)
+        double scale = 1.2;
         double x = getWidth() / 2 + item.coordinates().x() * scale + offsetX;
         double y = getHeight() / 2 - item.coordinates().y() * scale + offsetY;
         return new double[]{x, y};

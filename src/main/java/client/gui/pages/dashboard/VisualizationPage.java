@@ -34,44 +34,27 @@ public class VisualizationPage extends BasePage {
     }
 
     private void buildContent() {
-//        Canvas
+        // единственный радар-канвас на всю ширину страницы
         ObjectVisualizationCanvas mainCanvas = new ObjectVisualizationCanvas();
         mainCanvas.getStyleClass().add("main-canvas");
-//        Wrote in css file
         mainCanvas.setWidth(900);
         mainCanvas.setHeight(500);
-//        Canvas can not autoscale
-//        mainCanvas.prefWidth(Double.MAX_VALUE);
-//        mainCanvas.prefHeight(Double.MAX_VALUE);
         mainCanvas.setItems(gateway.show());
 
-        VBox objectDetectedArea = new VBox(20);
-        objectDetectedArea.getStyleClass().add("object-detected-area");
+        // область под канвасом: информация о обнаруженном объекте + кнопка сброса
         Label objectDetectedInfo = new Label(Messages.get(Messages.Key.OBJECTS_DETECTED_BY_RADAR));
+        objectDetectedInfo.getStyleClass().add("object-info");
 
-        // Reset origin button
         UiButton resetOriginBtn = new UiButton(
                 Messages.get(Messages.Key.VISUALIZATION_RESET_ORIGIN),
                 ButtonVariant.DEFAULT
         );
         resetOriginBtn.setOnAction(e -> mainCanvas.resetOrigin());
-        objectDetectedArea.getChildren().addAll(objectDetectedInfo, resetOriginBtn);
 
-        ObjectVisualizationCanvas cartoonCanvas = new ObjectVisualizationCanvas();
-        cartoonCanvas.getStyleClass().add("cartoon-canvas");
-        cartoonCanvas.setWidth(400);
-        cartoonCanvas.setHeight(350);
+        VBox objectDetectedArea = new VBox(10, objectDetectedInfo, resetOriginBtn);
+        objectDetectedArea.getStyleClass().add("object-detected-area");
 
-        VBox rightVisualArea = new VBox(20);
-        rightVisualArea.getStyleClass().add("right-visual-area");
-        rightVisualArea.getChildren().addAll(cartoonCanvas, objectDetectedArea);
-
-        HBox canvasWrapper = new HBox(10);
-        canvasWrapper.getChildren().addAll(mainCanvas,rightVisualArea);
-        canvasWrapper.getStyleClass().add("canvas-wrapper");
-        HBox.setHgrow(mainCanvas, Priority.ALWAYS);
-
-        // Info label (shows selected object details)
+        // лейбл с деталями выбранного объекта
         Label info = new Label(Messages.get(Messages.Key.VISUALIZATION_CLICK_HINT));
         info.setWrapText(true);
         info.getStyleClass().add("object-info");
@@ -84,41 +67,42 @@ public class VisualizationPage extends BasePage {
                 + ", impactSpeed=" + h.impactSpeed()
         ));
 
-//        show to text area
-        mainCanvas.setOnObjectDetected(h -> {
-            objectDetectedInfo.setText(
-                    "Detected: " + h.name()
-                    + ", pos=(" + h.coordinates().x()
-                    + "; " + h.coordinates().y()
-                    + ")" + ", speed=" + h.impactSpeed() + " m/s"
-            );
-        });
+        mainCanvas.setOnObjectDetected(h -> objectDetectedInfo.setText(
+                "Detected: " + h.name()
+                + ", pos=(" + h.coordinates().x() + "; " + h.coordinates().y() + ")"
+                + ", speed=" + h.impactSpeed() + " m/s"
+        ));
 
-        // Info alert
+        // инфо-алерт
         UiAlert note = new UiAlert(
                 Messages.get(Messages.Key.VISUALIZATION_ANIMATION_TITLE),
                 Messages.get(Messages.Key.VISUALIZATION_ANIMATION_DESC),
                 AlertVariant.INFO
         );
 
-        // Reload button
+        // кнопка перезагрузки данных
         UiButton reload = new UiButton(
                 Messages.get(Messages.Key.VISUALIZATION_RELOAD),
                 ButtonVariant.DEFAULT
         );
         reload.setOnAction(e -> mainCanvas.setItems(gateway.show()));
 
-        // Canvas card
+        // карточка с канвасом
         UiCard canvasCard = new UiCard(
                 Messages.get(Messages.Key.VISUALIZATION_CARD_TITLE),
                 Messages.get(Messages.Key.VISUALIZATION_CARD_DESC)
         );
         canvasCard.getStyleClass().add("canvas-card");
 
+        // панель управления: инфо о выборе + кнопка reload + кнопка сброса
         HBox canvasControl = new HBox(12, info, reload);
         canvasControl.getStyleClass().add("canvas-control");
 
-        canvasCard.content().getChildren().addAll(wrapInScroll(canvasWrapper), canvasControl);
+        // канвас занимает всю ширину, под ним — панель управления и область обнаружения
+        VBox canvasLayout = new VBox(14, mainCanvas, canvasControl, objectDetectedArea);
+        VBox.setVgrow(mainCanvas, Priority.ALWAYS);
+
+        canvasCard.content().getChildren().add(canvasLayout);
 
         this.getChildren().addAll(note, canvasCard);
     }
