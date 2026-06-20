@@ -21,6 +21,9 @@ public final class OwnerColorPalette {
 
     private static final Map<String, Color> CACHE = new HashMap<>();
 
+    // выдаем цвета по очереди, чтобы избежать коллизий хэшей
+    private static int nextColorIndex = 0;
+
     public static Color colorFor(String owner) {
         String key = owner == null || owner.isBlank() ? "unknown" : owner.trim();
         return CACHE.computeIfAbsent(key, OwnerColorPalette::stableColor);
@@ -43,7 +46,9 @@ public final class OwnerColorPalette {
     }
 
     private static Color stableColor(String owner) {
-        int index = Math.floorMod(owner.hashCode(), PALETTE.length);
+        // последовательная выдача: первые 8 пользователей гарантированно получат разные цвета
+        int index = nextColorIndex % PALETTE.length;
+        nextColorIndex++;
         return PALETTE[index];
     }
 
