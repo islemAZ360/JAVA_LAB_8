@@ -6,6 +6,7 @@ import main.java.client.gui.components.card.UiCard;
 import main.java.client.gui.components.field.UiField;
 import main.java.client.gui.components.select.UiSelect;
 import main.java.client.gui.core.Direction;
+import main.java.client.gui.core.LangEventBus;
 import main.java.client.gui.core.Messages;
 import main.java.client.gui.core.Theme;
 import main.java.client.gui.layout.BasePage;
@@ -117,7 +118,8 @@ public class SettingsPage extends BasePage {
         applyLang.setOnAction(e -> {
             Messages.Lang selectedLang = langSelect.selected();
             if (selectedLang != null) {
-                Messages.setLang(selectedLang);
+                // через шину — чтобы подписчики (MainShell) тоже обновили язык
+                LangEventBus.setLang(selectedLang);
                 langPreview.setText(buildLangPreview());
             }
         });

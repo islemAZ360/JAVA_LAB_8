@@ -14,6 +14,7 @@ import main.java.client.gui.model.WeaponTypeUi;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.time.LocalDateTime;
@@ -122,8 +123,8 @@ public class HumanBeingFormDialog extends UiDialog {
     private void saveResult() {
         try {
             String humanName = required(name.getText(), "name");
-            int coordinateX = Integer.parseInt(required(x.getText(), "coordinates.x"));
-            long coordinateY = Long.parseLong(required(y.getText(), "coordinates.y"));
+            int coordinateX = parseX(required(x.getText(), "coordinates.x"));
+            long coordinateY = parseY(required(y.getText(), "coordinates.y"));
             double speed = Double.parseDouble(required(impactSpeed.getText(), "impactSpeed"));
             long waiting = Long.parseLong(required(minutes.getText(), "minutesOfWaiting"));
             String parsedCarName = required(carName.getText(), "car.name");
@@ -142,9 +143,36 @@ public class HumanBeingFormDialog extends UiDialog {
                     ownerLogin
             );
             close();
+        } catch (NumberFormatException ex) {
+            // число не распарсилось — показываем понятное сообщение, диалог не закрываем
+            showError("Некорректное число: " + ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            // вылезли за границы домена (например X=745)
+            showError(ex.getMessage());
         } catch (Exception ex) {
             showError(ex.getMessage());
         }
+    }
+
+    // проверяем X на допустимые границы, иначе кидаем IllegalArgumentException
+    private int parseX(String raw) {
+        int value = Integer.parseInt(raw);
+        if (value <= main.java.common.models.Const.MINVALUEX || value >= main.java.common.models.Const.MAXVALUEX) {
+            throw new IllegalArgumentException(
+                    "X должен быть больше " + main.java.common.models.Const.MINVALUEX
+                            + " и меньше " + main.java.common.models.Const.MAXVALUEX + ". Получено: " + value);
+        }
+        return value;
+    }
+
+    // проверяем Y на верхнюю границу
+    private long parseY(String raw) {
+        long value = Long.parseLong(raw);
+        if (value > main.java.common.models.Const.MAXVALUEY) {
+            throw new IllegalArgumentException(
+                    "Y должен быть не больше " + main.java.common.models.Const.MAXVALUEY + ". Получено: " + value);
+        }
+        return value;
     }
 
     private String required(String value, String field) {
@@ -155,9 +183,22 @@ public class HumanBeingFormDialog extends UiDialog {
     }
 
     private void showError(String message) {
-        error.setText("Ошибка", message == null ? "Некорректные данные" : message);
+        // заново навешиваем ERROR-стиль, чтобы алерт всегда был заметным
+        error.applyVariant(AlertVariant.ERROR);
+        error.setText("Ошибка проверки", message == null || message.isBlank() ? "Некорректные данные" : message);
         error.setVisible(true);
         error.setManaged(true);
+
+        // поднимаем алерт наверх контента, чтобы пользователь точно его увидел
+        content().getChildren().remove(error);
+        content().getChildren().add(0, error);
+
+        // если окно слишком низкое — немного растягиваем, иначе сообщение обрежется
+        Stage stage = stage();
+        if (stage.getHeight() < 620) {
+            stage.setHeight(620);
+        }
+        stage.sizeToScene();
     }
 
     private String normalizeOwner(String currentUser) {

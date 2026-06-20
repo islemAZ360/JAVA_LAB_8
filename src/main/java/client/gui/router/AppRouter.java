@@ -81,21 +81,22 @@ public class AppRouter {
         currentShell = new MainShell(stage, username);
 
         // Register menu items with navigation
-        currentShell.addItem(Messages.get(Messages.Key.MENU_PROTOTYPE),
+        // текст берём через supplier, чтобы при смене языка он пересчитывался
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_PROTOTYPE),
                 () -> showPrototype());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_COMPONENTS),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_COMPONENTS),
                 () -> showComponentShowcase());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_DATA_TABLE),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_DATA_TABLE),
                 () -> showDataTable());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_VISUALIZATION),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_VISUALIZATION),
                 () -> showVisualization());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_FILM),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_FILM),
                 () -> showFilm());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_BROWSER),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_BROWSER),
                 () -> showBrowser());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_TERMINAL),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_TERMINAL),
                 () -> showTerminal());
-        currentShell.addItem(Messages.get(Messages.Key.MENU_SETTINGS),
+        currentShell.addItem(() -> Messages.get(Messages.Key.MENU_SETTINGS),
                 () -> showSettings());
 
         // Logout callback

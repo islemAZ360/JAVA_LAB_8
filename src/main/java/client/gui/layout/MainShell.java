@@ -5,6 +5,7 @@ import main.java.client.gui.components.avatar.UiAvatar;
 import main.java.client.gui.components.button.ButtonVariant;
 import main.java.client.gui.components.button.UiButton;
 import main.java.client.gui.components.sidebar.UiSidebar;
+import main.java.client.gui.core.LangEventBus;
 import main.java.client.gui.core.Messages;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -42,7 +43,12 @@ public class MainShell extends BorderPane {
     private final UiSidebar       sidebar;
     private final Stage           stage;
     private final String          currentUser;
+    // ссылки на элементы футера — нужны для обновления языка
+    private Label userLabel;
+    private UiButton logoutBtn;
     private Runnable onLogout;
+    // обработчик смены языка, чтобы можно было отписаться при пересоздании шелла
+    private final Runnable langHandler = this::refreshLanguage;
 
     public MainShell(Stage stage, String currentUser) {
         this.stage       = stage;
@@ -68,12 +74,21 @@ public class MainShell extends BorderPane {
 
         setLeft(sidebar);
         setCenter(contentHost);
+
+        // подписываемся на смену языка, чтобы боковая панель тоже обновлялась
+        LangEventBus.subscribe(langHandler);
     }
 
     // ── Public API ───────────────────────────────────────────────────────────
 
     public MainShell addItem(String label, Runnable action) {
         sidebar.addItem(label, action);
+        return this;
+    }
+
+    // перегрузка с поставщиком текста — чтобы пункты умели обновлять язык
+    public MainShell addItem(java.util.function.Supplier<String> labelSupplier, Runnable action) {
+        sidebar.addItem(labelSupplier, action);
         return this;
     }
 
@@ -91,18 +106,33 @@ public class MainShell extends BorderPane {
 
     public String getCurrentUser()        { return currentUser;  }
 
+    // обновляем текст боковой панели и футера при смене языка
+    public void refreshLanguage() {
+        sidebar.refreshLanguage();
+        if (userLabel != null) {
+            userLabel.setText(Messages.get(Messages.Key.CURRENT_USER) + ":\n" + currentUser);
+        }
+        if (logoutBtn != null) {
+            logoutBtn.setText(Messages.get(Messages.Key.LOGOUT));
+        }
+    }
+
     // ── Sidebar ──────────────────────────────────────────────────────────────
 
     private UiSidebar buildSidebar() {
         UiAvatar avatar   = new UiAvatar(currentUser);
-        Label userLabel   = new Label(
+        userLabel   = new Label(
                 Messages.get(Messages.Key.CURRENT_USER) + ":\n" + currentUser);
         userLabel.getStyleClass().add("current-user-label");
 
-        UiButton logoutBtn = new UiButton(
+        logoutBtn = new UiButton(
                 Messages.get(Messages.Key.LOGOUT), ButtonVariant.OUTLINE);
         logoutBtn.setMaxWidth(Double.MAX_VALUE);
-        logoutBtn.setOnAction(e -> { if (onLogout != null) onLogout.run(); });
+        logoutBtn.setOnAction(e -> {
+            // перед выходом отписываемся от шины языка, иначе старый шелл утечёт
+            LangEventBus.unsubscribe(langHandler);
+            if (onLogout != null) onLogout.run();
+        });
 
         VBox footer = new VBox(10, avatar, userLabel, logoutBtn);
         footer.setAlignment(Pos.CENTER_LEFT);
