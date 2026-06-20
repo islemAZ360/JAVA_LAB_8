@@ -16,8 +16,10 @@ import java.util.List;
  */
 public class CartoonAnimationCanvas extends Canvas {
 
-    // ---------- Thời gian & trạng thái animation ----------
-    private double globalTime = 0; // tăng mỗi frame (~60fps)
+    // ---------- Время & состояние анимации ----------
+    private double globalTime = 0; // растёт каждый кадр (~60fps)
+    private double speedMultiplier = 1.0; // множитель скорости анимации
+    private boolean playing = true;
     private AnimationTimer timer;
 
     // ---------- Danh sách các nhân vật ----------
@@ -64,11 +66,44 @@ public class CartoonAnimationCanvas extends Canvas {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                globalTime += 0.016; // ~60fps
+                // шаг времени зависит от множителя скорости
+                globalTime += 0.016 * speedMultiplier;
                 draw();
             }
         };
         timer.start();
+    }
+
+    // ---- управление воспроизведением ----
+
+    public void pause() {
+        playing = false;
+        timer.stop();
+    }
+
+    public void play() {
+        if (!playing) {
+            playing = true;
+            timer.start();
+        }
+    }
+
+    // переключаем play/pause
+    public void togglePlay() {
+        if (playing) pause(); else play();
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    // меняем скорость анимации (1.0 = обычная, 2.0 = вдвое быстрее)
+    public void setSpeed(double multiplier) {
+        this.speedMultiplier = multiplier <= 0 ? 1.0 : multiplier;
+    }
+
+    public double getSpeed() {
+        return speedMultiplier;
     }
 
     @Override
@@ -516,12 +551,12 @@ public class CartoonAnimationCanvas extends Canvas {
         gc.fillOval(cx + s * 0.1, cy + s * 0.42, s * 0.08, s * 0.05);
     }
 
-    // ---------- Tiêu đề ----------
+    // ---------- Заголовок ----------
     private void drawTitle(GraphicsContext gc, double w) {
         gc.setFill(Color.web("#FFFFFF"));
         gc.setFont(Font.font("Arial", 20));
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("🐻 Cartoon Animation 🐱", w / 2, 30);
+        gc.fillText("Cartoon Animation", w / 2, 30);
     }
 
     // ============================================================
