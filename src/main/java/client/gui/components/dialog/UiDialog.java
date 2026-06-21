@@ -25,7 +25,7 @@ public class UiDialog {
         root.setCenter(content);
         root.setBottom(footer);
 
-        Scene scene = new Scene(root, 520, 520);
+        Scene scene = new Scene(root, 520, 680);
         CssLoader.applyTo(scene);
         ThemeManager.applyTheme(scene.getRoot(), Theme.DARK);
 
