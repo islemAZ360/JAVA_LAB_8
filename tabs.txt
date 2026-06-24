@@ -1,3 +1,82 @@
+
+/*============================================================*/
+/* 1. Tổng thể thanh Tab: Nền trong suốt hoàn toàn */
+.ui-tabs {
+    -fx-background-color: transparent;
+    -fx-tab-min-height: 40px;
+}
+
+/* 2. Triệt hạ toàn bộ nền trắng thô mặc định của hệ thống */
+.ui-tabs .tab-header-area,
+.ui-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: transparent !important;
+}
+
+/* 3. ĐỊNH DẠNG CÁC NÚT TAB MẶC ĐỊNH (Khi chưa chọn) */
+.ui-tabs .tab {
+    -fx-background-color: #1e1e1f; /* Màu nền xám đen tối giản hợp với giao diện */
+    -fx-background-radius: 6px 6px 0 0;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;      /* Khóa cứng khoảng cách không cho sụt chiều cao */
+}
+.ui-tabs .tab .tab-label {
+    -fx-text-fill: #94a3b8; /* Màu chữ xám nhạt tinh tế */
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* 4. TRIỆT TIÊU VIỀN XANH TUYỆT ĐỐI TRÊN TẤT CẢ CÁC TRẠNG THÁI FOCUS */
+.ui-tabs .tab:focused,
+.ui-tabs .tab:focused:hover,
+.ui-tabs .tab:selected:focused {
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent !important;
+    -fx-faint-focus-color: transparent !important;
+}
+.ui-tabs .tab .tab-label:focused {
+    -fx-text-fill: inherit;
+}
+
+/* 5. TAB KHI ĐƯỢC CHỌN (SELECTED): Chữ sáng lên, có gạch chân màu tím hiện đại */
+.ui-tabs .tab:selected {
+    -fx-background-color: #27272a; /* Nền sáng hơn một chút để phân biệt */
+    /* Tạo vệt gạch chân màu tím (7c3aed) dày 2px sát đáy tab */
+    -fx-background-color: #7c3aed, #27272a;
+    -fx-background-insets: 38px 0 0 0, 0 0 2px 0;
+}
+.ui-tabs .tab:selected .tab-label {
+    -fx-text-fill: #ffffff; /* Ép chữ thành màu trắng sáng */
+}
+
+/* 6. SỬA LỖI GIẢM CHIỀU CAO & VIỀN XANH KHI HOVER VÀO TAB ĐANG CHỌN */
+.ui-tabs .tab:selected:hover {
+    -fx-background-color: #7c3aed, #27272a;      /* Giữ nguyên màu nền và thanh tím */
+    -fx-background-insets: 38px 0 0 0, 0 0 2px 0; /* Khóa cứng vị trí thanh tím, chống sụt chiều cao */
+}
+.ui-tabs .tab:selected:hover .tab-label {
+    -fx-text-fill: #ffffff;                      /* Giữ chữ màu trắng */
+}
+
+/* 7. HIỆU ỨNG DI CHUỘT (HOVER) CHO CÁC TAB CHƯA CHỌN */
+.ui-tabs .tab:hover {
+    -fx-background-color: #27272a;
+    -fx-background-insets: 0; /* Chống sụt chiều cao khi di chuột qua các tab thường */
+}
+.ui-tabs .tab:hover .tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+/* 8. XÓA ĐƯỜNG KẺ NGANG MẶC ĐỊNH CỦA TABPANE DƯỚI NỀN */
+.ui-tabs *.content-area {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+
+
+
+
 /* ==========================================================================
    1. MAIN TABPANE CONTAINER
    ========================================================================== */
@@ -91,70 +170,4 @@
 .ui-tabs *.content-area {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-}
-
-/* ==========================================================================
-   9. OVERFLOW DROPDOWN BUTTON (SELECT BOX TRIGGER)
-   Styles the white button block containing the down arrow on the right side.
-   ========================================================================== */
-.ui-tabs .control-buttons-tab {
-    -fx-background-color: #1e1e1f; /* Matches your resting tab background */
-    -fx-background-radius: 0 6px 0 0;
-    -fx-cursor: hand;
-}
-
-/* STYLES THE LITTLE DOWN ARROW SHAPE INSIDE THE TRIGGER */
-.ui-tabs .control-buttons-tab .tab-down-button .arrow {
-    -fx-background-color: #94a3b8; /* Swaps the black arrow out for soft zinc gray */
-}
-.ui-tabs .control-buttons-tab .tab-down-button:hover .arrow {
-    -fx-background-color: #ffffff; /* Brightens to pure white when hovered */
-}
-
-/* ==========================================================================
-   10. OVERFLOW CONTEXT MENU POPUP (THE SELECT BOX LIST)
-   Forces the white native pop-up window background to follow dark mode rules.
-   ========================================================================== */
-.ui-tabs .context-menu {
-    -fx-background-color: #1e1e1f !important; /* Hard override of the native white background */
-    -fx-background-radius: 6px;
-    -fx-border-color: #27272a;               /* Subtle boundary stroke lines */
-    -fx-border-radius: 6px;
-    -fx-border-width: 1px;
-    -fx-padding: 4px;
-    -fx-background-insets: 0;
-}
-
-/* INDIVIDUAL ITEM ROWS INSIDE THE POPUP MENU */
-.ui-tabs .context-menu .menu-item {
-    -fx-background-color: transparent;
-    -fx-padding: 6px 12px 6px 12px;
-    -fx-background-radius: 4px;
-}
-
-/* TEXT LABELS INSIDE THE POPUP MENU ITEMS */
-.ui-tabs .context-menu .menu-item .label {
-    -fx-text-fill: #94a3b8 !important; /* Fixes white-on-white text visibility bug */
-    -fx-font-size: 13px;
-}
-
-/* TARGETS THE ACTIVE SYMBOL INDICATOR CHECKMARK */
-.ui-tabs .context-menu .menu-item .graphic {
-    -fx-text-fill: #7c3aed; /* Colors the active tab checkmark icon to purple */
-}
-
-/* ==========================================================================
-   11. POPUP MENU HOVER AND FOCUS HIGH-LIGHTING
-   Removes the native ugly blue highlight bar block completely.
-   ========================================================================== */
-.ui-tabs .context-menu .menu-item:focused,
-.ui-tabs .context-menu .menu-item:hover,
-.ui-tabs .context-menu .menu-item:armed {
-    -fx-background-color: #27272a !important; /* Soft gray highlights instead of bright blue */
-}
-
-.ui-tabs .context-menu .menu-item:focused .label,
-.ui-tabs .context-menu .menu-item:hover .label,
-.ui-tabs .context-menu .menu-item:armed .label {
-    -fx-text-fill: #ffffff !important; /* Brightens text to full white on hover */
 }

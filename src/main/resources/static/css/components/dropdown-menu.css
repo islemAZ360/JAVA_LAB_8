@@ -1,0 +1,68 @@
+/* ==========================================================================
+   1. MAIN DROPDOWN POPUP CONTAINER (.context-menu)
+   Styles the outer card container for the dropdown list.
+   ========================================================================== */
+.ui-dropdown-menu {
+    -fx-background-color: #1e1e1f; /* Clean dark gray card background */
+    -fx-background-radius: 6px;
+    -fx-border-color: #27272a;     /* Subtle divider border edge */
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-padding: 4px;
+    /* Block default system shadow properties to prevent pixelation leaks */
+    -fx-background-insets: 0;
+}
+
+/* ==========================================================================
+   2. INDIVIDUAL MENU ITEMS (.menu-item)
+   Formats the resting text and positioning for every dropdown entry.
+   ========================================================================== */
+.ui-dropdown-menu .ui-dropdown-item {
+    -fx-background-color: transparent; /* Flat row layout by default */
+    -fx-padding: 6px 12px 6px 12px;
+    -fx-background-radius: 4px;
+}
+
+/* TARGETS THE TEXT LABEL INSIDE THE MENU ITEM */
+.ui-dropdown-menu .ui-dropdown-item .label {
+    -fx-text-fill: #94a3b8; /* Soft readable zinc/gray text color */
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+}
+
+/* ==========================================================================
+   3. HOVER AND SELECTION STATES (:hover / :focused)
+   Fixes the ugly blue system highlight block and gives it a subtle glow.
+   ========================================================================== */
+.ui-dropdown-menu .ui-dropdown-item:focused,
+.ui-dropdown-menu .ui-dropdown-item:hover,
+.ui-dropdown-menu .ui-dropdown-item:armed {
+    -fx-background-color: #27272a; /* Slightly lighter gray background on hover */
+}
+
+/* BRIGHTENS TEXT TO PURE WHITE WHEN USER HOVERS */
+.ui-dropdown-menu .ui-dropdown-item:focused .label,
+.ui-dropdown-menu .ui-dropdown-item:hover .label,
+.ui-dropdown-menu .ui-dropdown-item:armed .label {
+    -fx-text-fill: #ffffff; /* Sharp white text when actively highlighted */
+}
+
+/* ==========================================================================
+   4. DIVIDER SEPARATOR LINE (.separator)
+   Ensures the horizontal line matches the dark theme.
+   ========================================================================== */
+.ui-dropdown-menu .separator .line {
+    -fx-border-color: #27272a;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* ==========================================================================
+   5. DISABLED ITEMS STATE
+   Fades out items that are marked as inactive.
+   ========================================================================== */
+.ui-dropdown-menu .ui-dropdown-item:disabled {
+    -fx-opacity: 0.4;
+}
+.ui-dropdown-menu .ui-dropdown-item:disabled .label {
+    -fx-text-fill: #64748b;
+}

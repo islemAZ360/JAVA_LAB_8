@@ -2,6 +2,8 @@ package main.java.client.gui.pages.dashboard;
 
 import javafx.application.Platform;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import main.java.client.gui.components.terminal.UiTerminalPanel;
 import main.java.client.gui.core.Messages;
@@ -33,11 +35,17 @@ public class TerminalPage extends BasePage {
         terminal.setCommandHandler(this::executeCommandAsync);
 
         // включаем полностраничный режим: терминал заполняет всю страницу без анимаций
-        terminal.setFullPageMode(true);
-        terminal.showCommandInput(true);
+//        terminal.setFullPageMode(true);
+//        terminal.showCommandInput(true);
 
-        this.getChildren().add(terminal);
-        VBox.setVgrow(terminal, Priority.ALWAYS);
+        StackPane terminalWrapper = new StackPane();
+        terminalWrapper.getChildren().add(terminal);
+        terminalWrapper.setMaxHeight(Region.USE_COMPUTED_SIZE);
+        terminalWrapper.setMinHeight(590);
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        this.getChildren().addAll(spacer, terminalWrapper);
     }
 
     // отправляем команду в фоновом потоке, чтобы не повесить UI

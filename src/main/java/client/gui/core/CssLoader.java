@@ -35,13 +35,17 @@ public final class CssLoader {
             "/main/resources/static/css/components/typography.css",
             "/main/resources/static/css/components/breadcrumb.css",
             "/main/resources/static/css/components/terminal.css",
+            "/main/resources/static/css/components/combo-box.css",
+            "/main/resources/static/css/components/select.css",
+//            "/main/resources/static/css/components/dropdown-menu.css",
 
 //            Pages css
             "/main/resources/static/css/pages/data-table-page.css",
             "/main/resources/static/css/pages/visualization-page.css",
             "/main/resources/static/css/pages/show-case-page.css",
             "/main/resources/static/css/pages/browser-page.css",
-            "/main/resources/static/css/pages/film-page.css"
+            "/main/resources/static/css/pages/film-page.css",
+            "/main/resources/static/css/pages/terminal-page.css"
 
 //            ... update here if add more style in future!
     );

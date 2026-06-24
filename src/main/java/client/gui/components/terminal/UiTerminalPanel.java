@@ -67,7 +67,9 @@ public class UiTerminalPanel extends VBox {
     // ── Singleton ────────────────────────────────────────────────────────────
     private static UiTerminalPanel INSTANCE;
 
-    public static UiTerminalPanel get() { return INSTANCE; }
+    public static UiTerminalPanel get() {
+        return INSTANCE;
+    }
 
     /**
      * Creates the terminal and attaches it to the Scene's root StackPane.
@@ -83,9 +85,13 @@ public class UiTerminalPanel extends VBox {
         // Ensure the terminal is always on top in the stack
         panel.toFront();
 
-        // When root resizes, panel takes full width
+        // When root resizes → panel takes full width
         panel.prefWidthProperty().bind(root.widthProperty());
         panel.maxWidthProperty().bind(root.widthProperty());
+
+        // ÉP CHIỀU CAO MẶC ĐỊNH LÊN 800PX TỪ CONTAINER GỐC ĐỂ KHÔNG BỊ TRÀN BÉ
+        panel.setPrefHeight(800);
+        panel.setMinHeight(800);
 
         return panel;
     }
@@ -95,338 +101,293 @@ public class UiTerminalPanel extends VBox {
         DEFAULT, INFO, WARN, ERROR, SUCCESS, SYSTEM, DEBUG
     }
 
-    public record LogEntry(String message, LogLevel level, String timestamp) {}
+    public record LogEntry(String message, LogLevel level, String timestamp) {
+    }
 
     // ── Constants ────────────────────────────────────────────────────────────
-    private static final double TAB_BAR_H  = 28;
-    private static final double DEFAULT_H  = 800;
+    private static final double TAB_BAR_H = 36;
+    private static final double DEFAULT_H = 800; // Đổi mặc định lên hẳn 800px theo yêu cầu
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    // ── State ────────────────────────────────────────────────────────────────
-    private boolean isExpanded      = false;
-    private boolean autoScroll    = true;
-    private boolean wrapText      = false;
+    // ── State (Giữ nguyên toàn bộ biến gốc của bạn) ──────────────────────────
+    private boolean isExpanded = true;
+    private boolean autoScroll = true;
+    private boolean wrapText = false;
     private boolean showTimestamp = true;
-    private double  panelHeight   = DEFAULT_H;
-    // в режиме полностраничной вставки отключаем анимации сворачивания
-    private boolean fullPageMode  = false;
+    private double panelHeight = DEFAULT_H;
 
-    // ── UI ───────────────────────────────────────────────────────────────────
-    private final TextFlow  logArea     = new TextFlow();
-    private final ScrollPane scrollPane = new ScrollPane(logArea);
-    private final TextField inputField  = new TextField();
-    private final VBox      bodyBox     = new VBox();
-    private final Label     tabLabel    = new Label();
-    private final Label     lineCount   = new Label("0 lines");
+    // ── UI Components ────────────────────────────────────────────────────────
+    private final TabPane tabPane = new TabPane();
+    private final String baseTabName;
 
-    // ── Data ─────────────────────────────────────────────────────────────────
-    private final List<LogEntry>              history        = new ArrayList<>();
-    private final List<String>                cmdHistory     = new ArrayList<>();
-    private final ConcurrentLinkedQueue<LogEntry> pending   = new ConcurrentLinkedQueue<>();
-    private int    historyIdx     = -1;
+    // Các thành phần trỏ động để phục vụ tương thích với code cũ bên ngoài gọi đến
+    private TextFlow logArea;
+    private ScrollPane scrollPane;
+    private TextField inputField;
+    private VBox bodyBox;
+    private final Label tabLabel = new Label();
+    private final Label lineCount = new Label("0 lines");
+
+    // ── Data (Giữ nguyên cấu trúc lưu trữ gốc của bạn) ────────────────────────
+    private final List<LogEntry> history = new ArrayList<>();
+    private final List<String> cmdHistory = new ArrayList<>();
+    private final ConcurrentLinkedQueue<LogEntry> pending = new ConcurrentLinkedQueue<>();
+    private int historyIdx = -1;
     private Consumer<String> commandHandler;
 
     // ═══════════════════════════════════════════════════════════════════════════
-    //  Constructor (private — use install())
+    //  Class Thẻ Tab độc lập (Mỗi thẻ Tab tự quản lý luồng ngầm của riêng mình)
     // ═══════════════════════════════════════════════════════════════════════════
+    private static class TerminalTab extends Tab {
+        final TextFlow logArea = new TextFlow();
+        final ScrollPane scrollPane = new ScrollPane(logArea);
+        final TextField inputField = new TextField();
+        final VBox bodyBox = new VBox();
+        final List<LogEntry> tabHistory = new ArrayList<>();
+        final List<String> tabCmdHistory = new ArrayList<>();
+        Thread activeThread = null;
 
+        TerminalTab(String title) {
+            super(title);
+            bodyBox.getStyleClass().add("ui-terminal-body");
+            VBox.setVgrow(bodyBox, Priority.ALWAYS);
+            setContent(bodyBox);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    //  Constructor
+    // ═══════════════════════════════════════════════════════════════════════════
     public UiTerminalPanel(String tabName) {
         INSTANCE = this;
+        this.baseTabName = tabName;
         getStyleClass().add("ui-terminal-panel");
         setFillWidth(true);
 
-        // Collapsed state: only show the tab bar
-        setPrefHeight(TAB_BAR_H);
-        setMaxHeight(TAB_BAR_H);
-        setMinHeight(TAB_BAR_H);
-
-        // IMPORTANT: only intercept mouse events in the area where the terminal actually has UI
-        // The transparent area (when collapsed) does not block clicks to the elements below
+        // Khóa chặt kích thước ban đầu cao lớn 800px để không bị layout cha ép nhỏ
+        setPrefHeight(DEFAULT_H);
+        setMinHeight(400);
+        setMaxHeight(Double.MAX_VALUE);
         setPickOnBounds(false);
 
-        // ── Tab bar ─────────────────────────────────────────────────────────
-        HBox tabBar = buildTabBar(tabName);
+        // Cấu hình TabPane
+        tabPane.getStyleClass().add("ui-terminal-tabpane");
+        VBox.setVgrow(tabPane, Priority.ALWAYS);
 
-        // ── Body ─────────────────────────────────────────────────────────────
-        buildBody();
+        // Thanh điều hướng macOS bên trên
+        HBox macHeader = buildMacHeader();
 
-        getChildren().addAll(bodyBox, tabBar);
+        // Tạo mặc định Tab đầu tiên
+        createNewTerminalTab(tabName);
 
-        // ── Alt+F12 shortcut ─────────────────────────────────────────────────
-        sceneProperty().addListener((obs, o, sc) -> {
-            if (sc == null) return;
-            sc.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+        // Lắng nghe sự kiện chuyển Tab
+        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+            if (newTab instanceof TerminalTab tTab) {
+                updateActiveInstance(tTab);
+            }
+        });
+
+        getChildren().addAll(macHeader, tabPane);
+
+        // Tự động dọn dẹp khi out khỏi Scene
+        sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                autoDestroy();
+                return;
+            }
+
+            // Dùng EventHandler để tránh nuốt phím Enter của ô Input
+            newScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
                 if (e.isAltDown() && e.getCode() == KeyCode.F12) {
-                    toggle();
+                    createNewTerminalTab(baseTabName);
                     e.consume();
                 }
             });
         });
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Build tab bar
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    private HBox buildTabBar(String tabName) {
-        tabLabel.setText("> " + tabName);
-        tabLabel.getStyleClass().add("ui-terminal-tab-label");
-
-        HBox activeTab = new HBox(tabLabel);
-        activeTab.getStyleClass().addAll("ui-terminal-tab", "ui-terminal-tab-active");
-        activeTab.setAlignment(Pos.CENTER_LEFT);
-        activeTab.setPadding(new Insets(0, 14, 0, 10));
-        activeTab.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) toggle();
-        });
-
-        // Spacer
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        // Action buttons — only visible when expanded
-        Button clearBtn = actionBtn("[x] Clear", () -> clear());
-        Button wrapBtn  = actionBtn("[W] Wrap",  null);
-        Button timeBtn  = actionBtn("[T]",       null);
-        Button closeBtn = new Button("[x]");
-        closeBtn.getStyleClass().add("ui-terminal-close-btn");
-        closeBtn.setOnAction(e -> collapse());
-
-        wrapBtn.setOnAction(e -> {
-            toggleWrap();
-            wrapBtn.setText(wrapText ? "[W] Wrap *" : "[W] Wrap");
-        });
-        timeBtn.setOnAction(e -> {
-            toggleTimestamp();
-            timeBtn.setText(showTimestamp ? "[T] *" : "[T]");
-        });
-
-        lineCount.getStyleClass().add("ui-terminal-line-count");
-        lineCount.setVisible(false);
-
-        HBox right = new HBox(4, lineCount, clearBtn, wrapBtn, timeBtn, closeBtn);
-        right.setAlignment(Pos.CENTER_RIGHT);
-        right.setPadding(new Insets(0, 8, 0, 0));
-
-        // Show action buttons only when expanded
-        clearBtn.visibleProperty().bind(bodyBox.visibleProperty());
-        clearBtn.managedProperty().bind(bodyBox.visibleProperty());
-        wrapBtn.visibleProperty().bind(bodyBox.visibleProperty());
-        wrapBtn.managedProperty().bind(bodyBox.visibleProperty());
-        timeBtn.visibleProperty().bind(bodyBox.visibleProperty());
-        timeBtn.managedProperty().bind(bodyBox.visibleProperty());
-        lineCount.visibleProperty().bind(bodyBox.visibleProperty());
-        lineCount.managedProperty().bind(bodyBox.visibleProperty());
-
-        HBox bar = new HBox(activeTab, spacer, right);
-        bar.getStyleClass().add("ui-terminal-tabbar");
-        bar.setAlignment(Pos.CENTER_LEFT);
-        bar.setMinHeight(TAB_BAR_H);
-        bar.setMaxHeight(TAB_BAR_H);
-        bar.setPrefHeight(TAB_BAR_H);
-
-        // Tab bar always receives clicks (pickOnBounds=true is default)
-        return bar;
+    private void updateActiveInstance(TerminalTab activeTab) {
+        this.logArea = activeTab.logArea;
+        this.scrollPane = activeTab.scrollPane;
+        this.inputField = activeTab.inputField;
+        this.bodyBox = activeTab.bodyBox;
+        this.tabLabel.setText(activeTab.getText());
+        this.lineCount.setText(activeTab.tabHistory.size() + " lines");
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Build body (log area + input)
-    // ═══════════════════════════════════════════════════════════════════════════
+    private void createNewTerminalTab(String title) {
+        TerminalTab newTab = new TerminalTab(title);
 
-    private void buildBody() {
-        // Log area
-        logArea.getStyleClass().add("ui-terminal-log");
-        logArea.setPadding(new Insets(6, 10, 6, 10));
-        logArea.setLineSpacing(2);
+        newTab.logArea.getStyleClass().add("ui-terminal-log");
+        newTab.logArea.setPadding(new Insets(8, 12, 8, 12));
+        newTab.logArea.setLineSpacing(2);
 
-        scrollPane.getStyleClass().add("ui-terminal-scroll");
-        scrollPane.setFitToWidth(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        newTab.scrollPane.getStyleClass().add("ui-terminal-scroll");
+        newTab.scrollPane.setFitToWidth(true);
+        newTab.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        newTab.scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        VBox.setVgrow(newTab.scrollPane, Priority.ALWAYS);
 
-        // Resize handle (drag to change panel height)
         Region resizeHandle = new Region();
         resizeHandle.getStyleClass().add("ui-terminal-resize-handle");
         resizeHandle.setPrefHeight(4);
         resizeHandle.setMaxWidth(Double.MAX_VALUE);
         installResizeDrag(resizeHandle);
 
-        // Input row
-        HBox inputRow = buildInputRow();
+        HBox inputRow = buildInputRowForTab(newTab);
+        newTab.bodyBox.getChildren().addAll(resizeHandle, newTab.scrollPane, inputRow);
 
-        bodyBox.getChildren().addAll(resizeHandle, scrollPane, inputRow);
-        bodyBox.getStyleClass().add("ui-terminal-body");
-        bodyBox.setVisible(false);
-        bodyBox.setManaged(false);
-        VBox.setVgrow(bodyBox, Priority.ALWAYS);
+        // Cấu hình sự kiện đóng Tab để hủy luồng ngầm lập tức
+        newTab.setOnCloseRequest(e -> {
+            if (newTab.activeThread != null && newTab.activeThread.isAlive()) {
+                newTab.activeThread.interrupt();
+            }
+            newTab.tabHistory.clear();
+            newTab.tabCmdHistory.clear();
+            newTab.logArea.getChildren().clear();
+        });
+
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+
+        // Ép cập nhật biến trỏ động ngay khoảnh khắc sinh Tab để tránh lỗi logArea bị null
+        updateActiveInstance(newTab);
+
+        Platform.runLater(() -> newTab.inputField.requestFocus());
     }
 
-    private HBox buildInputRow() {
-        Label prompt = new Label(">>>");
-        prompt.getStyleClass().add("ui-terminal-prompt");
-        prompt.setPadding(new Insets(0, 8, 0, 10));
+    private HBox buildMacHeader() {
+        Region closeCircle = new Region();
+        closeCircle.getStyleClass().addAll("mac-circle-btn", "mac-btn-close");
+        Region minCircle = new Region();
+        minCircle.getStyleClass().addAll("mac-circle-btn", "mac-btn-minimize");
+        Region maxCircle = new Region();
+        maxCircle.getStyleClass().addAll("mac-circle-btn", "mac-btn-maximize");
+        HBox macButtons = new HBox(8, closeCircle, minCircle, maxCircle);
+        macButtons.setAlignment(Pos.CENTER_LEFT);
 
-        inputField.getStyleClass().add("ui-terminal-input");
-        inputField.setPromptText("Enter command...");
-        HBox.setHgrow(inputField, Priority.ALWAYS);
-
-        inputField.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case ENTER -> submitCommand();
-                case UP    -> navigateHistory(-1);
-                case DOWN  -> navigateHistory(1);
-                case L     -> { if (e.isControlDown()) clear(); }
-                default    -> {}
+        closeCircle.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                for (Tab tab : tabPane.getTabs()) {
+                    if (tab instanceof TerminalTab tTab && tTab.activeThread != null) {
+                        tTab.activeThread.interrupt();
+                    }
+                }
+                tabPane.getTabs().clear();
+                setVisible(false);
+                setManaged(false);
             }
         });
 
-        HBox row = new HBox(prompt, inputField);
+        Button addTabBtn = new Button("＋");
+        addTabBtn.getStyleClass().add("ui-terminal-add-tab-btn");
+        addTabBtn.setOnAction(e -> createNewTerminalTab(baseTabName));
+
+        HBox leftContainer = new HBox(12, macButtons, addTabBtn);
+        leftContainer.setAlignment(Pos.CENTER_LEFT);
+
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Button clearBtn = actionBtn("✕ Clear", () -> clear());
+        Button wrapBtn = actionBtn("⊡ Wrap", null);
+        Button timeBtn = actionBtn("⏱", null);
+        Button closeBtn = new Button("✕");
+        closeBtn.getStyleClass().add("ui-terminal-close-btn");
+        closeBtn.setOnAction(e -> {
+            Tab activeTab = tabPane.getSelectionModel().getSelectedItem();
+            if (activeTab instanceof TerminalTab tTab) {
+                if (tTab.activeThread != null && tTab.activeThread.isAlive()) {
+                    tTab.activeThread.interrupt();
+                }
+                tTab.tabHistory.clear();
+                tTab.tabCmdHistory.clear();
+                tTab.logArea.getChildren().clear();
+                tabPane.getTabs().remove(tTab);
+            }
+        });
+        wrapBtn.setOnAction(e -> {
+            toggleWrap();
+            wrapBtn.setText(wrapText ? "⊡ Wrap ✓" : "⊡ Wrap");
+        });
+        timeBtn.setOnAction(e -> {
+            toggleTimestamp();
+            timeBtn.setText(showTimestamp ? "⏱ ✓" : "⏱");
+        });
+        lineCount.getStyleClass().add("ui-terminal-line-count");
+        HBox right = new HBox(4, lineCount, clearBtn, wrapBtn, timeBtn, closeBtn);
+        right.setAlignment(Pos.CENTER_RIGHT);
+        right.setPadding(new Insets(0, 8, 0, 0));
+        HBox bar = new HBox(leftContainer, spacer, right);
+        bar.getStyleClass().add("ui-terminal-tabbar");
+        bar.setAlignment(Pos.CENTER_LEFT);
+        bar.setPadding(new Insets(0, 16, 0, 16));
+        bar.setMinHeight(TAB_BAR_H);
+        bar.setMaxHeight(TAB_BAR_H);
+        bar.setPrefHeight(TAB_BAR_H);
+        return bar;
+    }
+
+    private HBox buildInputRowForTab(TerminalTab tTab) {
+        Label prompt = new Label(">>>");
+        prompt.getStyleClass().add("ui-terminal-prompt");
+        prompt.setPadding(new Insets(0, 8, 0, 12));
+        tTab.inputField.getStyleClass().add("ui-terminal-input");
+        tTab.inputField.setPromptText("Enter command...");
+        HBox.setHgrow(tTab.inputField, Priority.ALWAYS);
+        tTab.inputField.setOnKeyPressed(e -> {
+            updateActiveInstance(tTab);
+            if (e.getCode() == KeyCode.ENTER) {
+                submitCommand();
+                e.consume();
+            } else if (e.getCode() == KeyCode.UP) {
+                navigateHistory(-1);
+                e.consume();
+            } else if (e.getCode() == KeyCode.DOWN) {
+                navigateHistory(1);
+                e.consume();
+            } else if (e.getCode() == KeyCode.L && e.isControlDown()) {
+                clear();
+                e.consume();
+            }
+        });
+        HBox row = new HBox(prompt, tTab.inputField);
         row.getStyleClass().add("ui-terminal-input-row");
         row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(2, 8, 2, 0));
-        row.setMinHeight(30);
-        row.setMaxHeight(30);
+        row.setPadding(new Insets(4, 8, 4, 0));
+        row.setMinHeight(32);
+        row.setMaxHeight(32);
         return row;
     }
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Toggle expand / collapse
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    // включаем режим полностраничного терминала: без анимаций и ограничений высоты
-    public void setFullPageMode(boolean enabled) {
-        this.fullPageMode = enabled;
-        if (!enabled) return;
-
-        // сразу раскрываем, без анимации
-        isExpanded = true;
-        bodyBox.setVisible(true);
-        bodyBox.setManaged(true);
-        bodyBox.setOpacity(1.0);
-        VBox.setVgrow(bodyBox, Priority.ALWAYS);
-
-        // снимаем все ограничения высоты — пусть растёт на всю страницу
-        setMinHeight(Region.USE_COMPUTED_SIZE);
-        setPrefHeight(Region.USE_COMPUTED_SIZE);
-        setMaxHeight(Double.MAX_VALUE);
-
-        if (autoScroll) scrollToBottom();
-        inputField.requestFocus();
-    }
-
-    public boolean isFullPageMode() {
-        return fullPageMode;
-    }
-
-    public void toggle() {
-        if (fullPageMode) return; // в полностраничном режиме сворачивание не нужно
-        if (isExpanded) collapse(); else expand();
-    }
-
-    public void expand() {
-        if (fullPageMode) return; // уже раскрыт на всю страницу
-        if (isExpanded) return;
-        isExpanded = true;
-        tabLabel.setText("v " + tabLabel.getText().replaceAll("^[><v]\\s+", ""));
-
-        // Prepare bodyBox for parallel animation (invisible but managed)
-        bodyBox.setVisible(true);
-        bodyBox.setManaged(true);
-        bodyBox.setOpacity(0.0);
-
-        // Allow the container to grow
-        setMinHeight(TAB_BAR_H);
-        setMaxHeight(Double.MAX_VALUE);
-
-        double targetHeight = TAB_BAR_H + panelHeight;
-
-        // Animate height and opacity simultaneously for smooth transition
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(prefHeightProperty(), TAB_BAR_H),
-                        new KeyValue(bodyBox.opacityProperty(), 0.0)
-                ),
-                new KeyFrame(Duration.millis(200),
-                        new KeyValue(prefHeightProperty(), targetHeight, Interpolator.EASE_OUT),
-                        new KeyValue(bodyBox.opacityProperty(), 1.0, Interpolator.EASE_OUT)
-                )
-        );
-
-        timeline.setOnFinished(event -> {
-            if (autoScroll) scrollToBottom();
-            inputField.requestFocus();
-        });
-        timeline.play();
-    }
-
-    public void collapse() {
-        if (fullPageMode) return; // сворачивать нельзя в полностраничном режиме
-        if (!isExpanded) return;
-        isExpanded = false;
-        tabLabel.setText("> " + tabLabel.getText().replaceAll("^[><v]\\s+", ""));
-
-        // Capture current dynamic height to avoid stuttering if interrupted
-        double currentHeight = getPrefHeight();
-
-        // Animate height reduction and fade-out simultaneously
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(prefHeightProperty(), currentHeight),
-                        new KeyValue(bodyBox.opacityProperty(), bodyBox.getOpacity())
-                ),
-                new KeyFrame(Duration.millis(200),
-                        new KeyValue(prefHeightProperty(), TAB_BAR_H, Interpolator.EASE_IN),
-                        new KeyValue(bodyBox.opacityProperty(), 0.0, Interpolator.EASE_IN)
-                )
-        );
-
-        timeline.setOnFinished(event -> {
-            // Completely remove from layout calculations after animation ends
-            bodyBox.setVisible(false);
-            bodyBox.setManaged(false);
-
-            // Lock the component bounds to collapsed state
-            setMaxHeight(TAB_BAR_H);
-            setMinHeight(TAB_BAR_H);
-        });
-        timeline.play();
-    }
-
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Resize drag
-    // ═══════════════════════════════════════════════════════════════════════════
 
     private void installResizeDrag(Region handle) {
         final double[] startY = {0};
         final double[] startH = {0};
-
         handle.setOnMousePressed(e -> {
             startY[0] = e.getScreenY();
             startH[0] = panelHeight;
             e.consume();
         });
         handle.setOnMouseDragged(e -> {
-            if (!isExpanded) return;
-            double delta = startY[0] - e.getScreenY(); // drag up = increase
-            panelHeight = Math.max(80, Math.min(600, startH[0] + delta));
-            setPrefHeight(TAB_BAR_H + panelHeight);
+            double delta = startY[0] - e.getScreenY();
+            panelHeight = Math.max(200, Math.min(1000, startH[0] + delta));
+            setPrefHeight(panelHeight);
             e.consume();
         });
         handle.setCursor(javafx.scene.Cursor.N_RESIZE);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    //  Logging
+    // Logging (Sửa lỗi dứt điểm: Tìm đích danh LogArea của Tab đang mở để vẽ)
     // ═══════════════════════════════════════════════════════════════════════════
-
     public void appendLog(String message, LogLevel level) {
         String ts = LocalTime.now().format(TIME_FMT);
         LogEntry entry = new LogEntry(message, level, ts);
         history.add(entry);
+        if (tabPane.getSelectionModel().getSelectedItem() instanceof TerminalTab activeTab) {
+            activeTab.tabHistory.add(entry);
+        }
         pending.add(entry);
-
         if (Platform.isFxApplicationThread()) {
             flushPending();
         } else {
@@ -441,71 +402,101 @@ public class UiTerminalPanel extends VBox {
             renderEntry(entry);
             count++;
         }
-        if (count > 0) {
-            lineCount.setText(history.size() + " lines");
+        if (count > 0 && tabPane.getSelectionModel().getSelectedItem() instanceof TerminalTab activeTab) {
+            lineCount.setText(activeTab.tabHistory.size() + " lines");
             if (autoScroll) scrollToBottom();
         }
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    //  Logging (Đồng bộ hóa an toàn cho tất cả các luồng Log từ commandHandler đổ về)
+    // ═══════════════════════════════════════════════════════════════════════════
     private void renderEntry(LogEntry entry) {
-        if (showTimestamp) {
-            Text ts = new Text("[" + entry.timestamp() + "] ");
-            ts.getStyleClass().addAll("ui-terminal-text", "ui-terminal-ts");
-            logArea.getChildren().add(ts);
-        }
-        Text msg = new Text(entry.message() + "\n");
-        msg.getStyleClass().add("ui-terminal-text");
-        msg.getStyleClass().add(switch (entry.level()) {
-            case INFO    -> "ui-terminal-info";
-            case WARN    -> "ui-terminal-warn";
-            case ERROR   -> "ui-terminal-error";
-            case SUCCESS -> "ui-terminal-success";
-            case SYSTEM  -> "ui-terminal-system";
-            case DEBUG   -> "ui-terminal-debug";
-            default      -> "ui-terminal-default";
+        // Lấy Tab đang hoạt động tại thời điểm hàm render được kích hoạt
+        javafx.scene.control.Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
+        if (!(currentTab instanceof TerminalTab activeTab)) return;
+
+        TextFlow targetLogArea = activeTab.logArea;
+        if (targetLogArea == null) return;
+
+        // Luôn luôn bọc trong Platform.runLater để an toàn đồ họa JavaFX
+        Platform.runLater(() -> {
+            if (showTimestamp) {
+                Text ts = new Text("[" + entry.timestamp() + "] ");
+                ts.getStyleClass().addAll("ui-terminal-text", "ui-terminal-ts");
+                targetLogArea.getChildren().add(ts);
+            }
+            Text msg = new Text(entry.message() + "\n");
+            msg.getStyleClass().add("ui-terminal-text");
+            msg.getStyleClass().add(switch (entry.level()) {
+                case INFO    -> "ui-terminal-info";
+                case WARN    -> "ui-terminal-warn";
+                case ERROR   -> "ui-terminal-error";
+                case SUCCESS -> "ui-terminal-success";
+                case SYSTEM  -> "ui-terminal-system";
+                case DEBUG   -> "ui-terminal-debug";
+                default      -> "ui-terminal-default";
+            });
+            if (wrapText) msg.wrappingWidthProperty().bind(targetLogArea.widthProperty().subtract(20));
+            targetLogArea.getChildren().add(msg);
         });
-        if (wrapText) msg.wrappingWidthProperty().bind(logArea.widthProperty().subtract(20));
-        logArea.getChildren().add(msg);
     }
 
     private void scrollToBottom() {
-        Platform.runLater(() -> scrollPane.setVvalue(1.0));
+        if (scrollPane != null) {
+            Platform.runLater(() -> scrollPane.setVvalue(1.0));
+        }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Controls
-    // ═══════════════════════════════════════════════════════════════════════════
+    // ── Các hàm Controls ──────────────────────────────────────────────────────
+    public void toggle() {
+    }
+
+    public void expand() {
+    }
+
+    public void collapse() {
+    }
 
     public void clear() {
-        history.clear();
-        logArea.getChildren().clear();
+        if (tabPane.getSelectionModel().getSelectedItem() instanceof TerminalTab activeTab) {
+            activeTab.tabHistory.clear();
+            activeTab.logArea.getChildren().clear();
+        }
         lineCount.setText("0 lines");
     }
 
     public void toggleWrap() {
         wrapText = !wrapText;
+        if (logArea == null) return;
         for (Node n : logArea.getChildren()) {
             if (n instanceof Text t) {
                 if (wrapText) t.wrappingWidthProperty().bind(logArea.widthProperty().subtract(20));
-                else          t.wrappingWidthProperty().unbind();
+                else t.wrappingWidthProperty().unbind();
             }
         }
     }
 
-    public void toggleAutoScroll() { autoScroll = !autoScroll; }
+    public void toggleAutoScroll() {
+        autoScroll = !autoScroll;
+    }
 
     public void toggleTimestamp() {
         showTimestamp = !showTimestamp;
+        if (logArea == null) return;
         logArea.getChildren().clear();
-        history.forEach(this::renderEntry);
+        if (tabPane.getSelectionModel().getSelectedItem() instanceof TerminalTab activeTab) {
+            activeTab.tabHistory.forEach(this::renderEntry);
+        }
         if (autoScroll) scrollToBottom();
     }
 
-    public void setCommandHandler(Consumer<String> handler) { this.commandHandler = handler; }
+    public void setCommandHandler(Consumer<String> handler) {
+        this.commandHandler = handler;
+    }
 
     public void showCommandInput(boolean show) {
-        // inputRow is last child of bodyBox
-        if (!bodyBox.getChildren().isEmpty()) {
+        if (bodyBox != null && !bodyBox.getChildren().isEmpty()) {
             Node last = bodyBox.getChildren().getLast();
             last.setVisible(show);
             last.setManaged(show);
@@ -515,50 +506,159 @@ public class UiTerminalPanel extends VBox {
     public void redirectSystemOut() {
         java.io.PrintStream original = System.out;
         System.setOut(new java.io.PrintStream(original) {
-            @Override public void println(String x)  { super.println(x);  appendLog(x == null ? "null" : x, LogLevel.DEFAULT); }
-            @Override public void println(Object x)  { super.println(x);  appendLog(String.valueOf(x), LogLevel.DEFAULT); }
+            @Override
+            public void println(String x) {
+                super.println(x);
+                appendLog(x == null ? "null" : x, LogLevel.DEFAULT);
+            }
+
+            @Override
+            public void println(Object x) {
+                super.println(x);
+                appendLog(String.valueOf(x), LogLevel.DEFAULT);
+            }
         });
     }
 
-    public boolean isExpanded() { return isExpanded; }
-    public List<LogEntry> getHistory() { return Collections.unmodifiableList(history); }
-    public void setDefaultHeight(double h) { this.panelHeight = Math.max(80, h); }
+    public boolean isExpanded() {
+        return isExpanded;
+    }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Command input
-    // ═══════════════════════════════════════════════════════════════════════════
+    public List getHistory() {
+        return java.util.Collections.unmodifiableList(history);
+    }
 
+    public void setDefaultHeight(double h) {
+        this.panelHeight = Math.max(150, h);
+    }
+
+    // ── Command Input Handling ───────────────────────────────────────────────
     private void submitCommand() {
+        if (inputField == null) return;
         String cmd = inputField.getText().trim();
         if (cmd.isBlank()) return;
-        cmdHistory.add(0, cmd);
-        historyIdx = -1;
-        inputField.clear();
-        appendLog(">>> " + cmd, LogLevel.DEFAULT);
-        if (commandHandler != null) {
-            new Thread(() -> commandHandler.accept(cmd)).start();
+
+        if (tabPane.getSelectionModel().getSelectedItem() instanceof TerminalTab activeTab) {
+            activeTab.tabCmdHistory.add(0, cmd);
+            cmdHistory.add(0, cmd);
+            inputField.clear();
+
+            // 1. In chữ trắng câu lệnh người dùng nhập
+            appendLog(">>> " + cmd, LogLevel.DEFAULT);
+
+            if (commandHandler != null) {
+                if (activeTab.activeThread != null && activeTab.activeThread.isAlive()) {
+                    activeTab.activeThread.interrupt();
+                }
+
+                final String targetThreadName = "TerminalThread-" + activeTab.getText();
+
+                // 2. ÉP IN CHỮ TÍM HỆ THỐNG VÀO ĐÚNG LOGAREA CỦA TAB HIỆN TẠI TRƯỚC KHI CHẠY LUỒNG
+                Platform.runLater(() -> {
+                    Text ts = new Text("[" + LocalTime.now().format(TIME_FMT) + "] ");
+                    ts.getStyleClass().addAll("ui-terminal-text", "ui-terminal-ts");
+
+                    Text msg = new Text("[System] " + targetThreadName + " was activated.\n");
+                    msg.getStyleClass().addAll("ui-terminal-text", "ui-terminal-system"); // Ăn theo màu tím system
+
+                    if (wrapText) msg.wrappingWidthProperty().bind(activeTab.logArea.widthProperty().subtract(20));
+
+                    // Thêm trực tiếp vào logArea của tab đang hoạt động, không sợ bị null hay chậm luồng
+                    activeTab.logArea.getChildren().addAll(ts, msg);
+                    if (autoScroll) scrollToBottom();
+                });
+
+                // Khởi chạy luồng ngầm thực thi lệnh
+                activeTab.activeThread = new Thread(() -> {
+                    try {
+                        commandHandler.accept(cmd);
+                    } catch (Exception ex) {
+                        Platform.runLater(() -> {
+                            if (Thread.currentThread().isInterrupted()) {
+                                appendLog("[System] Command process was terminated.", LogLevel.WARN);
+                            } else {
+                                appendLog("[Error] " + ex.getMessage(), LogLevel.ERROR);
+                            }
+                        });
+                    }
+                });
+                activeTab.activeThread.setName(targetThreadName);
+                activeTab.activeThread.start();
+            }
         }
     }
 
     private void navigateHistory(int dir) {
-        if (cmdHistory.isEmpty()) return;
-        historyIdx = Math.max(-1, Math.min(cmdHistory.size() - 1, historyIdx + dir));
-        inputField.setText(historyIdx < 0 ? "" : cmdHistory.get(historyIdx));
-        inputField.end();
+        if (tabPane.getSelectionModel().getSelectedItem() instanceof TerminalTab activeTab) {
+            if (activeTab.tabCmdHistory.isEmpty()) return;
+            historyIdx = Math.max(-1, Math.min(activeTab.tabCmdHistory.size() - 1, historyIdx + dir));
+            inputField.setText(historyIdx < 0 ? "" : activeTab.tabCmdHistory.get(historyIdx));
+            inputField.end();
+        }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    //  Static API
-    // ═══════════════════════════════════════════════════════════════════════════
+    private Button actionBtn(String text, Runnable action) {
+        Button btn = new Button(text);
+        if (action != null) btn.setOnAction(e -> action.run());
+        return btn;
+    }
 
-    public static void log(String msg)                       { dispatch(msg, LogLevel.DEFAULT); }
-    public static void log(String msg, LogLevel level)       { dispatch(msg, level);            }
-    public static void info(String msg)                      { dispatch(msg, LogLevel.INFO);    }
-    public static void warn(String msg)                      { dispatch(msg, LogLevel.WARN);    }
-    public static void error(String msg)                     { dispatch(msg, LogLevel.ERROR);   }
-    public static void success(String msg)                   { dispatch(msg, LogLevel.SUCCESS); }
-    public static void system(String msg)                    { dispatch(msg, LogLevel.SYSTEM);  }
-    public static void debug(String msg)                     { dispatch(msg, LogLevel.DEBUG);   }
+    private void autoDestroy() {
+        history.clear();
+        cmdHistory.clear();
+        pending.clear();
+        commandHandler = null;
+        if (tabPane != null) {
+            for (Tab tab : tabPane.getTabs()) {
+                if (tab instanceof TerminalTab tTab) {
+                    if (tTab.activeThread != null) tTab.activeThread.interrupt();
+                    tTab.tabHistory.clear();
+                    tTab.tabCmdHistory.clear();
+                    tTab.logArea.getChildren().clear();
+                }
+            }
+            tabPane.getTabs().clear();
+        }
+        getChildren().clear();
+        if (INSTANCE == this) INSTANCE = null;
+    }
+
+//     ═══════════════════════════════════════════════════════════════════════════
+//      Static API
+//     ═══════════════════════════════════════════════════════════════════════════
+
+    public static void log(String msg) {
+        dispatch(msg, LogLevel.DEFAULT);
+    }
+
+    public static void log(String msg, LogLevel level) {
+        dispatch(msg, level);
+    }
+
+    public static void info(String msg) {
+        dispatch(msg, LogLevel.INFO);
+    }
+
+    public static void warn(String msg) {
+        dispatch(msg, LogLevel.WARN);
+    }
+
+    public static void error(String msg) {
+        dispatch(msg, LogLevel.ERROR);
+    }
+
+    public static void success(String msg) {
+        dispatch(msg, LogLevel.SUCCESS);
+    }
+
+    public static void system(String msg) {
+        dispatch(msg, LogLevel.SYSTEM);
+    }
+
+    public static void debug(String msg) {
+        dispatch(msg, LogLevel.DEBUG);
+    }
+
     public static void error(String msg, Throwable t) {
         error(msg + ": " + t.getMessage());
         for (var el : t.getStackTrace()) debug("  at " + el);
@@ -570,13 +670,5 @@ public class UiTerminalPanel extends VBox {
         } else {
             System.out.println("[" + level + "] " + msg);
         }
-    }
-
-    // ── Helper ───────────────────────────────────────────────────────────────
-    private Button actionBtn(String text, Runnable action) {
-        Button btn = new Button(text);
-        btn.getStyleClass().add("ui-terminal-action-btn");
-        if (action != null) btn.setOnAction(e -> action.run());
-        return btn;
     }
 }

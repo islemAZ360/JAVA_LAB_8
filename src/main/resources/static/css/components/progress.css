@@ -1,2 +1,38 @@
-.ui-progress{-fx-progress-color:#18181b;-fx-background-color:#f4f4f5;-fx-background-radius:999px;-fx-border-radius:999px;-fx-pref-height:8px;}
-.ui-progress-label{-fx-font-size:12px;-fx-text-fill:#71717a;}
+/* ==========================================================================
+   1. MAIN PROGRESS BAR CONTAINER
+   Controls the overall height and base layout.
+   ========================================================================== */
+.ui-progress {
+    -fx-pref-height: 8px;
+    -fx-background-color: transparent; /* Removes default box boundary layers */
+}
+
+/* ==========================================================================
+   2. PROGRESS TRACK (THE BACKGROUND PATH)
+   Changes the unfulfilled path background to a visible dark charcoal tone.
+   ========================================================================== */
+.ui-progress .track {
+    -fx-background-color: #27272a; /* Visible dark gray track background */
+    -fx-background-radius: 999px;
+    -fx-background-insets: 0;
+}
+
+/* ==========================================================================
+   3. PROGRESS BAR (THE FILLING PROGRESS)
+   Changes the actual progress fill indicator to a vibrant vivid purple.
+   ========================================================================== */
+.ui-progress .bar {
+    -fx-background-color: #7c3aed; /* Vibrant purple fill to match your tabs & sliders */
+    -fx-background-radius: 999px;
+    -fx-background-insets: 0;
+}
+
+/* ==========================================================================
+   4. PROGRESS PERCENTAGE TEXT LABEL
+   Brightens the text color slightly to maintain high contrast readability.
+   ========================================================================== */
+.ui-progress-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e2e8f0; /* Crisp light gray/white text for high visibility */
+}

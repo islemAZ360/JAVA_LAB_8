@@ -1,0 +1,232 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   1. Khung Panel chính & Header điều hướng macOS
+   ───────────────────────────────────────────────────────────────────────── */
+.page .ui-terminal-panel {
+    -fx-background-color: #282a36; /* Bảng màu Dracula chuẩn Mac Dark */
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: #44475a;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 15, 0, 0, 10);
+}
+
+.page .ui-terminal-tabbar {
+    -fx-background-color: #343a40;
+    -fx-background-radius: 11px 11px 0px 0px;
+    -fx-border-color: transparent transparent #191a21 transparent;
+    -fx-border-width: 1px;
+    -fx-padding: 0px 16px;
+}
+
+/* 3 Chấm tròn Mac */
+.page .mac-circle-btn {
+    -fx-background-radius: 50%;
+    -fx-min-width: 12px;
+    -fx-max-width: 12px;
+    -fx-min-height: 12px;
+    -fx-max-height: 12px;
+}
+.page .mac-btn-close { -fx-background-color: #ff5f56; }
+.page .mac-btn-minimize { -fx-background-color: #ffbd2e; }
+.page .mac-btn-maximize { -fx-background-color: #27c93f; }
+
+/* Nút thêm Tab mới (+) */
+.page .ui-terminal-add-tab-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 0px 6px;
+}
+.page .ui-terminal-add-tab-btn:hover {
+    -fx-text-fill: #50fa7b; /* Chuyển sang xanh lá khi hover vào nút thêm tab */
+}
+
+/* Các nút chức năng phụ phía góc phải header */
+.page .ui-terminal-tabbar .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6272a4;
+    -fx-font-size: 11px;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.page .ui-terminal-tabbar .button:hover {
+    -fx-background-color: #44475a;
+    -fx-text-fill: #f8f8f2;
+}
+.page .ui-terminal-line-count {
+    -fx-text-fill: #6272a4;
+    -fx-font-size: 11px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   2. Cấu trúc Quản lý hệ thống nhiều Tab (Đã fix triệt để vệt xám trắng)
+   ───────────────────────────────────────────────────────────────────────── */
+.page .ui-terminal-tabpane {
+    -fx-tab-closing-policy: ALL_TABS;
+}
+
+/* Xóa bỏ hoàn toàn vệt xám trắng mặc định của JavaFX */
+.page .ui-terminal-tabpane .tab-header-area {
+    -fx-background-color: #1e1e24 !important; /* Màu xám tối đồng bộ nền */
+    -fx-padding: 4px 10px 0px 10px;
+}
+
+.page .ui-terminal-tabpane .tab-header-area .tab-header-background,
+.page .ui-terminal-tabpane .tab-header-area .headers-region {
+    -fx-background-color: transparent !important; /* Ép buộc trong suốt hoàn toàn */
+}
+
+/* Thẻ tab đơn lẻ */
+.page .ui-terminal-tabpane .tab {
+    -fx-background-color: #282a36;
+    -fx-background-radius: 6px 6px 0px 0px;
+    -fx-padding: 4px 12px;
+}
+.page .ui-terminal-tabpane .tab .tab-label {
+    -fx-text-fill: #6272a4;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 12px;
+}
+.page .ui-terminal-tabpane .tab:selected {
+    -fx-background-color: #343a40; /* Sáng màu khi đang active */
+}
+.page .ui-terminal-tabpane .tab:selected .tab-label {
+    -fx-text-fill: #f8f8f2;
+    -fx-font-weight: bold;
+}
+
+/* Nút X tắt Tab */
+.page .ui-terminal-tabpane .tab .tab-close-button {
+    -fx-background-color: #6272a4;
+}
+.page .ui-terminal-tabpane .tab .tab-close-button:hover {
+    -fx-background-color: #ff5555;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   3. Sửa triệt để dải đen chữ Log - Đồng nhất vùng hiển thị nội dung
+   ───────────────────────────────────────────────────────────────────────── */
+.page .ui-terminal-body {
+    -fx-background-color: transparent;
+}
+
+.page .ui-terminal-scroll {
+    -fx-background: transparent !important;
+    -fx-background-color: transparent !important;
+}
+.page .ui-terminal-scroll .viewport {
+    -fx-background-color: transparent !important; /* Triệt tiêu hoàn toàn dải đen loang lổ quanh text */
+}
+
+/* Thiết lập trong suốt hoàn toàn cho TextFlow logArea */
+.page .ui-terminal-log {
+    -fx-background-color: transparent !important;
+    -fx-font-family: "Menlo", "Monaco", "Consolas", monospace;
+    -fx-font-size: 13px;
+    -fx-text-fill: #f8f8f2;
+}
+
+/* Thanh cuộn tối giản Mac */
+.page .ui-terminal-scroll .scroll-bar:vertical,
+.page .ui-terminal-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.page .ui-terminal-scroll .scroll-bar .thumb {
+    -fx-background-color: #44475a;
+    -fx-background-radius: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   4. Định dạng text log theo LogLevel & Input dòng lệnh dưới đáy
+   ───────────────────────────────────────────────────────────────────────── */
+.page .ui-terminal-text {
+    -fx-font-family: "Menlo", "Monaco", "Consolas", monospace;
+    -fx-font-size: 13px;
+}
+.page .ui-terminal-ts { -fx-text-fill: #6272a4; }
+.page .ui-terminal-default { -fx-text-fill: #f8f8f2; }
+.page .ui-terminal-info { -fx-text-fill: #8be9fd; }
+.page .ui-terminal-warn { -fx-text-fill: #ffb86c; }
+.page .ui-terminal-error { -fx-text-fill: #ff5555; }
+.page .ui-terminal-success { -fx-text-fill: #50fa7b; }
+.page .ui-terminal-system { -fx-text-fill: #bd93f9; }
+.page .ui-terminal-debug { -fx-text-fill: #ff79c6; }
+
+.page .ui-terminal-resize-handle {
+    -fx-background-color: #191a21;
+    -fx-cursor: n-resize;
+}
+.page .ui-terminal-input-row {
+    -fx-background-color: transparent;
+    -fx-padding: 4px 10px;
+}
+.page .ui-terminal-prompt {
+    -fx-font-family: "Menlo", "Monaco", monospace;
+    -fx-text-fill: #50fa7b;
+    -fx-font-weight: bold;
+}
+.page .ui-terminal-input {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f8f8f2;
+    -fx-font-family: "Menlo", "Monaco", monospace;
+    -fx-font-size: 13px;
+}
+.page .ui-terminal-input:focused {
+    -fx-background-color: transparent;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   5. Fix triệt để menu xổ xuống (Tab Overflow Menu) chuẩn màu tối macOS
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Nút mũi tên nhỏ ở góc phải của thanh Tab Pane */
+.page .ui-terminal-tabpane .control-buttons-tab {
+    -fx-background-color: #343a40;
+}
+.page .ui-terminal-tabpane .control-buttons-tab .tab-down-button {
+    -fx-background-color: transparent;
+}
+.page .ui-terminal-tabpane .control-buttons-tab .tab-down-button .arrow {
+    -fx-background-color: #6272a4; /* Màu mũi tên */
+}
+
+/* Khung Menu chứa danh sách khi bấm vào nút xổ xuống */
+.context-menu {
+    -fx-background-color: #21222c !important; /* Đổi nền trắng sang nền tối sẫm hẳn */
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #44475a;
+    -fx-border-width: 1px;
+    -fx-padding: 5px 0px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+}
+
+/* Các dòng tên Tab bên trong menu thả xuống */
+.context-menu .menu-item {
+    -fx-padding: 6px 16px;
+    -fx-background-color: transparent;
+}
+.context-menu .menu-item .label {
+    -fx-text-fill: #f8f8f2 !important; /* Biến chữ màu trắng/mờ thành màu sáng dễ đọc */
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 12px;
+}
+
+/* Khi di chuột (hover) qua một dòng Tab trong menu */
+.context-menu .menu-item:focused,
+.context-menu .menu-item:hover {
+    -fx-background-color: #343a40 !important; /* Màu nền nổi bật khi rê chuột */
+}
+.context-menu .menu-item:focused .label,
+.context-menu .menu-item:hover .label {
+    -fx-text-fill: #50fa7b !important; /* Chữ chuyển sang màu xanh lá đặc trưng */
+}
+
+/* Dấu tích ✓ biểu thị Tab đang được chọn */
+.context-menu .menu-item .left-container .radio,
+.context-menu .menu-item .left-container .check {
+    -fx-background-color: #50fa7b !important; /* Biến dấu tích sang màu xanh lá sáng sủa */
+}
