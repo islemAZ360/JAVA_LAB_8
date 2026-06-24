@@ -8,6 +8,7 @@
     -fx-border-color: #44475a;
     -fx-border-width: 1px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 15, 0, 0, 10);
+    -fx-pref-height: 1500px; /* Số lớn để ép giãn tối đa */
 }
 
 .page .ui-terminal-tabbar {
