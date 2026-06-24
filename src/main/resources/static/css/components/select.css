@@ -1,0 +1,69 @@
+/* ==========================================================================
+   1. CUSTOM NON-EDITABLE SELECT COMPONENT (.ui-select)
+   Fixes the low-contrast text visibility inside the main select button wrapper.
+   ========================================================================== */
+.ui-select {
+    -fx-background-color: #1e1e1f; /* Dark button background matching the theme */
+    -fx-border-color: #3f3f46;     /* Visible border boundary edge on dark layouts */
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 2px 4px;          /* Clean layout padding constraints */
+}
+
+/* TARGETS THE INTERNAL CELL RESPONSIBLE FOR DISPLAYING THE ACTIVE SELECTION */
+.ui-select .list-cell {
+    -fx-background-color: transparent !important; /* Strips default gray/white node backgrounds */
+    -fx-text-fill: #ffffff !important;           /* Forces high-contrast pure white text fill */
+    -fx-padding: 4px 6px;
+}
+
+/* ENSURES TEXT REMAINS CRISP WHITE EVEN WHEN EXPANDED OR FOCUSED */
+.ui-select:showing .list-cell,
+.ui-select:focused .list-cell {
+    -fx-text-fill: #ffffff !important;
+}
+
+/* CUSTOMIZES THE ARROW BUTTON WRAPPER REGION */
+.ui-select .arrow-button {
+    -fx-background-color: transparent;            /* Invisible outer padding background */
+    -fx-cursor: hand;
+}
+
+/* BRIGHTENS THE SMALL DOWNWARD ARROW GRAPHIC INDICATOR */
+.ui-select .arrow {
+    -fx-background-color: #94a3b8; /* Crisp silver color for high UI readability */
+}
+
+/* INTERACTIVE GLOW WHEN USER ACTIVELY FOCUSES THE SELECT CONTAINER */
+.ui-select:focused {
+    -fx-border-color: #3b82f6; /* Modern focus ring ring effect using royal blue */
+}
+
+/* ==========================================================================
+   2. POPUP LIST VIEW FOR SELECT COMPONENT (.list-view)
+   Overrides the blinding white system background block when the menu opens.
+   ========================================================================== */
+.ui-select .list-view {
+    -fx-background-color: #1e1e1f;       /* Dark card background matching the main button */
+    -fx-background-radius: 6px;
+    -fx-border-color: #27272a;           /* Clean dark border outline for the popup overlay */
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-padding: 4px;
+}
+
+/* TARGETS THE ROWS INSIDE THE OPENED POPUP LIST VIEW */
+.ui-select .list-view .list-cell {
+    -fx-background-color: transparent;   /* Removes flat alternating row backgrounds */
+    -fx-text-fill: #94a3b8 !important;   /* Soft readable zinc color for resting options */
+    -fx-padding: 6px 12px;
+    -fx-background-radius: 4px;
+}
+
+/* STYLES THE HIGHLIGHTED/HOVERED ROWS INSIDE THE POPUP MENU */
+.ui-select .list-view .list-cell:hover,
+.ui-select .list-view .list-cell:selected,
+.ui-select .list-view .list-cell:focused {
+    -fx-background-color: #27272a;       /* Slightly lighter surface gray highlight fill */
+    -fx-text-fill: #ffffff !important;   /* Crisp white text for the active item */
+}

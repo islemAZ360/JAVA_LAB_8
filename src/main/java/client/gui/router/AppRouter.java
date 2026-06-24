@@ -1,5 +1,8 @@
 package main.java.client.gui.router;
 
+import main.java.client.gui.controllers.BrowserPageController;
+import main.java.client.gui.integration.LLMGateWay;
+import main.java.client.gui.integration.LLMGatewayStream;
 import main.java.client.gui.layout.MainShell;
 import main.java.client.gui.controllers.AuthController;
 import main.java.client.gui.pages.auth.LoginView;
@@ -26,16 +29,22 @@ public class AppRouter {
 
     private final Stage stage;
     private final Lab7CommandGateway gateway;
+    private final LLMGateWay llmGateway;
+    private final LLMGatewayStream streamGateway;
     private MainShell currentShell;
 
     private Theme currentTheme = Theme.DARK;
     private Direction currentDirection = Direction.LTR;
     private AuthController authController;
+    private BrowserPageController browserPageManager;
 
-    public AppRouter(Stage stage, Lab7CommandGateway gateway) {
+    public AppRouter(Stage stage, Lab7CommandGateway gateway, LLMGateWay llmGateway, LLMGatewayStream streamGateway) {
         this.stage = stage;
         this.gateway = gateway;
+        this.llmGateway = llmGateway;
+        this.streamGateway = streamGateway;
         this.authController = new AuthController(gateway, this);
+        this.browserPageManager = new BrowserPageController(llmGateway, streamGateway);
     }
 
     // ========================================
@@ -137,9 +146,8 @@ public class AppRouter {
         currentShell.setContent(new FilmPage(gateway));
     }
 
-    private void showBrowser() {
-        currentShell.setContent(new BrowserPage(gateway));
-    }
+//    private void showBrowser() { new BrowserPageController(currentShell, llmGateway));}
+    private void showBrowser() { currentShell.setContent(this.browserPageManager.getView()); }
 
     private void showTerminal() {
         currentShell.setContent(new TerminalPage(gateway));

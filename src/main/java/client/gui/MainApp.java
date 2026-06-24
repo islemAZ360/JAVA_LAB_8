@@ -25,44 +25,11 @@ public class MainApp extends Application {
         stage.show();
     }
 
-//    private void openLoginWindow(Stage stage) {
-//        LoginView loginView = new LoginView();
-//        Scene scene = stage.getScene();
-//
-//        if (scene == null) {
-//            scene = new Scene(loginView, 520, 420);
-//            CssLoader.applyTo(scene);
-//            stage.setScene(scene);
-//        } else {
-//            scene.setRoot(loginView);
-//        }
-//        ThemeManager.applyTheme(scene.getRoot(), Theme.DARK);
-//
-//        loginView.setOnLogin((login, password) -> {
-//            AuthResult result = gateway.login(login, password);
-//            if (!result.success()) {
-//                loginView.showMessage(result.message());
-//                return;
-//            }
-//            currentUser = normalizeUsername(result.username());
-//            openDashboard(stage);
-//        });
-//
-//        loginView.setOnRegister((login, password) -> {
-//            AuthResult result = gateway.register(login, password);
-//            loginView.showMessage(result.message());
-//            if (result.success()) {
-//                currentUser = normalizeUsername(result.username());
-//                openDashboard(stage);
-//            }
-//        });
-//    }
-
     private void openLoginWindow(Stage stage) {
 
     }
 
-    // ✅ MỚI: Mở RegisterView
+
     private void openRegisterWindow(Stage stage) {
         RegisterView registerView = new RegisterView();
         registerView.setMaxWidth(520);
@@ -72,7 +39,7 @@ public class MainApp extends Application {
         scene.setRoot(registerView);
         applyUiSettings(scene.getRoot());
 
-        // ✅ Xử lý Register
+
         registerView.setOnRegister((login, password) -> {
             AuthResult result = gateway.register(login, password);
             if (!result.success()) {
@@ -83,7 +50,7 @@ public class MainApp extends Application {
             openMainDashboard(stage);
         });
 
-        // ✅ Chuyển về LoginView
+
         registerView.setOnSwitchToLogin(() -> openLoginWindow(stage));
     }
 
@@ -108,5 +75,3 @@ public class MainApp extends Application {
         launch(args);
     }
 }
-
-

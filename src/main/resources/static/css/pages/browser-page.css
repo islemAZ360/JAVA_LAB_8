@@ -1,41 +1,45 @@
-/* Style the ScrollPane viewport */
+.page.browser-page .search-bar {
+    -fx-alignment: CENTER;
+}
 
-.page.browser-page .search-result-area .scroll-pane {
+/* Style the ScrollPane viewport */
+.page.browser-page .search-result-area {
    -fx-background: transparent;
    -fx-background-color: transparent;
 }
 
 /* Style the scrollbar container */
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical {
+.page.browser-page .search-result-area .scroll-bar:vertical {
    -fx-background-color: transparent;
    -fx-pref-width: 5px;  /* Makes the scrollbar slim */
    -fx-width: 2px;
 }
 
 /* Style the track (background of the scrollbar) */
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .track {
+.page.browser-page .search-result-area .scroll-bar:vertical .track {
    -fx-background-color: transparent;
 }
 
 /* Style the draggable thumb (Violet color) */
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .thumb {
+.page.browser-page .search-result-area .scroll-bar:vertical .thumb {
    -fx-background-color: #8A2BE2; /* Violet / BlueViolet */
    -fx-background-radius: 2px;   /* Rounded beautiful corners */
 }
 
 /* Optional: Darker violet hover effect */
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .thumb:hover {
+.page.browser-page .search-result-area .scroll-bar:vertical .thumb:hover {
    -fx-background-color: #7A1FA2;
 }
 
 /* Hide the top and bottom increment/decrement arrow buttons */
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .increment-button,
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .decrement-button {
+.page.browser-page .search-result-area .scroll-bar:vertical .increment-button,
+.page.browser-page .search-result-area .scroll-bar:vertical .decrement-button {
    -fx-background-color: transparent;
    -fx-padding: 0;
 }
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .increment-arrow,
-.page.browser-page .search-result-area .scroll-pane .scroll-bar:vertical .decrement-arrow {
+
+.page.browser-page .search-result-area .scroll-bar:vertical .increment-arrow,
+.page.browser-page .search-result-area .scroll-bar:vertical .decrement-arrow {
    -fx-shape: " ";
    -fx-padding: 0;
 }
