@@ -157,10 +157,12 @@ public class SettingsPage extends BasePage {
     // ========================================
 
     private String buildLangPreview() {
-        return Messages.get(Messages.Key.LOGIN_TITLE) + " | "
-                + Messages.get(Messages.Key.ADD) + " | "
-                + Messages.get(Messages.Key.EDIT) + " | "
-                + Messages.get(Messages.Key.DELETE) + " | "
-                + Messages.get(Messages.Key.LOGOUT);
+        return Messages.get(Messages.Key.LOGIN_TITLE)
+                + " | " + Messages.get(Messages.Key.ADD)
+                + " | " + Messages.get(Messages.Key.LOGOUT)
+                + "\n" + Messages.get(Messages.Key.LANGUAGE)
+                + ": " + Messages.getCurrentLang().displayName()
+                + "\n" + "Number: " + Messages.formatNumber(1234567.89)
+                + "\n" + "Date: " + Messages.formatDate(new java.util.Date());
     }
 }

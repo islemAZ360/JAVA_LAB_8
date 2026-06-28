@@ -1,4 +1,9 @@
 package main.java.client.gui.core;
+import java.text.NumberFormat;
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 import java.util.Locale;
 
@@ -554,5 +559,21 @@ public final class Messages {
 
     public static String get(Key key) {
         return key.translation.get(currentLang);
+    }
+    public static String formatNumber(Number number) {
+        return NumberFormat.getInstance(getCurrentLocale()).format(number);
+    }
+
+    public static String formatDate(java.util.Date date) {
+        return DateFormat.getDateTimeInstance(
+                DateFormat.MEDIUM, DateFormat.SHORT, getCurrentLocale()
+        ).format(date);
+    }
+    public static String formatDate(LocalDateTime dateTime) {
+        if (dateTime == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
+                .withLocale(getCurrentLocale());
+        return dateTime.format(formatter);
     }
 }
