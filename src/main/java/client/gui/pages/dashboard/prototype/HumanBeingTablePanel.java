@@ -130,11 +130,15 @@ public class HumanBeingTablePanel extends UiCard {
                         Comparator.comparing(HumanBeingUiModel::name)))
                 .addColumn(new ColumnSpec<>("x", h -> h.coordinates().x(), 50))
                 .addColumn(new ColumnSpec<>("y", h -> h.coordinates().y(), 50))
-                .addColumn(new ColumnSpec<>("creationDate", HumanBeingUiModel::creationDate, 140))
+                .addColumn(new ColumnSpec<>("creationDate",
+                        h -> Messages.formatDate(h.creationDate()), 140))
+
                 .addColumn(new ColumnSpec<>("realHero", HumanBeingUiModel::realHero, 80))
                 .addColumn(new ColumnSpec<>("hasToothpick", HumanBeingUiModel::hasToothpick, 110))
-                .addColumn(new ColumnSpec<>("impactSpeed", HumanBeingUiModel::impactSpeed, 100))
-                .addColumn(new ColumnSpec<>("minutes", HumanBeingUiModel::minutesOfWaiting, 80))
+                .addColumn(new ColumnSpec<>("impactSpeed",
+                        h -> Messages.formatNumber(h.impactSpeed()), 100))
+                .addColumn(new ColumnSpec<>("minutes",
+                        h -> Messages.formatNumber(h.minutesOfWaiting()), 80))
                 .addColumn(new ColumnSpec<>("weaponType", HumanBeingUiModel::weaponType, 110))
                 .addColumn(new ColumnSpec<>("car.name", h -> h.car().name(), 100))
                 .addColumn(new ColumnSpec<>("car.cool", h -> h.car().cool(), 75))
