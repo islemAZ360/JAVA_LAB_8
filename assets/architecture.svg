@@ -48,16 +48,16 @@
       100% { cx: 290; opacity: 0; }
     }
     @keyframes packetRight2 {
-      0%   { cx: 610; opacity: 0; }
+      0%   { cx: 655; opacity: 0; }
       10%  { opacity: 1; }
       90%  { opacity: 1; }
-      100% { cx: 680; opacity: 0; }
+      100% { cx: 695; opacity: 0; }
     }
     @keyframes packetLeft2 {
-      0%   { cx: 680; opacity: 0; }
+      0%   { cx: 695; opacity: 0; }
       10%  { opacity: 1; }
       90%  { opacity: 1; }
-      100% { cx: 610; opacity: 0; }
+      100% { cx: 655; opacity: 0; }
     }
     .bp { animation: borderPulse 3s ease-in-out infinite; }
     .stA { animation: twinkleA 4s ease-in-out infinite; }
