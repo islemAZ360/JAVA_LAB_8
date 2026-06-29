@@ -152,35 +152,7 @@
 ## 🛠️ &nbsp;Технологический стек
 
 <div align="center">
-<table>
-<tr>
-<td align="center" width="140">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="48" height="48" alt="Java"/>
-<br><b>Java 21</b>
-<br><sub>Core Platform</sub>
-</td>
-<td align="center" width="140">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="48" height="48" alt="PostgreSQL"/>
-<br><b>PostgreSQL</b>
-<br><sub>Database</sub>
-</td>
-<td align="center" width="140">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original-wordmark.svg" width="48" height="48" alt="CSS"/>
-<br><b>JavaFX CSS</b>
-<br><sub>Styling</sub>
-</td>
-<td align="center" width="140">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/intellij/intellij-original.svg" width="48" height="48" alt="IntelliJ"/>
-<br><b>IntelliJ IDEA</b>
-<br><sub>IDE</sub>
-</td>
-<td align="center" width="140">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="48" height="48" alt="Git"/>
-<br><b>Git</b>
-<br><sub>Version Control</sub>
-</td>
-</tr>
-</table>
+<img src="assets/tech-stack.svg" alt="Tech Stack" width="100%"/>
 </div>
 
 <br>
