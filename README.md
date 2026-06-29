@@ -4,7 +4,7 @@
      🌌 ANIMATED COSMIC HEADER BANNER
      ═══════════════════════════════════════════════════════════════════ -->
 
-<img src="assets/header-animation.svg" alt="JAVA LAB 8 — Enterprise Client-Server Application" width="100%"/>
+<img src="assets/header-animation-v2.svg" alt="JAVA LAB 8 — Enterprise Client-Server Application" width="100%"/>
 
 <br>
 
