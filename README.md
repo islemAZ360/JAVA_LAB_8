@@ -139,7 +139,7 @@
 
 <div align="center">
 
-<img src="assets/architecture.svg?v=2" alt="System Architecture" width="100%"/>
+<img src="assets/architecture-v2.svg" alt="System Architecture" width="100%"/>
 
 </div>
 
@@ -229,7 +229,7 @@ java --module-path /path/to/javafx/lib --add-modules javafx.controls Client
 
 <div align="center">
 
-<img src="assets/structure.svg?v=2" alt="Project Structure" width="100%"/>
+<img src="assets/structure-v2.svg" alt="Project Structure" width="100%"/>
 
 </div>
 
