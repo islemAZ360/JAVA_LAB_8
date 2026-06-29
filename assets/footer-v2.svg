@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="180" viewBox="0 0 900 180">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d0221"/>
+      <stop offset="50%" style="stop-color:#080c16"/>
+      <stop offset="100%" style="stop-color:#0d0221"/>
+    </linearGradient>
+
+    <!-- Moving gradient for the top border -->
+    <linearGradient id="topBorderGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:0"/>
+      <stop offset="50%" style="stop-color:#22d3ee;stop-opacity:1">
+        <animate attributeName="stop-color" values="#22d3ee;#c084fc;#22d3ee" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0"/>
+    </linearGradient>
+
+    <!-- Neon Text Glow -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle Glow for elements -->
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .star { fill: #ffffff; animation: twinkle 4s infinite ease-in-out; }
+    .star-purple { fill: #c4b5fd; animation: twinkle 5s infinite ease-in-out; }
+    .star-cyan { fill: #67e8f9; animation: twinkle 3s infinite ease-in-out; }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50% { opacity: 0.9; transform: scale(1.2); }
+    }
+
+    @keyframes drift {
+      0% { transform: translateX(0px); }
+      50% { transform: translateX(10px); }
+      100% { transform: translateX(0px); }
+    }
+
+    .drifting-group { animation: drift 10s ease-in-out infinite; }
+
+    .brand-text {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      fill: #e2e8f0;
+    }
+
+    .quote-text {
+      font-family: 'Georgia', serif;
+      font-size: 14px;
+      font-style: italic;
+      fill: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+
+    .highlight-text {
+      fill: #22d3ee;
+      font-weight: bold;
+    }
+    
+    .made-with {
+      font-family: 'Cascadia Code', monospace;
+      font-size: 10px;
+      fill: #64748b;
+    }
+  </style>
+
+  <!-- Base Rectangle -->
+  <rect width="900" height="180" rx="16" fill="url(#bgGlow)"/>
+  
+  <!-- Glowing Top Border -->
+  <rect x="0" y="0" width="900" height="2" fill="url(#topBorderGlow)"/>
+
+  <!-- Starfield (Cosmic Vibe) -->
+  <g class="drifting-group">
+    <circle cx="80" cy="40" r="1.5" class="star" style="animation-delay: 0s;"/>
+    <circle cx="200" cy="120" r="1" class="star-purple" style="animation-delay: 1s;"/>
+    <circle cx="750" cy="50" r="2" class="star-cyan" style="animation-delay: 0.5s;" filter="url(#subtleGlow)"/>
+    <circle cx="850" cy="140" r="1.5" class="star" style="animation-delay: 1.5s;"/>
+    <circle cx="120" cy="150" r="1" class="star-cyan" style="animation-delay: 2s;"/>
+    <circle cx="680" cy="130" r="1.5" class="star-purple" style="animation-delay: 0.8s;"/>
+    <circle cx="450" cy="30" r="1" class="star" style="animation-delay: 2.5s;"/>
+  </g>
+
+  <!-- Grid Pattern Overlay for Tech Vibe -->
+  <g stroke="#334155" stroke-width="0.5" opacity="0.2">
+    <line x1="0" y1="45" x2="900" y2="45" />
+    <line x1="0" y1="135" x2="900" y2="135" />
+    <line x1="200" y1="0" x2="200" y2="180" stroke-dasharray="4 4" />
+    <line x1="700" y1="0" x2="700" y2="180" stroke-dasharray="4 4" />
+  </g>
+
+  <!-- Quote Section -->
+  <!-- Left Quote Mark -->
+  <text x="215" y="75" font-family="'Georgia', serif" font-size="50" fill="#7c3aed" opacity="0.3">«</text>
+  
+  <!-- The Quote -->
+  <text x="450" y="70" class="quote-text" text-anchor="middle">
+    Программирование — это не просто написание <tspan class="highlight-text" filter="url(#subtleGlow)">кода</tspan>.
+  </text>
+  <text x="450" y="95" class="quote-text" text-anchor="middle">
+    Это создание <tspan fill="#c084fc">архитектуры</tspan>, которая выдержит испытание временем.
+  </text>
+
+  <!-- Right Quote Mark -->
+  <text x="660" y="105" font-family="'Georgia', serif" font-size="50" fill="#7c3aed" opacity="0.3">»</text>
+
+  <!-- Divider Line -->
+  <line x1="350" y1="125" x2="550" y2="125" stroke="#334155" stroke-width="1"/>
+  <circle cx="450" cy="125" r="3" fill="#22d3ee" filter="url(#subtleGlow)"/>
+
+  <!-- Footer Branding -->
+  <text x="450" y="145" class="brand-text" text-anchor="middle" filter="url(#neonGlow)">
+    ИТМО | ФАКУЛЬТЕТ ПИиКТ
+  </text>
+  
+  <text x="450" y="162" class="made-with" text-anchor="middle">
+    &lt;/&gt; 2026 • Сделано с 🤍 командой Нейро 1.1
+  </text>
+
+  <!-- Side accents -->
+  <rect x="25" y="80" width="3" height="20" rx="1.5" fill="#c084fc" filter="url(#subtleGlow)"/>
+  <rect x="872" y="80" width="3" height="20" rx="1.5" fill="#22d3ee" filter="url(#subtleGlow)"/>
+
+</svg>
