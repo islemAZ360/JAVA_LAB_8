@@ -29,7 +29,6 @@
 
 <br>
 
-<!-- Tagline -->
 <samp><b>Современное многопоточное клиент-серверное приложение на JavaFX</b></samp>
 <br>
 <samp>NIO Architecture • PostgreSQL • Real-time Sync • 4 Languages</samp>
@@ -53,10 +52,6 @@
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
 ## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" width="28"/> &nbsp;Ключевые особенности
-
-<!-- ╔═══════════════════════════════════════════════════════════════════╗
-     ║  FEATURE CARDS — BENTO GRID LAYOUT                               ║
-     ╚═══════════════════════════════════════════════════════════════════╝ -->
 
 <table>
 <tr>
@@ -144,41 +139,7 @@
 
 <div align="center">
 
-```
-                    ┌──────────────────────────────────────────────┐
-                    │           🏗️  SYSTEM ARCHITECTURE            │
-                    └──────────────────────────────────────────────┘
-
-    ┌─────────────┐      TCP/NIO       ┌─────────────┐      JDBC       ┌──────────────┐
-    │             │ ◄──────────────────►│             │ ◄──────────────►│              │
-    │  🖥️ Client  │   Serialization    │  ⚙️ Server  │   Repository   │ 🐘 PostgreSQL │
-    │   JavaFX    │   Request/Response │  NIO+Threads │   Pattern      │   Database   │
-    │             │                    │              │                │              │
-    └──────┬──────┘                    └──────┬───────┘                └──────────────┘
-           │                                  │
-    ┌──────┴──────┐                    ┌──────┴───────┐
-    │  🎨 UI Layer │                    │ 📦 Commands  │
-    │  ─────────── │                    │ ───────────  │
-    │  • Router    │                    │  • Execute   │
-    │  • EventBus  │                    │  • Validate  │
-    │  • i18n      │                    │  • Auth      │
-    │  • Canvas    │                    │  • CRUD      │
-    └─────────────┘                    └──────────────┘
-```
-
-</div>
-
-<br>
-
-<div align="center">
-
-| Паттерн | Описание | Применение |
-| :---: | :--- | :--- |
-| 📦 **DTO** | Data Transfer Object | Классы `Request` / `Response` для обмена данными |
-| ⚙️ **Command** | Инкапсуляция операций | Серверные и клиентские команды |
-| 🗄️ **Repository** | Изоляция данных | Логика работы с PostgreSQL |
-| 📡 **Observer / EventBus** | Реактивное обновление | Смена языка → мгновенное обновление UI |
-| 🏭 **Factory & Singleton** | Создание и управление | Единственные экземпляры сервисов |
+<img src="assets/architecture.svg" alt="System Architecture" width="100%"/>
 
 </div>
 
@@ -232,52 +193,7 @@
 
 <div align="center">
 
-<table>
-<tr>
-<td align="center" width="300">
-
-**🏆 ИСЛАМ АЗАЙЗИЯ**
-
-<sub>
-
-`Архитектура DTO` · `Сериализация`
-`Логирование (Log4j2)` · `Интеграция UI и Сети`
-`Stream API фильтрация` · `Thread-safety`
-`Фоновое авто-обновление`
-
-</sub>
-
-</td>
-<td align="center" width="300">
-
-**🏆 Чы Нгок Чыонг**
-
-<sub>
-
-`Базовая настройка JavaFX` · `Маршрутизация`
-`Регистрация / Авторизация`
-`Компоненты UI` · `Terminal`
-`Dialogs` · `Router`
-
-</sub>
-
-</td>
-<td align="center" width="300">
-
-**🏆 Дао Мань Зыонг**
-
-<sub>
-
-`JDBC & PostgreSQL` · `Многопоточный сервер`
-`NIO & ThreadPools`
-`Интернационализация (i18n)`
-`Визуализация на Canvas`
-
-</sub>
-
-</td>
-</tr>
-</table>
+<img src="assets/team.svg" alt="Development Team" width="100%"/>
 
 </div>
 
@@ -347,18 +263,12 @@ JAVA_LAB_8/
 
 <img src="assets/footer.svg" alt="Footer" width="100%"/>
 
-<br>
+<br><br>
 
-<sub>
-
-Сделано с ❤️ командой **Нейро 1.1** для курса программирования в ИТМО
-
-</sub>
-
-<br>
-
-[![Stars](https://img.shields.io/github/stars/islemAZ360/JAVA_LAB_8?style=social)](https://github.com/islemAZ360/JAVA_LAB_8)
-&nbsp;&nbsp;
-[![Forks](https://img.shields.io/github/forks/islemAZ360/JAVA_LAB_8?style=social)](https://github.com/islemAZ360/JAVA_LAB_8)
+[![Stars](https://img.shields.io/github/stars/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=7c3aed)](https://github.com/islemAZ360/JAVA_LAB_8)
+&nbsp;
+[![Forks](https://img.shields.io/github/forks/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=06b6d4)](https://github.com/islemAZ360/JAVA_LAB_8)
+&nbsp;
+[![Repo Size](https://img.shields.io/github/repo-size/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=f59e0b)](https://github.com/islemAZ360/JAVA_LAB_8)
 
 </div>
