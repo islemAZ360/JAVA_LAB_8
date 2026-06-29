@@ -30,7 +30,7 @@ public class UiDataTable<T> extends VBox {
         getStyleClass().add("ui-data-table-wrap");
         table.getStyleClass().add("ui-data-table");
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        // включаем множественный выбор для массового удаления
+        // Включаем множественный выбор для массового удаления
         table.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
         // Ctrl+A — выделить все строки
         table.setOnKeyPressed(e -> {
@@ -78,7 +78,7 @@ public class UiDataTable<T> extends VBox {
         this.rowStyleFactory = rowStyleFactory;
         table.setRowFactory(tv -> new TableRow<>() {
             {
-                // слушаем выделение строки и пересчитываем стиль — иначе inline-цвет владельца перекроет :selected
+                // Слушаем выделение строки и пересчитываем стиль, чтобы цвет выделения работал корректно
                 selectedProperty().addListener((obs, wasSel, isSel) -> applyRowStyle());
             }
 
@@ -88,7 +88,7 @@ public class UiDataTable<T> extends VBox {
                 applyRowStyle();
             }
 
-            // считаем итоговый стиль: цвет владельца, а поверх — выделение, если строка выбрана
+            // Считаем итоговый стиль: базовый цвет, а поверх — выделение
             private void applyRowStyle() {
                 T item = getItem();
                 if (item == null || isEmpty() || UiDataTable.this.rowStyleFactory == null) {
@@ -98,7 +98,7 @@ public class UiDataTable<T> extends VBox {
                 String base = UiDataTable.this.rowStyleFactory.apply(item);
                 if (base == null) base = "";
                 if (isSelected()) {
-                    // выделяем выбранную строку яркой рамкой и фоном, переопределяя цвет владельца
+                    // Выделяем выбранную строку яркой рамкой и фоном
                     base = base
                             + "-fx-background-color: #1e293b;"
                             + "-fx-border-color: #6366f1 transparent #6366f1 transparent;"
@@ -139,7 +139,7 @@ public class UiDataTable<T> extends VBox {
         return table.getSelectionModel().getSelectedItem();
     }
 
-    // возвращаем все выбранные строки — нужно для массового удаления
+    // Возвращаем все выбранные строки для массового удаления
     public java.util.List<T> getSelectedItems() {
         return new ArrayList<>(table.getSelectionModel().getSelectedItems());
     }
@@ -153,7 +153,7 @@ public class UiDataTable<T> extends VBox {
     }
 
     private void refreshView() {
-        // Yêu cầu đề bài: filter/sort bằng Streams API.
+
         List<T> result = allItems.stream()
                 .filter(filter)
                 .collect(Collectors.toList());
