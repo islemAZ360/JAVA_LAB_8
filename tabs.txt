@@ -1,32 +1,31 @@
-
 /*============================================================*/
-/* 1. Tổng thể thanh Tab: Nền trong suốt hoàn toàn */
+/* 1. Общий вид панели вкладок: Полностью прозрачный фон */
 .ui-tabs {
     -fx-background-color: transparent;
     -fx-tab-min-height: 40px;
 }
 
-/* 2. Triệt hạ toàn bộ nền trắng thô mặc định của hệ thống */
+/* 2. Удаляем белый фон по умолчанию, создаваемый системой */
 .ui-tabs .tab-header-area,
 .ui-tabs .tab-header-area .tab-header-background {
     -fx-background-color: transparent !important;
 }
 
-/* 3. ĐỊNH DẠNG CÁC NÚT TAB MẶC ĐỊNH (Khi chưa chọn) */
+/* 3. ФОРМАТИРОВАНИЕ ВКЛАДОК ПО УМОЛЧАНИЮ (Не выбранные) */
 .ui-tabs .tab {
-    -fx-background-color: #1e1e1f; /* Màu nền xám đen tối giản hợp với giao diện */
+    -fx-background-color: #1e1e1f; /* Стильный темно-серый фон */
     -fx-background-radius: 6px 6px 0 0;
     -fx-padding: 8px 16px;
     -fx-cursor: hand;
-    -fx-background-insets: 0;      /* Khóa cứng khoảng cách không cho sụt chiều cao */
+    -fx-background-insets: 0;      /* Фиксируем отступы, чтобы предотвратить потерю высоты */
 }
 .ui-tabs .tab .tab-label {
-    -fx-text-fill: #94a3b8; /* Màu chữ xám nhạt tinh tế */
+    -fx-text-fill: #94a3b8; /* Светло-серый цвет текста */
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
-/* 4. TRIỆT TIÊU VIỀN XANH TUYỆT ĐỐI TRÊN TẤT CẢ CÁC TRẠNG THÁI FOCUS */
+/* 4. ПОЛНОСТЬЮ УБИРАЕМ СИНИЙ КОНТУР ВО ВСЕХ СОСТОЯНИЯХ ФОКУСА */
 .ui-tabs .tab:focused,
 .ui-tabs .tab:focused:hover,
 .ui-tabs .tab:selected:focused {
@@ -38,36 +37,36 @@
     -fx-text-fill: inherit;
 }
 
-/* 5. TAB KHI ĐƯỢC CHỌN (SELECTED): Chữ sáng lên, có gạch chân màu tím hiện đại */
+/* 5. ВЫБРАННАЯ ВКЛАДКА (SELECTED): Текст светится, современное фиолетовое подчеркивание */
 .ui-tabs .tab:selected {
-    -fx-background-color: #27272a; /* Nền sáng hơn một chút để phân biệt */
-    /* Tạo vệt gạch chân màu tím (7c3aed) dày 2px sát đáy tab */
+    -fx-background-color: #27272a; /* Фон немного светлее для контраста */
+    /* Создаем фиолетовое (7c3aed) подчеркивание толщиной 2px внизу вкладки */
     -fx-background-color: #7c3aed, #27272a;
     -fx-background-insets: 38px 0 0 0, 0 0 2px 0;
 }
 .ui-tabs .tab:selected .tab-label {
-    -fx-text-fill: #ffffff; /* Ép chữ thành màu trắng sáng */
+    -fx-text-fill: #ffffff; /* Делаем цвет текста ярко-белым */
 }
 
-/* 6. SỬA LỖI GIẢM CHIỀU CAO & VIỀN XANH KHI HOVER VÀO TAB ĐANG CHỌN */
+/* 6. ИСПРАВЛЕНИЕ УМЕНЬШЕНИЯ ВЫСОТЫ И СИНЕГО КОНТУРА ПРИ НАВЕДЕНИИ НА ВЫБРАННУЮ ВКЛАДКУ */
 .ui-tabs .tab:selected:hover {
-    -fx-background-color: #7c3aed, #27272a;      /* Giữ nguyên màu nền và thanh tím */
-    -fx-background-insets: 38px 0 0 0, 0 0 2px 0; /* Khóa cứng vị trí thanh tím, chống sụt chiều cao */
+    -fx-background-color: #7c3aed, #27272a;      /* Сохраняем цвет фона и фиолетовую полосу */
+    -fx-background-insets: 38px 0 0 0, 0 0 2px 0; /* Фиксируем фиолетовую полосу, предотвращая потерю высоты */
 }
 .ui-tabs .tab:selected:hover .tab-label {
-    -fx-text-fill: #ffffff;                      /* Giữ chữ màu trắng */
+    -fx-text-fill: #ffffff;                      /* Сохраняем белый текст */
 }
 
-/* 7. HIỆU ỨNG DI CHUỘT (HOVER) CHO CÁC TAB CHƯA CHỌN */
+/* 7. ЭФФЕКТ ПРИ НАВЕДЕНИИ (HOVER) ДЛЯ НЕВЫБРАННЫХ ВКЛАДОК */
 .ui-tabs .tab:hover {
     -fx-background-color: #27272a;
-    -fx-background-insets: 0; /* Chống sụt chiều cao khi di chuột qua các tab thường */
+    -fx-background-insets: 0; /* Предотвращает потерю высоты при наведении на обычные вкладки */
 }
 .ui-tabs .tab:hover .tab-label {
     -fx-text-fill: #ffffff;
 }
 
-/* 8. XÓA ĐƯỜNG KẺ NGANG MẶC ĐỊNH CỦA TABPANE DƯỚI NỀN */
+/* 8. УДАЛЯЕМ ЛИНИЮ ПО УМОЛЧАНИЮ ПОД ВКЛАДКАМИ */
 .ui-tabs *.content-area {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
