@@ -239,7 +239,7 @@ java --module-path /path/to/javafx/lib --add-modules javafx.controls Client
 
 <div align="center">
 
-<img src="assets/footer-v2.svg" alt="Footer" width="100%"/>
+<img src="assets/footer-v2.svg?v=3" alt="Footer" width="100%"/>
 
 <br><br>
 
