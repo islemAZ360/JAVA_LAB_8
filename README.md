@@ -229,7 +229,7 @@ java --module-path /path/to/javafx/lib --add-modules javafx.controls Client
 
 <div align="center">
 
-<img src="assets/structure.svg" alt="Project Structure" width="100%"/>
+<img src="assets/structure.svg?v=2" alt="Project Structure" width="100%"/>
 
 </div>
 
