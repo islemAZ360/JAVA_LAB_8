@@ -152,7 +152,7 @@
 ## 🛠️ &nbsp;Технологический стек
 
 <div align="center">
-<img src="assets/tech-stack.svg" alt="Tech Stack" width="100%"/>
+<img src="assets/tech-stack-v2.svg" alt="Tech Stack" width="100%"/>
 </div>
 
 <br>
@@ -211,7 +211,7 @@ java --module-path /path/to/javafx/lib --add-modules javafx.controls Client
 
 <div align="center">
 
-<img src="assets/footer-v2.svg?v=3" alt="Footer" width="100%"/>
+<img src="assets/footer-v2.svg?v=4" alt="Footer" width="100%"/>
 
 <br><br>
 

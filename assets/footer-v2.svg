@@ -126,7 +126,7 @@
   <circle cx="450" cy="125" r="3" fill="#22d3ee" filter="url(#subtleGlow)"/>
 
   <!-- Footer Branding -->
-  <text x="450" y="145" class="brand-text" text-anchor="middle" filter="url(#neonGlow)">
+  <text x="450" y="145" class="brand-text" text-anchor="middle">
     ИТМО | ФАКУЛЬТЕТ ПИиКТ
   </text>
   
