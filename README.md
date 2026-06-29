@@ -265,10 +265,10 @@ JAVA_LAB_8/
 
 <br><br>
 
-[![Stars](https://img.shields.io/github/stars/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=7c3aed)](https://github.com/islemAZ360/JAVA_LAB_8)
+[![Stars](https://img.shields.io/github/stars/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=7c3aed&cacheSeconds=60)](https://github.com/islemAZ360/JAVA_LAB_8)
 &nbsp;
-[![Forks](https://img.shields.io/github/forks/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=06b6d4)](https://github.com/islemAZ360/JAVA_LAB_8)
+[![Forks](https://img.shields.io/github/forks/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=06b6d4&cacheSeconds=60)](https://github.com/islemAZ360/JAVA_LAB_8)
 &nbsp;
-[![Repo Size](https://img.shields.io/github/repo-size/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=f59e0b)](https://github.com/islemAZ360/JAVA_LAB_8)
+[![Repo Size](https://img.shields.io/github/repo-size/islemAZ360/JAVA_LAB_8?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117&color=f59e0b&cacheSeconds=60)](https://github.com/islemAZ360/JAVA_LAB_8)
 
 </div>
