@@ -39,7 +39,7 @@
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" width="28"/> &nbsp;О проекте
+## 📖 &nbsp;О проекте
 
 > **Данный репозиторий — финальная (восьмая) лабораторная работа по программированию.**
 >
@@ -51,7 +51,7 @@
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" width="28"/> &nbsp;Ключевые особенности
+## 🌟 &nbsp;Ключевые особенности
 
 <table>
 <tr>
@@ -135,7 +135,7 @@
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Classical%20Building.png" width="28"/> &nbsp;Архитектура и Паттерны
+## 🏛️ &nbsp;Архитектура и Паттерны
 
 <div align="center">
 
@@ -149,7 +149,7 @@
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Hammer%20and%20Wrench.png" width="28"/> &nbsp;Технологический стек
+## 🛠️ &nbsp;Технологический стек
 
 <div align="center">
 <table>
@@ -189,7 +189,7 @@
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Busts%20in%20Silhouette.png" width="28"/> &nbsp;Команда разработчиков
+## 👥 &nbsp;Команда разработчиков
 
 <div align="center">
 
@@ -203,7 +203,7 @@
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Rocket.png" width="28"/> &nbsp;Быстрый старт
+## 🚀 &nbsp;Быстрый старт
 
 ```bash
 # 1️⃣  Клонировать репозиторий
@@ -225,35 +225,13 @@ java --module-path /path/to/javafx/lib --add-modules javafx.controls Client
 <img src="assets/divider.svg" width="100%"/>
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20File%20Box.png" width="28"/> &nbsp;Структура проекта
+## 🗂️ &nbsp;Структура проекта
 
-```
-JAVA_LAB_8/
-├── 📂 src/main/java/
-│   ├── 📂 client/             # 🖥️  Клиентская часть
-│   │   ├── 📂 gui/            #     JavaFX интерфейс
-│   │   │   ├── components/    #     UI-компоненты (Button, Table, Input...)
-│   │   │   ├── pages/         #     Страницы приложения
-│   │   │   ├── core/          #     Messages, Theme, CssLoader
-│   │   │   ├── router/        #     Навигация между страницами
-│   │   │   └── integration/   #     Шлюзы к серверу
-│   │   └── Terminal.java      #     Консольный клиент
-│   ├── 📂 server/             # ⚙️  Серверная часть
-│   │   ├── Server.java        #     NIO Selector + Event Loop
-│   │   ├── RequestHandler.java#     Обработка команд
-│   │   └── 📂 repository/     #     JDBC → PostgreSQL
-│   └── 📂 common/             # 📦  Общие модули
-│       ├── dto/               #     Request, Response, StatusCode
-│       ├── model/             #     HumanBeing, Car, Coordinates
-│       └── utils/             #     Валидация, IO утилиты
-├── 📂 src/main/resources/
-│   ├── 📂 static/css/         # 🎨  CSS-стили (Dark Theme)
-│   ├── 📂 config/             #     config.properties
-│   └── 📂 static/icons/       #     Иконки и графика
-├── 📂 scripts/                # 🔧  SQL скрипты инициализации
-├── 📂 lib/                    # 📚  Зависимости (Log4j2, JDBC)
-└── 📂 logs/                   # 📋  Логи сервера
-```
+<div align="center">
+
+<img src="assets/structure.svg" alt="Project Structure" width="100%"/>
+
+</div>
 
 <br>
 
